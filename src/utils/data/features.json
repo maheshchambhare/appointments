@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Book Summaries",
+    "description": "Concise summaries of books, highlighting key points, main themes, and important takeaways."
+  },
+  {
+    "name": "Quote Extraction",
+    "description": "Automatically extract notable quotes from books, allowing users to easily find and share impactful passages."
+  },
+  {
+    "name": "Keynote Generation",
+    "description": "Generate keynotes or bullet-point presentations summarizing the main ideas and concepts of a book."
+  }
+]

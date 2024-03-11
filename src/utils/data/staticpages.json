@@ -1,0 +1,5 @@
+[
+  { "page": "Terms and Conditions", "route": "/terms-and-conditions" },
+  { "page": "Privacy Policy", "route": "/privacy-policy" },
+  { "page": "Cookie Policy", "route": "/cookie-policy" }
+]
