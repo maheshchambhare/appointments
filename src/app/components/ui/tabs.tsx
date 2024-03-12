@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/utils/cn";
 
@@ -15,7 +15,7 @@ export const Tabs = ({
   containerClassName,
   activeTabClassName,
   tabClassName,
-  contentClassName
+  contentClassName,
 }: {
   tabs: Tab[];
   containerClassName?: string;
@@ -54,7 +54,7 @@ export const Tabs = ({
             onMouseLeave={() => setHovering(false)}
             className={cn("relative px-4 py-2 rounded-full", tabClassName)}
             style={{
-              transformStyle: "preserve-3d"
+              transformStyle: "preserve-3d",
             }}
           >
             {active.value === tab.value && (
@@ -79,7 +79,7 @@ export const Tabs = ({
         active={active}
         key={active.value}
         hovering={hovering}
-        className={cn("mt-32", contentClassName)}
+        className={cn("mt-12", contentClassName)}
       />
     </>
   );
@@ -88,7 +88,8 @@ export const Tabs = ({
 export const FadeInDiv = ({
   className,
   tabs,
-  hovering
+  hovering,
+  active,
 }: {
   className?: string;
   key?: any;
@@ -96,23 +97,27 @@ export const FadeInDiv = ({
   active: Tab;
   hovering?: boolean;
 }) => {
-  const isActive = (tab: Tab) => {
-    return tab.value === tabs[0].value;
-  };
+  const [loadedTabs, setLoadedTabs] = useState<Tab[]>([]);
+
+  useEffect(() => {
+    // Preload content for all tabs when component mounts or tabs change
+    setLoadedTabs(tabs);
+  }, [tabs]);
+
   return (
     <div className="relative w-full h-full">
-      {tabs.map((tab, idx) => (
+      {loadedTabs.map((tab, idx) => (
         <motion.div
           key={tab.value}
           layoutId={tab.value}
           style={{
             scale: 1 - idx * 0.1,
-            top: hovering ? idx * -50 : 0,
+            top: hovering ? idx * -50 : -30,
             zIndex: -idx,
-            opacity: idx < 3 ? 1 - idx * 0.1 : 0
+            opacity: idx < 3 ? 1 - idx * 0.1 : 0,
           }}
           animate={{
-            y: isActive(tab) ? [0, 40, 0] : 0
+            y: active.value == tab.value ? [0, 10, 0] : 0,
           }}
           className={cn("w-full h-full absolute top-0 left-0", className)}
         >

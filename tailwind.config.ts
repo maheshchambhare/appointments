@@ -20,6 +20,8 @@ const config: Config = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "gradient-br":
+          "linear-gradient(to bottom right, rgba(62,147,252), rgba(239,183,192))",
       },
       colors: {
         background: "#131313",
