@@ -3,8 +3,7 @@ import React from "react";
 import Header from "./Header";
 import Navbar from "@/app/components/Layouts/Navbar";
 import ScreenWrapper from "@/app/components/Layouts/ScreenWrapper";
-import { Tabs } from "@/app/components/ui/tabs";
-import TicketCards from "./TicketCards";
+import MoreSection from "./MoreSection";
 
 interface ParamsType {
   // Define the structure of params object
@@ -24,151 +23,16 @@ function page({
 }) {
   const title = params.landingpage;
   const about =
-    "this is the best saloon in surat, we are available at adajan,paal area";
+    "Welcome to Assemble, your premier unisex salon nestled in the vibrant Adajan area of Surat. Our salon is a sanctuary where style meets sophistication, offering a diverse range of cutting-edge services tailored to both men and women";
   const address = "abc,near shakti nagar,adajan,pal,340949";
 
-  const upcomingData = [
-    {
-      name: "Mahesh Chambhare",
-      ticketId: "#0",
-      mobile: "8767431997",
-      id: "0",
-      slot: "09:00AM - 09:30AM",
-    },
-    {
-      name: "Pavan Chambhare",
-      ticketId: "#1787",
-      mobile: "8767431997",
-      id: "1",
-      slot: "09:30AM - 10:00AM",
-    },
-    {
-      name: "Amitabh Shah",
-      ticketId: "#07654",
-      mobile: "8767431997",
-      id: "2",
-      slot: "10:30AM - 11:00AM",
-    },
-    {
-      name: "Elon  Musk",
-      ticketId: "#02344",
-      mobile: "8767431997",
-      id: "3",
-      slot: "11:00AM - 11:30AM",
-    },
-    {
-      name: "Jeff bozos",
-      ticketId: "#05676",
-      mobile: "8767431997",
-      id: "4",
-      slot: "11:30AM - 12:00AM",
-    },
-  ];
-
-  const inProgressData = [
-    {
-      name: "Mahesh Chambhare",
-      ticketId: "#1",
-      mobile: "8767431997",
-      id: "10",
-      slot: "09:00AM - 09:30AM",
-    },
-    {
-      name: "Pavan Chambhare",
-      ticketId: "#17337",
-      mobile: "8767431997",
-      id: "13",
-      slot: "09:30AM - 10:00AM",
-    },
-    {
-      name: "Amitabh Shah",
-      ticketId: "#0454",
-      mobile: "8767431997",
-      id: "22",
-      slot: "10:30AM - 11:00AM",
-    },
-    {
-      name: "Elon  Musk",
-      ticketId: "#023de44",
-      mobile: "8767431997",
-      id: "6",
-      slot: "11:00AM - 11:30AM",
-    },
-    {
-      name: "Jeff bozos",
-      ticketId: "#056tt76",
-      mobile: "8767431997",
-      id: "42",
-      slot: "11:30AM - 12:00AM",
-    },
-    {
-      name: "Pavan Chambhare",
-      ticketId: "#17337",
-      mobile: "8767431997",
-      id: "13",
-      slot: "09:30AM - 10:00AM",
-    },
-    {
-      name: "Amitabh Shah",
-      ticketId: "#0454",
-      mobile: "8767431997",
-      id: "22",
-      slot: "10:30AM - 11:00AM",
-    },
-    {
-      name: "Elon  Musk",
-      ticketId: "#023de44",
-      mobile: "8767431997",
-      id: "6",
-      slot: "11:00AM - 11:30AM",
-    },
-    {
-      name: "Jeff bozos",
-      ticketId: "#056tt76",
-      mobile: "8767431997",
-      id: "42",
-      slot: "11:30AM - 12:00AM",
-    },
-  ];
-  const tabs = [
-    {
-      title: "Upcoming",
-      value: "upcoming",
-      content: (
-        <div className="w-full overflow-hidden relative h-[70vh] overflow-y-scroll rounded-2xl py-6 px-4 sm:py-10 sm:px-6 bg-black  shadow-lg backdrop-blur-2xl">
-          <TicketCards tickets={upcomingData} />
-        </div>
-      ),
-    },
-    {
-      title: "In Progress",
-      value: "inprogress",
-      content: (
-        <div className="w-full  relative h-[70vh] overflow-y-scroll rounded-2xl py-6 px-4 sm:py-10 sm:px-6 bg-black  shadow-lg backdrop-blur-2xl">
-          <TicketCards tickets={inProgressData} />
-        </div>
-      ),
-    },
-    {
-      title: "Done",
-      value: "Done",
-      content: (
-        <div className="w-full overflow-hidden relative h-[70vh] rounded-2xl py-6 px-4 sm:py-10 sm:px-6 bg-black  shadow-lg backdrop-blur-2xl">
-          <TicketCards tickets={upcomingData} />
-        </div>
-      ),
-    },
-  ];
-
   return (
-    <main className="flex bg-background flex-col w-[100vw] min-h-[100vh] overflow-hidden">
+    <main className="flex bg-background flex-col w-[100vw] min-h-[100vh] ">
       <div className="relative h-auto w-full  ">
         <ScreenWrapper>
           <Navbar />
           <Header title={title} about={about} address={address} />
-          <div className="h-[100vh] mb-[100px] [perspective:1000px] relative b flex flex-col max-w-5xl mx-auto w-full  items-start justify-start my-4">
-            <Tabs tabs={tabs} />
-          </div>
+          <MoreSection />
         </ScreenWrapper>
       </div>
     </main>

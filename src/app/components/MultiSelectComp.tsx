@@ -85,6 +85,7 @@ function MultiSelectComp({
             option: (provided, state) => ({
               ...provided,
               fontSize: "16px", // Adjust the font size for the options in the list
+              color: "#131313",
             }),
             placeholder: (provided, state) => ({
               ...provided,

@@ -11,6 +11,7 @@ interface ticketTypes {
 }
 
 function TicketCards({ tickets }: { tickets: ticketTypes[] }) {
+  const customerView = false;
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 ">
       {tickets.map((ticket: ticketTypes, index) => {
@@ -23,15 +24,17 @@ function TicketCards({ tickets }: { tickets: ticketTypes[] }) {
               {ticket.ticketId}
             </p>
             <p className="text-textPrimary font-poppins text-sm sm:text-base">
-              {ticket.name}
+              {!customerView && ticket.name}
             </p>
             <p className="text-textSecondary font-poppins text-sm sm:text-sm">
               {ticket.slot}
             </p>
-            <div className="flex justify-between mt-2">
-              <AnimatedBtn title="In progress" onClick={() => {}} />
-              <AnimatedBtn title="Call" onClick={() => {}} />
-            </div>
+            {!customerView && (
+              <div className="flex justify-between mt-2">
+                <AnimatedBtn title="In progress" onClick={() => {}} />
+                <AnimatedBtn title="Call" onClick={() => {}} />
+              </div>
+            )}
           </div>
         );
       })}

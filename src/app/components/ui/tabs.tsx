@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { cn } from "@/utils/cn";
 
 type Tab = {
@@ -79,7 +79,7 @@ export const Tabs = ({
         active={active}
         key={active.value}
         hovering={hovering}
-        className={cn("mt-12", contentClassName)}
+        className={cn("mt-2", contentClassName)}
       />
     </>
   );
@@ -97,113 +97,11 @@ export const FadeInDiv = ({
   active: Tab;
   hovering?: boolean;
 }) => {
-  const [loadedTabs, setLoadedTabs] = useState<Tab[]>([]);
-
-  useEffect(() => {
-    // Preload content for all tabs when component mounts or tabs change
-    setLoadedTabs(tabs);
-  }, [tabs]);
-
   return (
-    <div className="relative w-full h-full">
-      {loadedTabs.map((tab, idx) => (
-        <motion.div
-          key={tab.value}
-          layoutId={tab.value}
-          style={{
-            scale: 1 - idx * 0.1,
-            top: hovering ? idx * -50 : -30,
-            zIndex: -idx,
-            opacity: idx < 3 ? 1 - idx * 0.1 : 0,
-          }}
-          animate={{
-            y: active.value == tab.value ? [0, 10, 0] : 0,
-          }}
-          className={cn("w-full h-full absolute top-0 left-0", className)}
-        >
-          {tab.content}
-        </motion.div>
-      ))}
+    <div className="relative w-full     ">
+      <motion.div className={cn("w-full  left-0", className)}>
+        {active.content}
+      </motion.div>
     </div>
   );
 };
-
-// Example Use
-
-// "use client";
-
-// import Image from "next/image";
-// import { Tabs } from "../ui/tabs";
-
-// export function TabsDemo() {
-//   const tabs = [
-//     {
-//       title: "Product",
-//       value: "product",
-//       content: (
-//         <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-br from-purple-700 to-violet-900">
-//           <p>Product Tab</p>
-//           <DummyContent />
-//         </div>
-//       ),
-//     },
-//     {
-//       title: "Services",
-//       value: "services",
-//       content: (
-//         <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-br from-purple-700 to-violet-900">
-//           <p>Services tab</p>
-//           <DummyContent />
-//         </div>
-//       ),
-//     },
-//     {
-//       title: "Playground",
-//       value: "playground",
-//       content: (
-//         <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-br from-purple-700 to-violet-900">
-//           <p>Playground tab</p>
-//           <DummyContent />
-//         </div>
-//       ),
-//     },
-//     {
-//       title: "Content",
-//       value: "content",
-//       content: (
-//         <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-br from-purple-700 to-violet-900">
-//           <p>Content tab</p>
-//           <DummyContent />
-//         </div>
-//       ),
-//     },
-//     {
-//       title: "Random",
-//       value: "random",
-//       content: (
-//         <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-br from-purple-700 to-violet-900">
-//           <p>Random tab</p>
-//           <DummyContent />
-//         </div>
-//       ),
-//     },
-//   ];
-
-//   return (
-//     <div className="h-[20rem] md:h-[40rem] [perspective:1000px] relative b flex flex-col max-w-5xl mx-auto w-full  items-start justify-start my-40">
-//       <Tabs tabs={tabs} />
-//     </div>
-//   );
-// }
-
-// const DummyContent = () => {
-//   return (
-//     <Image
-//       src="/linear.webp"
-//       alt="dummy image"
-//       width="1000"
-//       height="1000"
-//       className="object-cover object-left-top h-[60%]  md:h-[90%] absolute -bottom-10 inset-x-0 w-[90%] rounded-xl mx-auto"
-//     />
-//   );
-// };

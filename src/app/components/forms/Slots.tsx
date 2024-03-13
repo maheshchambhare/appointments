@@ -1,10 +1,89 @@
 "use client";
 import React, { useRef, useState } from "react";
 import MultiSelectComp from "../MultiSelectComp";
+import { ChevronLeft } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { setBusinessSectionType } from "@/store/slices/commonSlices";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment";
+import Button from "../ui/Button";
+
+interface timeselector {
+  startTime: Date | null;
+  endTime: Date | null;
+  breakTimeStart: Date | null;
+  breakTimeEnd: Date | null;
+}
+
+interface selecteddur {
+  hours: string;
+  minutes: string;
+}
+
+interface slot {
+  startTime: string;
+  endTime: string;
+}
+
+function generateTimeSlots(data: any) {
+  const { startTime, endTime, breakTimeStart, breakTimeEnd, hours, minutes } =
+    data;
+
+  const start = new Date(startTime);
+  const end = new Date(endTime);
+  const breakStart = new Date(breakTimeStart);
+  const breakEnd = new Date(breakTimeEnd);
+
+  const slotDuration = hours * 60 + minutes; // Slot duration in minutes
+  const slots = [];
+
+  let currentSlotStart = new Date(start);
+
+  // Loop through each slot
+  while (currentSlotStart < end) {
+    const currentSlotEnd = new Date(
+      currentSlotStart.getTime() + slotDuration * 60000
+    );
+
+    // Check if the current slot falls within the break time
+    if (currentSlotStart >= breakStart && currentSlotStart < breakEnd) {
+      // Move the slot to the end of the break
+      currentSlotStart.setTime(breakEnd.getTime());
+      currentSlotEnd.setTime(currentSlotStart.getTime() + slotDuration * 60000);
+    }
+
+    // Add slot to the array
+    slots.push({
+      startTime: moment(new Date(currentSlotStart)).format("hh:mm A"),
+      endTime: moment(new Date(currentSlotEnd)).format("hh:mm A"),
+    });
+
+    // Move to the next slot
+    currentSlotStart.setTime(currentSlotStart.getTime() + slotDuration * 60000);
+  }
+
+  return slots;
+}
 
 function Slots() {
   const hoursRef = useRef(null);
   const minutesRef = useRef(null);
+  const dispatch = useDispatch();
+
+  const [timeSelector, setTimeSelector] = useState<timeselector>({
+    startTime: moment("09:00:00", "HH:mm:ss").toDate(),
+    endTime: moment("18:00:00", "HH:mm:ss").toDate(),
+    breakTimeStart: moment("13:00:00", "HH:mm:ss").toDate(),
+    breakTimeEnd: moment("14:00:00", "HH:mm:ss").toDate(),
+  });
+
+  const [selectedDuration, setSelectedDuration] = useState<selecteddur>({
+    hours: "0",
+    minutes: "0",
+  });
+
+  const [generatedSlots, setGeneratedSlots] = useState<any>([]);
 
   const hoursArr = [
     {
@@ -155,86 +234,6 @@ function Slots() {
       label: "55",
     },
   ];
-  const [monthOfYears, setMonthOfYears] = useState([
-    {
-      id: 1,
-      month: "JAN",
-      name: "january",
-      isActive: false,
-      isDisabled: false,
-    },
-    {
-      id: 2,
-      month: "FEB",
-      name: "February",
-      isActive: false,
-      isDisabled: false,
-    },
-    {
-      id: 3,
-      month: "MAR",
-      name: "March",
-      isActive: false,
-      isDisabled: false,
-    },
-    {
-      id: 4,
-      month: "APR",
-      name: "April",
-      isActive: false,
-      isDisabled: false,
-    },
-    { id: 5, month: "MAY", name: "May", isActive: false, isDisabled: false },
-    {
-      id: 6,
-      month: "JUN",
-      name: "June",
-      isActive: false,
-      isDisabled: false,
-    },
-    {
-      id: 7,
-      month: "JUL",
-      name: "July",
-      isActive: false,
-      isDisabled: false,
-    },
-    {
-      id: 8,
-      month: "AUG",
-      name: "August",
-      isActive: false,
-      isDisabled: false,
-    },
-    {
-      id: 9,
-      month: "SEP",
-      name: "September",
-      isActive: false,
-      isDisabled: false,
-    },
-    {
-      id: 10,
-      month: "OCT",
-      name: "October",
-      isActive: false,
-      isDisabled: false,
-    },
-    {
-      id: 11,
-      month: "NOV",
-      name: "November",
-      isActive: false,
-      isDisabled: false,
-    },
-    {
-      id: 12,
-      month: "DEC",
-      name: "December",
-      isActive: false,
-      isDisabled: false,
-    },
-  ]);
 
   const [dayOfWeek, setDaysOfWeek] = useState([
     { id: 0, days: "S", name: "Sunday", isActive: false },
@@ -246,8 +245,34 @@ function Slots() {
     { id: 6, days: "S", name: "Saturday", isActive: false },
   ]);
 
+  const [durationErr, setDurationErr] = useState("");
+
+  const handleSubmit = () => {
+    if (selectedDuration.hours === "0" && selectedDuration.minutes === "0") {
+      setDurationErr(
+        "Please enter duration to create slots, duration cannot be empty"
+      );
+      setDurationErr("");
+      return;
+    }
+
+    const data = { ...selectedDuration, ...timeSelector };
+
+    const timeSlots = generateTimeSlots(data);
+    setGeneratedSlots(timeSlots);
+  };
+
   return (
     <div>
+      <div
+        onClick={() => {
+          dispatch(setBusinessSectionType("1"));
+        }}
+        className="my-4 flex cursor-pointer"
+      >
+        <ChevronLeft />
+        <p className="text-base font-poppins ">Go Back</p>
+      </div>
       <div className="my-[20px] w-full">
         <div className="flex flex-col w-full">
           <label
@@ -255,15 +280,16 @@ function Slots() {
           >
             Duration of Slot
           </label>{" "}
-          <div className="flex  w-full justify-between mt-[5px] sm:justify-stretch sm:gap-2 xsm:justify-stretch xsm:gap-2">
-            <div className="w-[25%] sm:w-full xsm:w-full">
+          <div className="flex  w-full justify-between md:justify-start mt-[5px] ">
+            <div className="w-[47%] md:w-[20%] md:mr-4">
               <div className="col-md-12">
                 <MultiSelectComp
                   full={true}
                   refSelect={hoursRef}
                   title="Hours"
-                  onChange={(e) => {
-                    // validation.setFieldValue("hours", e.value);
+                  onChange={(e: any) => {
+                    selectedDuration.hours = e.value;
+                    setSelectedDuration({ ...selectedDuration });
                   }}
                   isMulti={false}
                   required={true}
@@ -276,15 +302,16 @@ function Slots() {
                 />
               </div>
             </div>
-            <div className="w-[25%] sm:w-full xsm:w-full">
+            <div className="w-[47%] md:w-[20%]">
               <div className="w-full ">
                 <MultiSelectComp
                   full={true}
                   title="Minutes"
                   refSelect={minutesRef}
                   required={true}
-                  onChange={(e) => {
-                    // validation.setFieldValue("minutes", e.value);
+                  onChange={(e: any) => {
+                    selectedDuration.minutes = e.value;
+                    setSelectedDuration({ ...selectedDuration });
                   }}
                   isMulti={false}
                   placeholder="Minutes"
@@ -296,15 +323,209 @@ function Slots() {
                 />
               </div>
             </div>
-            <div className="w-[10%]" />
           </div>
           <div>
-            <p className="text-[10px] mt-[5px] text-red-500">
-              {/* {activityDurationErr} */}
-            </p>
+            <p className="text-sm mt-[5px] text-red-500">{durationErr}</p>
           </div>
         </div>
       </div>
+
+      <div className="w-full max-w-[450px]  my-[10px]">
+        <div className="w-full flex justify-between ">
+          <div>
+            <label
+              className={`font-sans text-md  font-medium  transition-all duration-200 ease-in-out left-4`}
+            >
+              Select available days
+            </label>
+          </div>
+          <div>
+            <label
+              onClick={() => {
+                dayOfWeek.map((d, i) => {
+                  d.isActive = true;
+                });
+                setDaysOfWeek([...dayOfWeek]);
+              }}
+              className={`font-sans text-md  font-medium  transition-all duration-200 ease-in-out left-4`}
+            >
+              Select All
+            </label>
+          </div>
+        </div>
+        <div className="weekDays-selector">
+          {dayOfWeek.map((data, index) => {
+            return (
+              <React.Fragment key={index}>
+                <div className="inline-flex items-center">
+                  <label
+                    className="relative flex cursor-pointer items-center rounded-full p-3"
+                    htmlFor="checkbox"
+                    data-ripple-dark="true"
+                  >
+                    <input
+                      type="checkbox"
+                      className="before:content[''] peer relative h-[40px] w-[40px] cursor-pointer appearance-none rounded-md border border-blue-gray-200 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-textPrimary checked:bg-textPrimary checked:before:bg-textPrimary hover:before:opacity-10"
+                      id={data.name}
+                      onClick={(e) => {
+                        data.isActive = !data.isActive;
+                        setDaysOfWeek([...dayOfWeek]);
+                      }}
+                      checked={data.isActive}
+                      defaultChecked={data.isActive}
+                    />
+                    <div className="pointer-events-none absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4  transition-opacity peer-checked:opacity-100">
+                      <label
+                        className={`${
+                          data.isActive
+                            ? "text-background"
+                            : "text-textSecondary"
+                        }`}
+                        htmlFor={data.name}
+                      >
+                        {data.days}
+                      </label>
+                    </div>
+                  </label>
+                </div>
+              </React.Fragment>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="my-[20px] w-full flex justify-between md:justify-start">
+        <div className="flex flex-col w-[47%] my-[5px] md:w-[20%] md:mr-4">
+          <div className="mb-2">
+            <label
+              className={`font-sans text-md  font-medium  transition-all duration-200 ease-in-out left-4 `}
+              htmlFor="startTime"
+            >
+              Start Time
+            </label>
+            <span className="text-red-600"> *</span>
+          </div>
+          <DatePicker
+            id={"startTime"}
+            selected={timeSelector.startTime}
+            onChange={(e) => {
+              timeSelector.startTime = e;
+              setTimeSelector({ ...timeSelector });
+            }}
+            showTimeSelect
+            className="h-[40px] text-md text-black rounded-[7px] p-[10px] w-full border-[1px] border-[#ced4da] sm:text-sm xsm:text-sm"
+            showTimeSelectOnly
+            timeIntervals={15}
+            timeCaption="Time"
+            dateFormat="h:mm aa"
+          />
+        </div>
+
+        <div className="flex flex-col w-[47%] my-[5px] md:w-[20%] ">
+          <div className="mb-2">
+            <label
+              className={`font-sans text-md  font-medium  transition-all duration-200 ease-in-out left-4 `}
+              htmlFor="startTime"
+            >
+              End Time
+            </label>
+            <span className="text-red-600"> *</span>
+          </div>
+          <DatePicker
+            id={"endTime"}
+            selected={timeSelector.endTime}
+            onChange={(e) => {
+              timeSelector.endTime = e;
+              setTimeSelector({ ...timeSelector });
+            }}
+            showTimeSelect
+            className="h-[40px] text-md text-black rounded-[7px] p-[10px] w-full border-[1px] border-[#ced4da] sm:text-sm xsm:text-sm"
+            showTimeSelectOnly
+            timeIntervals={15}
+            timeCaption="Time"
+            dateFormat="h:mm aa"
+          />
+        </div>
+      </div>
+
+      <div className="my-[20px] w-full flex justify-between md:justify-start">
+        <div className="flex flex-col w-[47%] my-[5px] md:w-[20%] md:mr-4">
+          <div className="mb-2">
+            <label
+              className={`font-sans text-md  font-medium  transition-all duration-200 ease-in-out left-4 `}
+              htmlFor="startTime"
+            >
+              Break Start Time
+            </label>
+            <span className="text-red-600"> *</span>
+          </div>
+          <DatePicker
+            id={"startTime"}
+            selected={timeSelector.breakTimeStart}
+            onChange={(e) => {
+              timeSelector.breakTimeStart = e;
+              setTimeSelector({ ...timeSelector });
+            }}
+            showTimeSelect
+            className="h-[40px] text-md text-black rounded-[7px] p-[10px] w-full border-[1px] border-[#ced4da] sm:text-sm xsm:text-sm"
+            showTimeSelectOnly
+            timeIntervals={15}
+            timeCaption="Time"
+            dateFormat="h:mm aa"
+          />
+        </div>
+
+        <div className="flex flex-col w-[47%] my-[5px] md:w-[20%] ">
+          <div className="mb-2">
+            <label
+              className={`font-sans text-md  font-medium  transition-all duration-200 ease-in-out left-4 `}
+              htmlFor="startTime"
+            >
+              Break End Time
+            </label>
+            <span className="text-red-600"> *</span>
+          </div>
+          <DatePicker
+            id={"endTime"}
+            selected={timeSelector.breakTimeEnd}
+            onChange={(e) => {
+              timeSelector.breakTimeEnd = e;
+              setTimeSelector({ ...timeSelector });
+            }}
+            showTimeSelect
+            className="h-[40px] text-md text-black rounded-[7px] p-[10px] w-full border-[1px] border-[#ced4da] sm:text-sm xsm:text-sm"
+            showTimeSelectOnly
+            timeIntervals={15}
+            timeCaption="Time"
+            dateFormat="h:mm aa"
+          />
+        </div>
+      </div>
+      <div className="mt-6 mb-4">
+        <Button type="button" onClick={handleSubmit} title="Generate Slots" />
+      </div>
+
+      {generatedSlots.length > 0 && (
+        <div className="bg-black my-10 rounded-md shadow-md px-4 py-8">
+          <p
+            className={`font-sans text-xl mb-8 font-medium  transition-all duration-200 ease-in-out left-4`}
+          >
+            Total Slots Generated : {generatedSlots.length}
+          </p>
+          <div className="flex gap-4 flex-wrap w-full">
+            {generatedSlots.map((slot: slot, ind: any) => {
+              return (
+                <div
+                  className="flex justify-center  border border-textPrimary p-2 rounded-lg w-[200px]"
+                  key={ind}
+                >
+                  <p>{slot.startTime + " - " + slot.endTime}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

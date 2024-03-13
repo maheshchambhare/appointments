@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { MapPin } from "lucide-react";
 
 function Header({
   title,
@@ -12,16 +13,19 @@ function Header({
   address: string;
 }) {
   return (
-    <div className="h-auto mt-2 pb-4 border-b-[1px] border-textPrimary  ">
-      <h1 className="font-poppins text-base text-textPrimary capitalize md:text-xl">
+    <div className="h-auto mt-0 mb-10  md:mb-20  ">
+      <h1 className="font-mont text-center text-[50px] text-textPrimary capitalize md:text-[70px]">
         {title}
       </h1>
-      <p className="font-poppins text-sm text-textSecondary my-1 md:text-base">
+      <p className="font-poppins max-w-[500px] mx-auto text-center mt-[-10px] mb-2 text-md text-textSecondary md:text-base">
         {about}
       </p>
-      <p className="font-poppins text-sm text-textSecondary md:text-base">
-        {address}
-      </p>
+      <div className="flex justify-center items-center">
+        <MapPin size={16} />
+        <p className="font-poppins ml-2 text-sm text-textTextprimary md:text-base">
+          {address}
+        </p>
+      </div>
     </div>
   );
 }

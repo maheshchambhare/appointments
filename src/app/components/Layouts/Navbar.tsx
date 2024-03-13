@@ -6,7 +6,8 @@ import ResetPassword from "../forms/ResetPassword";
 import Otp from "../forms/Otp";
 import Menu from "./Menu";
 import { User, CalendarPlus } from "lucide-react";
-import Slots from "../forms/Slots";
+import { useDispatch } from "react-redux";
+import { setBusinessSectionType } from "@/store/slices/commonSlices";
 
 interface menuItem {
   name: string;
@@ -20,7 +21,9 @@ function Navbar() {
   const [resetForm, setResetForm] = useState(false);
   const [otpForm, setOtpForm] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
-  const [slotsForm, setSlotsForm] = useState(false);
+
+  const dispatch = useDispatch();
+
   const login = true;
 
   const menu = [
@@ -31,13 +34,12 @@ function Navbar() {
       onClick: () => {},
     },
     {
-      name: "Create Slots",
+      name: "Generate Slots",
       route: "slots",
       icon: <CalendarPlus size={18} />,
       onClick: () => {
         setOpenMenu(false);
-        setLoginModal(true);
-        setSlotsForm(true);
+        dispatch(setBusinessSectionType("2"));
       },
     },
   ];
@@ -73,9 +75,7 @@ function Navbar() {
         <ModalLayout
           isOpen={loginModal}
           modalTitle={
-            slotsForm
-              ? "Create Slots"
-              : resetForm
+            resetForm
               ? otpForm
                 ? "Verify Otp"
                 : "Reset your password"
@@ -88,9 +88,7 @@ function Navbar() {
             setOtpForm(false);
           }}
         >
-          {slotsForm ? (
-            <Slots />
-          ) : resetForm ? (
+          {resetForm ? (
             otpForm ? (
               <Otp />
             ) : (
