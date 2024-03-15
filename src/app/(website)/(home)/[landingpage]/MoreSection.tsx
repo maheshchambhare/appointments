@@ -10,7 +10,7 @@ import Button from "@/app/components/ui/Button";
 
 function MoreSection() {
   const businessPageType = useSelector(getBusinessSectionType);
-  const customerView = false;
+  const customerView = true;
 
   const upcomingData = [
     {
