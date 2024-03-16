@@ -21,8 +21,6 @@ const POST = async (req: Request) => {
       .toString()
       .padStart(6, "0");
 
-    console.log(verificationCode, "OOOO");
-
     const updatedUser = { ...body, password: encryptedPass };
 
     const prismaRes = await prisma.businessUser.create({ data: updatedUser });
