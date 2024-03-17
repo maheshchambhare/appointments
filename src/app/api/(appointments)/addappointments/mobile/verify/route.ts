@@ -2,8 +2,8 @@ import jwt from "jsonwebtoken";
 import prisma from "@/utils/prisma";
 import { NextResponse, NextRequest } from "next/server";
 
-const JWTKEY = process.env.JWT_KEY_TOKEN;
-const JWTKEYOTP = process.env.JWT_KEY_OTP;
+const JWTKEY: any = process.env.JWT_KEY_TOKEN;
+const JWTKEYOTP: any = process.env.JWT_KEY_OTP;
 
 const POST = async (req: NextRequest) => {
   try {
@@ -11,28 +11,19 @@ const POST = async (req: NextRequest) => {
 
     const otp = body.otp;
 
-    const cookie = req.cookies.get("userauth");
+    const cookie = req.cookies.get("appointmentauth");
     if (cookie) {
       const otpEncrypted = cookie?.value;
 
-      const decryptedOtp = await jwt.verify(otpEncrypted, JWTKEYOTP);
+      const decryptedOtp: any = await jwt.verify(otpEncrypted, JWTKEYOTP);
 
-      if (decryptedOtp.otp == otp) {
-        const businessUser = await prisma.businessUser.update({
-          where: {
-            id: decryptedOtp.id,
-          },
-          data: decryptedOtp?.password
-            ? {
-                password: decryptedOtp?.password,
-              }
-            : { verified: decryptedOtp.otp == otp },
-        });
-
+      if (decryptedOtp?.otp == otp) {
         let jsonToken = "";
 
+        const userPassObject = { ...decryptedOtp, verified: true };
+
         try {
-          jsonToken = await jwt.sign(businessUser, JWTKEY, {
+          jsonToken = await jwt.sign(userPassObject, JWTKEY, {
             expiresIn: 31556926, // 1 year in seconds
           });
         } catch (error) {
@@ -43,13 +34,13 @@ const POST = async (req: NextRequest) => {
           { message: "Successfully veified" },
           { status: 200 }
         );
-        response.cookies.set("token", jsonToken, {
+        response.cookies.set("appointmentform", jsonToken, {
           httpOnly: true,
           secure: true,
           sameSite: true,
         });
 
-        response.cookies.delete("userauth");
+        response.cookies.delete("appointmentauth");
         return response;
       }
 

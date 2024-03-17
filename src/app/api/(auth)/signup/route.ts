@@ -6,6 +6,16 @@ import jwt from "jsonwebtoken";
 const saltRounds = 10;
 const JWTKEY = process.env.JWT_KEY_OTP;
 
+function generateRandomString(length: number) {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+}
+
 const POST = async (req: Request) => {
   try {
     const body = await req.json();
@@ -21,7 +31,13 @@ const POST = async (req: Request) => {
       .toString()
       .padStart(6, "0");
 
-    const updatedUser = { ...body, password: encryptedPass };
+    const slugCode = generateRandomString(10);
+
+    const updatedUser = {
+      ...body,
+      password: encryptedPass,
+      slug: body.businessName.replace(/\s+/g, "-") + "-" + slugCode,
+    };
 
     const prismaRes = await prisma.businessUser.create({ data: updatedUser });
 

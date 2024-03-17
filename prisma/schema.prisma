@@ -42,20 +42,23 @@ model Appointments {
 }
 
 model BusinessUser {
-  id        String         @id @default(uuid())
-  name      String
-  mobile    String         @unique
-  email     String         @unique
-  password  String
-  about     String?
-  address   String?
-  verified  Boolean
-  tickets   Appointments[]
-  customers User[]
-  slots     String[]
-  weekdays  Json?
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
+  id           String         @id @default(uuid())
+  name         String
+  businessName String
+  mobile       String         @unique
+  email        String         @unique
+  password     String
+  slug         String         @unique
+  about        String?
+  address      String?
+  verified     Boolean
+  approved     Boolean
+  tickets      Appointments[]
+  customers    User[]
+  slots        String[]
+  weekdays     Json?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
 
   @@index([mobile, name])
 }
