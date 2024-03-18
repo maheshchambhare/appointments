@@ -2,17 +2,20 @@ import React, { useState } from "react";
 import { Formik } from "formik";
 import CustomInput from "../CustomInput";
 import Button from "../ui/Button";
+import { apicall } from "@/utils/getdata";
+import { useRouter } from "next/navigation";
 
 const SignUp = ({ setotpform }: { setotpform: (val: boolean) => void }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showCnfPassword, setShowCnfPassword] = useState(false);
+  const router = useRouter();
   return (
     <div>
       <Formik
         initialValues={{
           name: "",
+          businessName: "",
           mobile: "",
-          email: "",
           password: "",
           cnfPassword: "",
         }}
@@ -23,9 +26,13 @@ const SignUp = ({ setotpform }: { setotpform: (val: boolean) => void }) => {
             errors.name = "Required";
           }
 
+          if (!values.businessName) {
+            errors.businessName = "Required";
+          }
+
           if (!values.mobile) {
             errors.mobile = "Required";
-          } else if (values.mobile.length != 10) {
+          } else if (JSON.stringify(values.mobile).length != 10) {
             errors.mobile = "Invalid mobile number";
           }
 
@@ -52,17 +59,37 @@ const SignUp = ({ setotpform }: { setotpform: (val: boolean) => void }) => {
             errors.cnfPassword = "Passwords do not match";
           }
 
-          if (!values.email) {
-            errors.email = "Required";
-          } else if (
-            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-          ) {
-            errors.email = "Invalid email address";
-          }
+          // if (!values.email) {
+          //   errors.email = "Required";
+          // } else if (
+          //   !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+          // ) {
+          //   errors.email = "Invalid email address";
+          // }
           return errors;
         }}
         onSubmit={(values, { setSubmitting }) => {
           setotpform(true);
+
+          const data = {
+            name: values.name,
+            businessName: values.businessName,
+            verified: false,
+            approved: false,
+            mobile: JSON.stringify(values.mobile),
+            password: values.password,
+          };
+
+          apicall({
+            path: "signup",
+            getResponse: (res) => {
+              console.log(res.data, "HEY");
+            },
+            getError: (err) => {},
+            router,
+            method: "post",
+            data,
+          });
         }}
       >
         {({
@@ -78,7 +105,7 @@ const SignUp = ({ setotpform }: { setotpform: (val: boolean) => void }) => {
           <form onSubmit={handleSubmit}>
             <div className="mt-4">
               <CustomInput
-                type="name"
+                type="text"
                 name="name"
                 label="Name"
                 id="name"
@@ -91,7 +118,20 @@ const SignUp = ({ setotpform }: { setotpform: (val: boolean) => void }) => {
             </div>
             <div className="my-4">
               <CustomInput
-                type="mobile"
+                type="text"
+                name="businessName"
+                label="Business Name"
+                id="businessName"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.businessName}
+                error={errors.businessName}
+                touched={touched.businessName}
+              />
+            </div>
+            <div className="my-4">
+              <CustomInput
+                type="number"
                 name="mobile"
                 label="Mobile"
                 id="mobile"
@@ -103,7 +143,7 @@ const SignUp = ({ setotpform }: { setotpform: (val: boolean) => void }) => {
               />
             </div>
 
-            <div className="my-4">
+            {/* <div className="my-4">
               <CustomInput
                 type="email"
                 name="email"
@@ -115,7 +155,7 @@ const SignUp = ({ setotpform }: { setotpform: (val: boolean) => void }) => {
                 error={errors.email}
                 touched={touched.email}
               />
-            </div>
+            </div> */}
             <div className="my-4">
               <CustomInput
                 type={showPassword ? "text" : "password"}
@@ -135,7 +175,6 @@ const SignUp = ({ setotpform }: { setotpform: (val: boolean) => void }) => {
             <div className="mt-4 mb-6">
               <CustomInput
                 type={showCnfPassword ? "text" : "password"}
-                ß
                 name="cnfPassword"
                 label="Confirm Password"
                 id="cnfPassword"

@@ -2,10 +2,22 @@ import React, { useState } from "react";
 import { Formik } from "formik";
 import CustomInput from "../CustomInput";
 import Button from "../ui/Button";
+import Cookies from "js-cookie";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import { apicall } from "@/utils/getdata";
+import { setBusinessUserLoggedIn, setUserData } from "@/store/slices/authSlice";
 
-const Login = ({ resetForm }: { resetForm: (val: boolean) => void }) => {
+const Login = ({
+  resetForm,
+  setIsOpen,
+}: {
+  resetForm: (val: boolean) => void;
+  setIsOpen: (val: boolean) => void;
+}) => {
   const [showPassword, setShowPassword] = useState(false);
-
+  const dispatch = useDispatch();
+  const router = useRouter();
   return (
     <div>
       <Formik
@@ -41,7 +53,24 @@ const Login = ({ resetForm }: { resetForm: (val: boolean) => void }) => {
 
           return errors;
         }}
-        onSubmit={(values, { setSubmitting }) => {}}
+        onSubmit={(values, { setSubmitting }) => {
+          apicall({
+            path: "login",
+            getResponse: (res) => {
+              Cookies.set("businessUser", JSON.stringify({ ...res.data }));
+              dispatch(setBusinessUserLoggedIn(true));
+              dispatch(setUserData(res.data));
+              setIsOpen(false);
+            },
+            getError: (err) => {},
+            router,
+            method: "post",
+            data: {
+              mobile: values.mobile,
+              password: values.password,
+            },
+          });
+        }}
       >
         {({
           values,

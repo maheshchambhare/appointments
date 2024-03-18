@@ -1,59 +1,80 @@
-import React from "react";
-import { Formik } from "formik";
-import CustomInput from "../CustomInput";
+import React, { useState } from "react";
 import Button from "../ui/Button";
+import { apicall } from "@/utils/getdata";
+import { useRouter } from "next/navigation";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "../ui/InputOtp";
+import Cookies from "js-cookie";
+import { useDispatch } from "react-redux";
+import { setBusinessUserLoggedIn, setUserData } from "@/store/slices/authSlice";
 
-const Otp = () => (
-  <div>
-    <Formik
-      initialValues={{
-        otp: "",
-      }}
-      validate={(values) => {
-        const errors: any = {};
+const Otp = ({
+  setIsOpen,
+  formType,
+}: {
+  setIsOpen: (val: boolean) => void;
+  formType: string;
+}) => {
+  const router = useRouter();
+  const dispatch = useDispatch();
 
-        if (!values.otp) {
-          errors.mobile = "Required";
-        } else if (values.otp.length != 6) {
-          errors.mobile = "Invalid otp";
+  const [otpData, setOtpData] = useState("");
+
+  const handleSubmit = () => {
+    apicall({
+      path: formType == "1" ? "signup/verify" : "verifyotp",
+      getResponse: (res) => {
+        if (formType == "1") {
+          Cookies.set("businessUser", { ...res.data });
+          dispatch(setBusinessUserLoggedIn(true));
+          dispatch(setUserData(res.data));
         }
 
-        return errors;
-      }}
-      onSubmit={(values, { setSubmitting }) => {}}
-    >
-      {({
-        values,
-        errors,
-        touched,
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        isSubmitting,
-        /* and other goodies */
-      }) => (
-        <form onSubmit={handleSubmit}>
-          <div className="mt-4 mb-6">
-            <CustomInput
-              type="number"
-              name="otp"
-              label="OTP"
-              id="otp"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.otp}
-              error={errors.otp}
-              touched={touched.otp}
-            />
-          </div>
+        setIsOpen(false);
+      },
+      getError: (err) => {},
+      router,
+      method: "post",
+      data: { otp: otpData },
+    });
+  };
+  return (
+    <div>
+      <div className="flex flex-col justify-center items-center">
+        <InputOTP
+          textAlign="center"
+          maxLength={6}
+          value={otpData}
+          onChange={(e) => {
+            setOtpData(e);
+          }}
+          render={({ slots }) => (
+            <>
+              <InputOTPGroup>
+                {slots.slice(0, 3).map((slot, index) => (
+                  <InputOTPSlot key={index} {...slot} />
+                ))}{" "}
+              </InputOTPGroup>
+              <InputOTPSeparator />
+              <InputOTPGroup>
+                {slots.slice(3).map((slot, index) => (
+                  <InputOTPSlot key={index} {...slot} />
+                ))}
+              </InputOTPGroup>
+            </>
+          )}
+        />
 
-          <div className="mb-2">
-            <Button type="submit" onClick={handleSubmit} title="Verify" />
-          </div>
-        </form>
-      )}
-    </Formik>
-  </div>
-);
+        <div className="mb-2 mt-4">
+          <Button type="submit" onClick={handleSubmit} title="Verify" />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default Otp;

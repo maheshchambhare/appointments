@@ -4,13 +4,19 @@ import Otp from "@/app/components/forms/Otp";
 import SignUp from "@/app/components/forms/SignUp";
 import Button from "@/app/components/ui/Button";
 import { Spotlight } from "@/app/components/ui/Spotlight";
+import { getBusinessLoggedIn, getUserData } from "@/store/slices/authSlice";
+import { BASE_URL } from "@/utils/constants";
 import homeData from "@/utils/data/homepage.json";
 import { ChevronsDown } from "lucide-react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const [signupModal, setSignupModal] = useState(false);
   const [otpForm, setOtpForm] = useState(false);
+
+  const isBusinessLoggedIn = useSelector(getBusinessLoggedIn);
+  const businessUserData = useSelector(getUserData);
 
   return (
     <div className="h-[80vh] w-full    relative flex  items-center justify-between dark">
@@ -46,22 +52,28 @@ const Header = () => {
         >
           {homeData.description}
         </p>
+        {!isBusinessLoggedIn && (
+          <div className="relative w-full xsm:flex-col lg:flex-row   flex justify-center items-center mt-4 mx-auto mMax:ml-0 dark:text-white">
+            <Button
+              onClick={async () => {
+                if (isBusinessLoggedIn) {
+                  window.open(BASE_URL + businessUserData.slug, "_blank");
+                  return;
+                }
 
-        <div className="relative w-full xsm:flex-col lg:flex-row   flex justify-center items-center mt-4 mx-auto mMax:ml-0 dark:text-white">
-          <Button
-            onClick={async () => {
-              setSignupModal(true);
-            }}
-            title="Business Signup"
-          />
-          {/* <p className="mx-4">Or</p>
+                setSignupModal(true);
+              }}
+              title={"Business Signup"}
+            />
+            {/* <p className="mx-4">Or</p>
           <Button
             onClick={async () => {
               setSignupModal(true);
             }}
             title="User Signup"
           /> */}
-        </div>
+          </div>
+        )}
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 w-full flex justify-center">
@@ -78,7 +90,13 @@ const Header = () => {
           }}
         >
           {otpForm ? (
-            <Otp />
+            <Otp
+              formType="1"
+              setIsOpen={(e) => {
+                setSignupModal(e);
+                setOtpForm(false);
+              }}
+            />
           ) : (
             <SignUp
               setotpform={(e) => {

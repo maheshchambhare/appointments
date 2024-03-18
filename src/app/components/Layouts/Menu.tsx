@@ -58,6 +58,7 @@ const Menu: React.FC<ModalLayoutProps> = ({ isOpen, setIsOpen, children }) => {
           }}
           style={{
             width: "50%",
+            maxWidth: 300,
           }}
           className={`relative z-[100]  h-[100vh]    pb-6  px-5 ${
             childDiv

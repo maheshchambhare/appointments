@@ -4,6 +4,7 @@ import Header from "./Header";
 import Navbar from "@/app/components/Layouts/Navbar";
 import ScreenWrapper from "@/app/components/Layouts/ScreenWrapper";
 import MoreSection from "./MoreSection";
+import { API_URL } from "@/utils/constants";
 
 interface ParamsType {
   // Define the structure of params object
@@ -14,17 +15,32 @@ interface SearchParamsType {
   // Define the structure of searchParams object
 }
 
-function page({
+async function page({
   params,
   searchParams,
 }: {
   params: ParamsType;
   searchParams: SearchParamsType;
 }) {
-  const title = params.landingpage;
-  const about =
-    "Welcome to Assemble, your premier unisex salon nestled in the vibrant Adajan area of Surat. Our salon is a sanctuary where style meets sophistication, offering a diverse range of cutting-edge services tailored to both men and women";
-  const address = "abc,near shakti nagar,adajan,pal,340949";
+  let options = {
+    method: "POST",
+    headers: {
+      Accept: "*/*",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ slug: params.landingpage }),
+  };
+
+  const businessLandingPage = await fetch(API_URL + "slug", options)
+    .then((res) => res.json())
+    .then((json) => json)
+    .catch((err) => console.error("error00000:" + err));
+
+  const businessData = businessLandingPage.data;
+
+  const title = businessData.businessName;
+  const about = businessData.about;
+  const address = businessData.address;
 
   return (
     <main className="flex bg-background flex-col w-[100vw] min-h-[100vh] ">
@@ -32,7 +48,7 @@ function page({
         <ScreenWrapper>
           <Navbar />
           <Header title={title} about={about} address={address} />
-          <MoreSection />
+          <MoreSection businessData={businessData} />
         </ScreenWrapper>
       </div>
     </main>

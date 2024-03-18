@@ -6,8 +6,12 @@ import ResetPassword from "../forms/ResetPassword";
 import Otp from "../forms/Otp";
 import Menu from "./Menu";
 import { User, CalendarPlus } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setBusinessSectionType } from "@/store/slices/commonSlices";
+import { getBusinessLoggedIn, getUserData } from "@/store/slices/authSlice";
+import { BASE_URL } from "@/utils/constants";
+import { useRouter } from "next/navigation";
+import { AlignJustify, SquareKanban } from "lucide-react";
 
 interface menuItem {
   name: string;
@@ -21,17 +25,29 @@ function Navbar() {
   const [resetForm, setResetForm] = useState(false);
   const [otpForm, setOtpForm] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
-
+  const isBusinessLoggedIn = useSelector(getBusinessLoggedIn);
+  const businessUserData = useSelector(getUserData);
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const login = false;
 
   const menu = [
     {
+      name: "All Tickets",
+      route: "home",
+      icon: <SquareKanban size={18} />,
+      onClick: () => {
+        router.push("/" + businessUserData.slug);
+      },
+    },
+    {
       name: "Profile",
       route: "profile",
       icon: <User size={18} />,
-      onClick: () => {},
+      onClick: () => {
+        router.push("/" + businessUserData.slug + "/profile");
+      },
     },
     {
       name: "Generate Slots",
@@ -39,26 +55,37 @@ function Navbar() {
       icon: <CalendarPlus size={18} />,
       onClick: () => {
         setOpenMenu(false);
-        dispatch(setBusinessSectionType("2"));
+        router.push(businessUserData.slug);
+
+        setTimeout(() => {
+          dispatch(setBusinessSectionType("2"));
+        }, 200);
       },
     },
   ];
 
   return (
     <div className="w-[100%] z-10  mMax:w-[80%] lMax:w-[70%] mt-4 mx-auto h-[60px]  flex xsm:flex-row md:flex-row justify-between items-center  ">
-      <div className="xsm:w-[40%] md:w-[50%] h-full  ">
-        <h1 className=" w-full font-mont   xsm:text-[20px] md:text-[30px] text-[30px] text-textPrimary font-bold ">
+      <div
+        onClick={() => {
+          router.push("/");
+        }}
+        className="xsm:w-[40%] md:w-[50%] h-full  "
+      >
+        <h1 className=" w-full font-mont  cursor-pointer xsm:text-[20px] md:text-[30px] text-[30px] text-textPrimary font-bold ">
           APPOINTIFY
         </h1>
       </div>
-      {login ? (
+      {isBusinessLoggedIn ? (
         <div
           onClick={() => {
             setOpenMenu(true);
           }}
           className="flex  xsm:w-[50%] md:w-[30%] h-full justify-end"
         >
-          <p className="cursor-pointer font-mono font-semibold">Menu</p>
+          <p className="cursor-pointer font-mono font-semibold">
+            <AlignJustify />
+          </p>
         </div>
       ) : (
         <div
@@ -90,7 +117,7 @@ function Navbar() {
         >
           {resetForm ? (
             otpForm ? (
-              <Otp />
+              <Otp formType="2" />
             ) : (
               <ResetPassword
                 resetForm={(e) => {
@@ -105,6 +132,11 @@ function Navbar() {
             <Login
               resetForm={(e) => {
                 setResetForm(e);
+              }}
+              setIsOpen={(e) => {
+                setLoginModal(e);
+                setResetForm(false);
+                setOtpForm(false);
               }}
             />
           )}
@@ -121,7 +153,7 @@ function Navbar() {
             return (
               <div
                 onClick={item.onClick}
-                className="flex items-center my-4 "
+                className="flex cursor-pointer items-center my-4 "
                 key={ind}
               >
                 {item.icon}

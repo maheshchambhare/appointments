@@ -39,10 +39,14 @@ const POST = async (req: Request) => {
         console.error("Error generating token:", error);
       }
 
-      console.log(jsonToken, "PPPP");
-
       const response = NextResponse.json(
-        { res: businessUser },
+        {
+          name: businessUser.name,
+          slug: businessUser.slug,
+          about: businessUser.about,
+          address: businessUser.address,
+          id: businessUser.id,
+        },
         { status: 200 }
       );
 

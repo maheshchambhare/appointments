@@ -1,6 +1,8 @@
 "use client";
 import AnimatedBtn from "@/app/components/ui/AnimatedBtn";
+import { getBusinessLoggedIn } from "@/store/slices/authSlice";
 import React from "react";
+import { useSelector } from "react-redux";
 
 interface ticketTypes {
   name: string;
@@ -11,7 +13,9 @@ interface ticketTypes {
 }
 
 function TicketCards({ tickets }: { tickets: ticketTypes[] }) {
-  const customerView = false;
+  const isBusinessLoggedIn = useSelector(getBusinessLoggedIn);
+
+  const customerView = !isBusinessLoggedIn;
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 ">
       {tickets.map((ticket: ticketTypes, index) => {

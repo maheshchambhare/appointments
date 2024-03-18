@@ -5,7 +5,7 @@ const POST = async (req: NextRequest) => {
   try {
     const body = await req.json();
     const slug = body?.slug;
-    console.log(body, "ttt");
+    console.log(slug, "ttt");
     const businessUser = await prisma.businessUser.findUnique({
       where: {
         slug: slug,
@@ -13,12 +13,9 @@ const POST = async (req: NextRequest) => {
       },
     });
 
-    console.log(businessUser, "USER");
-
-    const response = NextResponse.json({ message: "success" }, { status: 200 });
+    const response = NextResponse.json({ data: businessUser }, { status: 200 });
     return response;
   } catch (error) {
-    console.error(error);
     return NextResponse.json(
       { message: "Something failed", error },
       { status: 500 }

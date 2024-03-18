@@ -7,10 +7,14 @@ import { useSelector } from "react-redux";
 import TicketCards from "./TicketCards";
 import Slots from "@/app/components/forms/Slots";
 import Button from "@/app/components/ui/Button";
+import { getBusinessLoggedIn } from "@/store/slices/authSlice";
 
-function MoreSection() {
+function MoreSection({ businessData }: { businessData: any }) {
   const businessPageType = useSelector(getBusinessSectionType);
-  const customerView = true;
+
+  const isBusinessLoggedIn = useSelector(getBusinessLoggedIn);
+
+  const customerView = !isBusinessLoggedIn;
 
   const upcomingData = [
     {

@@ -39,13 +39,11 @@ const POST = async (req: Request) => {
       slug: body.businessName.replace(/\s+/g, "-") + "-" + slugCode,
     };
 
-    const prismaRes = await prisma.businessUser.create({ data: updatedUser });
-
     let jsonToken = "";
 
     try {
       jsonToken = await jwt.sign(
-        { otp: verificationCode, id: prismaRes.id },
+        { otp: verificationCode, businessUser: updatedUser },
         JWTKEY,
         {
           expiresIn: 31556926, // 1 year in seconds
@@ -55,7 +53,10 @@ const POST = async (req: Request) => {
       console.error("Error generating token:", error);
     }
 
-    const response = NextResponse.json({ res: updatedUser }, { status: 200 });
+    const response = NextResponse.json(
+      { user: updatedUser, otp: verificationCode },
+      { status: 200 }
+    );
 
     response.cookies.set("userauth", jsonToken, {
       httpOnly: true,

@@ -40,6 +40,7 @@ const config: Config = {
         spotlight: "spotlight 2s ease .75s 1 forwards",
         "meteor-effect": "meteor 5s linear infinite",
         updown: "upDown 1s linear infinite",
+        "caret-blink": "caret-blink 1.25s ease-out infinite",
       },
       keyframes: {
         shimmer: {
@@ -78,6 +79,10 @@ const config: Config = {
             transform: "rotate(215deg) translateX(-500px)",
             opacity: "0",
           },
+        },
+        "caret-blink": {
+          "0%,70%,100%": { opacity: "1" },
+          "20%,50%": { opacity: "0" },
         },
       },
     },

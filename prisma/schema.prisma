@@ -46,7 +46,7 @@ model BusinessUser {
   name         String
   businessName String
   mobile       String         @unique
-  email        String         @unique
+  email        String?        @unique
   password     String
   slug         String         @unique
   about        String?
