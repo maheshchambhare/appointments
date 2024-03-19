@@ -81,15 +81,25 @@ function MultiSelectComp({
               height: !isMulti ? 38 : "auto",
               borderRadius: 8,
               fontSize: "16px",
+              backgroundColor: "#131313",
+              color: "#fff",
             }),
             option: (provided, state) => ({
               ...provided,
               fontSize: "16px", // Adjust the font size for the options in the list
-              color: "#131313",
+              color: "#fff",
+              backgroundColor: "#131313",
             }),
             placeholder: (provided, state) => ({
               ...provided,
               fontSize: "16px", // Adjust the font size for the placeholder
+              color: "#fff",
+              backgroundColor: "#131313",
+            }),
+            menu: (provided, state) => ({
+              ...provided,
+              background: "#131313",
+              color: "#fff",
             }),
           }}
           defaultValue={defaultValue}

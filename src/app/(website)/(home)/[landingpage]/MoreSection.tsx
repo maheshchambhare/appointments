@@ -162,7 +162,7 @@ function MoreSection({ businessData }: { businessData: any }) {
         <Slots />
       )}
 
-      {businessPageType === "1" && customerView && (
+      {businessPageType === "1" && (
         <div className="fixed bottom-0 bg-background py-4 left-0 right-0 self-center mx-auto flex justify-center">
           <Button
             type="button"

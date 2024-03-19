@@ -37,6 +37,7 @@ model Appointments {
   ticketId       String
   slot           String
   status         String
+  date           DateTime
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 }
