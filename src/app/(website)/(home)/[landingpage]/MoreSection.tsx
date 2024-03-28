@@ -2,19 +2,84 @@
 
 import { Tabs } from "@/app/components/ui/tabs";
 import { getBusinessSectionType } from "@/store/slices/commonSlices";
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import TicketCards from "./TicketCards";
 import Slots from "@/app/components/forms/Slots";
 import Button from "@/app/components/ui/Button";
-import { getBusinessLoggedIn } from "@/store/slices/authSlice";
+import {
+  getBusinessLoggedIn,
+  getUserData,
+  setUserData,
+} from "@/store/slices/authSlice";
+import { useRouter } from "next/navigation";
+import { apicall } from "@/utils/getdata";
+import Tab from "@/app/components/ui/Tab";
+
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function MoreSection({ businessData }: { businessData: any }) {
   const businessPageType = useSelector(getBusinessSectionType);
-
+  const router = useRouter();
   const isBusinessLoggedIn = useSelector(getBusinessLoggedIn);
+  const [activeTab, setActiveTab] = useState(0);
+
+  const [appointments, setAppointments] = useState(null);
+
+  const tabHeaders = ["Upcoming", "In Progress", "Completed"];
+
+  const dispatch = useDispatch();
 
   const customerView = !isBusinessLoggedIn;
+
+  useEffect(() => {
+    apicall({
+      path: "getappointments",
+      getResponse: (res) => {
+        setAppointments(res.data.appointments);
+      },
+      getError: (err) => {},
+      router,
+      method: "post",
+      data: {
+        status: JSON.stringify(activeTab),
+      },
+    });
+  }, [activeTab]);
+
+  const updateTicket = ({ status, id }: { status: string; id: string }) => {
+    console.log(status, id, "XX");
+    apicall({
+      path: "statuschange",
+      getResponse: (res) => {
+        const removeApp = appointments?.filter((d) => d.id !== id);
+
+        setAppointments(removeApp);
+
+        toast(
+          `🫡 Appointment moved to  ${
+            status == "1" ? "In Progress" : "Complete"
+          }`,
+          {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+          }
+        );
+      },
+      getError: (err) => {},
+      router,
+      method: "put",
+      data: { status, id },
+    });
+  };
 
   const upcomingData = [
     {
@@ -120,43 +185,32 @@ function MoreSection({ businessData }: { businessData: any }) {
     },
   ];
 
-  const tabs = [
-    {
-      title: "Upcoming",
-      value: "upcoming",
-      content: (
-        <div className="w-full h-full relative  mb-[100px]  py-4 px-4 ">
-          <TicketCards tickets={upcomingData} />
-        </div>
-      ),
-    },
-    {
-      title: "In Progress",
-      value: "inprogress",
-      content: (
-        <div className="w-full h-full relative  mb-[100px]  py-4 px-4 ">
-          <TicketCards tickets={inProgressData} />
-        </div>
-      ),
-    },
-    !customerView && {
-      title: "Completed",
-      value: "Completed",
-      content: (
-        <div className="w-full h-full relative  mb-[100px]  py-4 px-4 ">
-          <TicketCards tickets={upcomingData} />
-        </div>
-      ),
-    },
-  ];
+  const handleSubmit = () => {
+    router.push(`${businessData.slug}/appointment`);
+    // dispatch(setUserData(businessData));
+  };
 
-  const handleSubmit = () => {};
-
+  if (appointments == null) {
+    return <p>...loading</p>;
+  }
   return (
     <div className="relative max-h-max ">
       {businessPageType === "1" ? (
         <div className="relative [perspective:1000px]   flex flex-col max-w-5xl mx-auto w-full  items-start justify-start my-4">
-          <Tabs tabs={tabs} />
+          <Tab
+            tabs={tabHeaders}
+            selectedTab={(e) => setActiveTab(e)}
+            activateTab={activeTab}
+          />
+          <div className="w-full h-full mt-[20px] relative  mb-[100px]  py-4 px-1 ">
+            <TicketCards
+              tickets={appointments}
+              router={router}
+              update={({ status, id }: { status: string; id: string }) =>
+                updateTicket({ status, id })
+              }
+            />
+          </div>
         </div>
       ) : (
         <Slots />
@@ -171,6 +225,7 @@ function MoreSection({ businessData }: { businessData: any }) {
           />
         </div>
       )}
+      <ToastContainer />
     </div>
   );
 }

@@ -5,11 +5,14 @@ import Login from "../forms/Login";
 import ResetPassword from "../forms/ResetPassword";
 import Otp from "../forms/Otp";
 import Menu from "./Menu";
-import { User, CalendarPlus } from "lucide-react";
+import { User, CalendarPlus, UsersRound, Users2Icon } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { setBusinessSectionType } from "@/store/slices/commonSlices";
-import { getBusinessLoggedIn, getUserData } from "@/store/slices/authSlice";
-import { BASE_URL } from "@/utils/constants";
+import {
+  getBusinessLoggedIn,
+  getUserData,
+  setUserData,
+} from "@/store/slices/authSlice";
 import { useRouter } from "next/navigation";
 import { AlignJustify, SquareKanban } from "lucide-react";
 
@@ -60,6 +63,19 @@ function Navbar() {
         setTimeout(() => {
           dispatch(setBusinessSectionType("2"));
         }, 200);
+      },
+    },
+    {
+      name: "Members",
+      route: "members",
+      icon: <Users2Icon size={18} />,
+      onClick: () => {
+        setOpenMenu(false);
+        router.push("/" + businessUserData.slug + "/members");
+
+        // setTimeout(() => {
+        //    dispatch(setUserData("2"));
+        // }, 200);
       },
     },
   ];

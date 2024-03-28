@@ -1,13 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
 import CustomInput from "../CustomInput";
 import Button from "../ui/Button";
-import Cookies from "js-cookie";
-import { useDispatch } from "react-redux";
+
 import { useRouter } from "next/navigation";
 import { apicall } from "@/utils/getdata";
-import { setBusinessUserLoggedIn, setUserData } from "@/store/slices/authSlice";
+
 import {
   InputOTP,
   InputOTPGroup,
@@ -16,44 +15,58 @@ import {
 } from "../ui/InputOtp";
 import { RadioGroup, RadioGroupItem } from "../ui/RadioGrp";
 import { Label } from "../ui/Label";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { Buttons } from "../ui/Buttons";
 import { cn } from "@/utils/cn";
-import { format } from "date-fns";
 
 import moment from "moment";
 import Calender from "../ui/Calender";
+import MultiSelectComp from "../MultiSelectComp";
 
-const Appointment = () => {
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const Appointment = ({ businessData }: { businessData: any }) => {
   const [formType, setFormType] = useState("1");
   const [otp, setOtp] = useState("");
   const [showOtpField, setShowOtpField] = useState(false);
-  const [showCal, setShowCal] = useState(false);
-  const [showDobCal, setShowDobCal] = useState(false);
-  const dispatch = useDispatch();
   const router = useRouter();
   const [showCalenar, setShowCalenar] = useState(false);
-  const [calenderClick, setCalenderClick] = useState(null);
-  const daysOfWeek = [
-    { id: 0, days: "S", name: "Sunday", isActive: false },
-    { id: 1, days: "M", name: "Monday", isActive: true },
-    { id: 2, days: "T", name: "Tuesday", isActive: true },
-    { id: 3, days: "W", name: "Wednesday", isActive: true },
-    { id: 4, days: "T", name: "Thursday", isActive: false },
-    { id: 5, days: "F", name: "Friday", isActive: false },
-    { id: 6, days: "S", name: "Saturday", isActive: false },
-  ];
+  const [slotsArr, setSlotsArr] = useState<any[]>([]);
+  const [membersArr, setMembersArr] = useState<any[]>([]);
+  const [membersArrErr, setMembersArrErr] = useState<any>();
+  const [slotErr, setSlotErr] = useState<any>(null);
+  const [selectedSlot, setSelectedSlot] = useState<any>(null);
 
-  const mobileInitialVal = {
-    mobile: "",
-  };
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  const [loader, setLoader] = useState<boolean>(false);
+
+  const businessUserData = businessData;
+
+  useEffect(() => {
+    if (businessUserData.members) {
+      let people: any[] = [];
+      businessUserData.members.map((member: any, i: number) => {
+        let obj = {
+          label: member.name,
+          value: member.id,
+        };
+        people.push(obj);
+      });
+      setMembersArr(people);
+    }
+  }, [businessUserData]);
+
+  const daysOfWeek = businessData.weekdays;
 
   const finalForm = {
     name: "",
+    mobile: "",
     sex: "",
-    date: "10/12/2024",
-    slot: "",
+    date: "",
+    slot: null,
+    memberId: null,
   };
 
   const mobileErr = (values: any) => {
@@ -94,34 +107,137 @@ const Appointment = () => {
     return errors;
   };
 
+  const getAllSlots = ({ date, member }: { date: string; member: string }) => {
+    apicall({
+      path: "getslots",
+      getResponse: (res) => {
+        const disSlots = res.data.slots;
+
+        if (businessUserData.slots) {
+          const filteredSlots = businessUserData.slots.filter((slot: any) => {
+            // Check if the slot exists in disSlots array
+            return !disSlots.some((disSlot: any) => {
+              // You need to define the condition for matching slots
+              // For example, if the slots are objects and you want to match based on startTime and endTime
+              return (
+                slot.startTime === disSlot.slot.startTime &&
+                slot.endTime === disSlot.slot.endTime
+              );
+            });
+          });
+
+          let slots: any[] = [];
+          filteredSlots.map((d: any, i: number) => {
+            let obj = {
+              label: `${d.startTime} - ${d.endTime}`,
+              value: `${d.startTime} - ${d.endTime}`,
+              ...d,
+            };
+            slots.push(obj);
+          });
+
+          setSlotsArr(slots);
+        }
+      },
+      getError: (err) => {},
+      router,
+      method: "post",
+      data: { date, member },
+    });
+  };
+
+  if (loader) {
+    return <p>Loading...</p>;
+  }
+
   return (
-    <div className="max-w-[300px]">
+    <div className="max-w-[300px] mx-auto">
       <Formik
-        initialValues={formType == "0" ? mobileInitialVal : finalForm}
+        initialValues={finalForm}
         validate={(values) => {
-          if (formType == "0") {
-            mobileErr(values);
-          } else {
-            appointmentErr(values);
+          const errors: any = {};
+
+          if (!values.name) {
+            errors.name = "Required";
           }
+
+          if (!values.mobile) {
+            errors.mobile = "Required";
+          } else if (JSON.stringify(values.mobile).length != 10) {
+            errors.mobile = "Invalid mobile number";
+          }
+
+          if (!values.sex) {
+            errors.sex = "Required";
+          }
+
+          if (values.memberId == null) {
+            setMembersArrErr("Please select member");
+            errors.memberId = "Please select member";
+          }
+
+          if (!values.date) {
+            errors.date = "Required";
+          }
+
+          if (!values.slot) {
+            errors.slot =
+              "Select slot,try changing date or member if slots are not available";
+            setSlotErr(
+              "Select slot,try changing date or member if slots are not available"
+            );
+            //  setSlotsArr
+          }
+
+          return errors;
         }}
-        onSubmit={(values, { setSubmitting }) => {
-          // apicall({
-          //   path: "login",
-          //   getResponse: (res) => {
-          //     Cookies.set("businessUser", JSON.stringify({ ...res.data }));
-          //     dispatch(setBusinessUserLoggedIn(true));
-          //     dispatch(setUserData(res.data));
-          //     setIsOpen(false);
-          //   },
-          //   getError: (err) => {},
-          //   router,
-          //   method: "post",
-          //   data: {
-          //     mobile: values.mobile,
-          //     password: values.password,
-          //   },
-          // });
+        onSubmit={(values, { resetForm }) => {
+          if (showOtpField) {
+            setLoader(true);
+          }
+
+          apicall({
+            path: showOtpField ? "addappointments/verify" : "addappointments",
+            getResponse: (res) => {
+              if (res.status == 201) {
+                setShowOtpField(true);
+                toast("💬 Verify OTP", {
+                  position: "bottom-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                  transition: Bounce,
+                });
+                // resetForm();
+              } else {
+                setShowOtpField(false);
+                setSelectedDate(null);
+                toast("🎉 Appointment added successfully", {
+                  position: "bottom-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                  transition: Bounce,
+                });
+                resetForm();
+              }
+              if (showOtpField) {
+                setLoader(false);
+              }
+            },
+            getError: (err) => {},
+            router,
+            method: "post",
+            data: showOtpField ? { otp: otp } : values,
+          });
         }}
       >
         {({
@@ -135,170 +251,235 @@ const Appointment = () => {
           /* and other goodies */
         }) => (
           <form onSubmit={handleSubmit}>
-            {formType == "0" && (
-              <>
-                <div className="mt-4">
-                  <CustomInput
-                    type="number"
-                    name="mobile"
-                    label="Mobile"
-                    id="mobile"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.mobile}
-                    error={errors.mobile}
-                    touched={touched.mobile}
-                  />
-                </div>
-                {showOtpField && (
-                  <div className="mt-4">
-                    <InputOTP
-                      textAlign="center"
-                      maxLength={6}
-                      value={otp}
-                      onChange={(e) => {
-                        setOtp(e);
-                      }}
-                      render={({ slots }) => (
-                        <>
-                          <InputOTPGroup>
-                            {slots.slice(0, 3).map((slot, index) => (
-                              <InputOTPSlot key={index} {...slot} />
-                            ))}{" "}
-                          </InputOTPGroup>
-                          <InputOTPSeparator />
-                          <InputOTPGroup>
-                            {slots.slice(3).map((slot, index) => (
-                              <InputOTPSlot key={index} {...slot} />
-                            ))}
-                          </InputOTPGroup>
-                        </>
-                      )}
-                    />
+            <div className="w-full relative">
+              {showOtpField && (
+                <div className="absolute z-[200] cursor-not-allowed w-full h-full" />
+              )}
+              <div className="mt-4 w-full">
+                <CustomInput
+                  required
+                  type="text"
+                  name="name"
+                  label="Name"
+                  id="name"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.name}
+                  error={errors.name}
+                  touched={touched.name}
+                />
+              </div>
+              <div className="mt-4 w-full transition-all duration-300 ease-out">
+                <CustomInput
+                  type="number"
+                  required
+                  name="mobile"
+                  label="Mobile"
+                  id="mobile"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.mobile}
+                  error={errors.mobile}
+                  touched={touched.mobile}
+                />
+              </div>
+              <div className="mt-4 w-full">
+                <p className="mb-2 font-poppins text-white">
+                  Sex <span className="text-red-500">*</span>
+                </p>
+                <RadioGroup
+                  onValueChange={(e) => {
+                    errors.sex = "";
+                    values.sex = e;
+                  }}
+                  className="flex flex-wrap"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="male" id="male" />
+                    <Label htmlFor="male">Male</Label>
                   </div>
+                  <div className="flex ml-4 items-center space-x-2">
+                    <RadioGroupItem value="female" id="female" />
+                    <Label htmlFor="female">Female</Label>
+                  </div>
+                  <div className="flex ml-4 items-center space-x-2">
+                    <RadioGroupItem value="other" id="other" />
+                    <Label htmlFor="other">Other</Label>
+                  </div>
+                </RadioGroup>
+
+                {errors.sex && (
+                  <p className=" font-poppins mt-1 text-[10px] mb-[-10px] text-[#f46a6a]">
+                    {errors.sex}
+                  </p>
                 )}
-              </>
-            )}
+              </div>
 
-            {formType == "1" && (
-              <div>
-                <div className="mt-4">
-                  <CustomInput
-                    type="text"
-                    name="name"
-                    label="Name"
-                    id="name"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.name}
-                    error={errors.name}
-                    touched={touched.name}
-                  />
-                </div>
-                <div className="mt-4">
-                  <p className="mb-2 font-poppins text-white">Sex</p>
-                  <RadioGroup
-                    onValueChange={(e) => (values.sex = e)}
-                    className="flex flex-wrap"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="male" id="male" />
-                      <Label htmlFor="male">Male</Label>
-                    </div>
-                    <div className="flex ml-4 items-center space-x-2">
-                      <RadioGroupItem value="female" id="female" />
-                      <Label htmlFor="female">Female</Label>
-                    </div>
-                    <div className="flex ml-4 items-center space-x-2">
-                      <RadioGroupItem value="other" id="other" />
-                      <Label htmlFor="other">Other</Label>
-                    </div>
-                  </RadioGroup>
-                </div>
-
-                <div className="mt-4 ">
-                  <p className="mb-2 font-poppins text-white">
-                    Pick a Appointment Date
-                  </p>
-
-                  <Buttons
-                    onClick={() => {
-                      setShowCalenar(!showCalenar);
+              <div className="mt-4 w-full">
+                <div className="w-full ">
+                  <MultiSelectComp
+                    full={true}
+                    title="Pick a Member"
+                    required={true}
+                    onChange={(e: any) => {
+                      setSelectedDate(null);
+                      values.date = null;
+                      values.memberId = e.value;
+                      setMembersArrErr("");
                     }}
-                    variant={"outline"}
-                    className={cn(
-                      "w-[280px] justify-start text-left font-normal",
-                      !values.date && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {values.date ? (
-                      <p>{values.date}</p>
-                    ) : (
-                      <span>Pick a date</span>
-                    )}
-                  </Buttons>
-
-                  {showCalenar && (
-                    <div
-                      id="calendar"
-                      className="w-[300px] z-10  bg-white p-2 absolute rounded-lg mt-1"
-                    >
-                      <Calender
-                        selectedDays={null}
-                        daysOfWeek={daysOfWeek}
-                        disDays={["24/03/2024"]}
-                        showCalendar={(e) => {
-                          setShowCalenar(e);
-                        }}
-                        setSelDays={(e) => {
-                          values.date = e;
-                          console.log(e);
-                          setShowCalenar(false);
-                        }}
-                        startDate={new Date()}
-                        endDate={moment(new Date(), "YYYY-MM-DD")
-                          .add(2, "month")
-                          .endOf("month")
-                          .format("YYYY-MM-DD")}
-                        onDateClick={(e) => {
-                          console.log(e, "ON DATE CLICKED");
-                        }}
-                        colors={{
-                          text: "#131313",
-                          background: "#ffff",
-                          activeTextColor: "black",
-                          disabledTextColor: "gray",
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-
-                <div className="mt-4 ">
-                  <p className="mb-2 font-poppins text-white">
-                    Pick a Appointment Slot
-                  </p>
+                    isMulti={false}
+                    placeholder="Members"
+                    options={membersArr.length > 0 ? membersArr : []}
+                    error={membersArrErr}
+                  />
                 </div>
               </div>
-            )}
 
-            <div className="mb-2 mt-6">
+              <div className="mt-4 w-full ">
+                <p className="mb-1 font-poppins text-white">
+                  Pick a Appointment Date{" "}
+                  <span className="text-red-500">*</span>
+                </p>
+
+                <Buttons
+                  type="button"
+                  onClick={() => {
+                    if (values.memberId == null) {
+                      setMembersArrErr("Please select member first");
+                      return;
+                    }
+                    setMembersArrErr(null);
+                    setShowCalenar(!showCalenar);
+                  }}
+                  variant={"outline"}
+                  className={cn(
+                    "w-full justify-start text-left font-normal",
+                    !values.date && "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {selectedDate ? (
+                    <p className="text-textprimary font-sm">{values.date}</p>
+                  ) : (
+                    <span>Pick a date</span>
+                  )}
+                </Buttons>
+                {errors.date && (
+                  <p className="font-poppins mt-1 text-[10px]  mb-[-10px] text-[#f46a6a]">
+                    {errors.date}
+                  </p>
+                )}
+              </div>
+              {showCalenar && (
+                <div
+                  id="calendar"
+                  className="w-[300px] z-10  bg-white p-2 absolute rounded-lg mt-1"
+                >
+                  <Calender
+                    selectedDays={null}
+                    daysOfWeek={daysOfWeek}
+                    disDays={["24/03/2024"]}
+                    showCalendar={(e) => {
+                      setShowCalenar(e);
+                    }}
+                    setSelDays={(e) => {
+                      values.date = e;
+                      errors.date = "";
+                      setSelectedDate(e);
+                      if (values.memberId !== null) {
+                        getAllSlots({ date: e, member: values.memberId });
+                      }
+                      setShowCalenar(false);
+                    }}
+                    startDate={new Date()}
+                    endDate={moment(new Date(), "YYYY-MM-DD")
+                      .add(2, "month")
+                      .endOf("month")
+                      .format("YYYY-MM-DD")}
+                    onDateClick={(e) => {
+                      console.log(e, "ON DATE CLICKED");
+                    }}
+                    colors={{
+                      text: "#131313",
+                      background: "#ffff",
+                      activeTextColor: "black",
+                      disabledTextColor: "gray",
+                    }}
+                  />
+                </div>
+              )}
+
+              <div className="mt-4 w-full">
+                <div className="w-full ">
+                  <MultiSelectComp
+                    full={true}
+                    title="Pick a Appointment Slot"
+                    required={true}
+                    onChange={(e: any) => {
+                      errors.slot = "";
+                      values.slot = {
+                        startTime: e.startTime,
+                        endTime: e.endTime,
+                      };
+                      setSelectedSlot({
+                        startTime: e.startTime,
+                        endTime: e.endTime,
+                      });
+                      // selectedDuration.minutes = e.value;
+                      // setSelectedDuration({ ...selectedDuration });
+                    }}
+                    isMulti={false}
+                    placeholder="Slots"
+                    options={slotsArr.length > 0 ? slotsArr : []}
+                  />
+                  {errors.slot && (
+                    <p className=" font-poppins mt-1 text-[10px] mb-[-10px] text-[#f46a6a]">
+                      {errors.slot}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+            {showOtpField && (
+              <div className="mt-4 w-full transition-all duration-300 ease-out">
+                <p className="mb-1 font-poppins text-white font-sm">
+                  Verify OTP
+                </p>
+                <InputOTP
+                  textAlign="center"
+                  maxLength={6}
+                  value={otp}
+                  onChange={(e) => {
+                    setOtp(e);
+                  }}
+                  render={({ slots }) => (
+                    <>
+                      <InputOTPGroup>
+                        {slots.slice(0, 3).map((slot, index) => (
+                          <InputOTPSlot key={index} {...slot} />
+                        ))}{" "}
+                      </InputOTPGroup>
+                      <InputOTPSeparator />
+                      <InputOTPGroup>
+                        {slots.slice(3).map((slot, index) => (
+                          <InputOTPSlot key={index} {...slot} />
+                        ))}
+                      </InputOTPGroup>
+                    </>
+                  )}
+                />
+              </div>
+            )}
+            <div className="mb-2 mt-8">
               <Button
                 type="submit"
-                onClick={handleSubmit}
-                title={
-                  formType == "0"
-                    ? showOtpField
-                      ? "Verify"
-                      : "Send Otp"
-                    : "Add Appointment"
-                }
+                title={showOtpField ? "Verify" : "Add Appointment"}
               />
             </div>
           </form>
         )}
       </Formik>
+      <ToastContainer />
     </div>
   );
 };

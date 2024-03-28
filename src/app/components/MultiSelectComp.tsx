@@ -72,15 +72,24 @@ function MultiSelectComp({
           isDisabled={disabled}
           ref={refSelect}
           menuPlacement={menuPlacement || "auto"}
+          theme={(theme) => ({
+            ...theme,
+            colors: {
+              neutral50: "#fff",
+              neutral90: "#fff",
+            },
+          })}
           styles={{
             control: (baseStyles, state) => ({
               ...baseStyles,
-              borderColor: error ? "#f46a6a" : "#E0E0E0",
+              borderColor: error ? "#f46a6a" : "#e5e7eb",
               accentColor: "transparent",
               minHeight: 20,
               height: !isMulti ? 38 : "auto",
               borderRadius: 8,
-              fontSize: "16px",
+              borderWidth: 0,
+
+              fontSize: "14px",
               backgroundColor: "#131313",
               color: "#fff",
             }),
@@ -88,11 +97,13 @@ function MultiSelectComp({
               ...provided,
               fontSize: "16px", // Adjust the font size for the options in the list
               color: "#fff",
-              backgroundColor: "#131313",
+              ":hover": {
+                color: "rgba(62,147,252)",
+              },
             }),
             placeholder: (provided, state) => ({
               ...provided,
-              fontSize: "16px", // Adjust the font size for the placeholder
+              fontSize: "14px", // Adjust the font size for the placeholder
               color: "#fff",
               backgroundColor: "#131313",
             }),
@@ -100,6 +111,8 @@ function MultiSelectComp({
               ...provided,
               background: "#131313",
               color: "#fff",
+              borderColor: "#ccc",
+              borderWidth: 1,
             }),
           }}
           defaultValue={defaultValue}

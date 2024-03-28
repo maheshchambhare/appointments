@@ -5,7 +5,11 @@ import Navbar from "@/app/components/Layouts/Navbar";
 import ScreenWrapper from "@/app/components/Layouts/ScreenWrapper";
 import MoreSection from "./MoreSection";
 import { API_URL } from "@/utils/constants";
-
+import axios from "axios";
+import store from "@/store/store";
+import { setUserData } from "@/store/slices/authSlice";
+import Cookies from "js-cookie";
+import { redirect } from "next/navigation";
 interface ParamsType {
   // Define the structure of params object
   landingpage: string;
@@ -22,37 +26,52 @@ async function page({
   params: ParamsType;
   searchParams: SearchParamsType;
 }) {
-  let options = {
-    method: "POST",
-    headers: {
-      Accept: "*/*",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ slug: params.landingpage }),
-  };
+  let businessLandingPage = null;
+  if (params?.landingpage != "favicon.ico") {
+    const options = {
+      method: "post",
+      url: API_URL + "slug",
+      headers: {
+        Accept: "*/*",
+        "Content-Type": "application/json",
+        cache: "no-store",
+      },
+      data: {
+        slug: params.landingpage,
+      },
+    };
 
-  const businessLandingPage = await fetch(API_URL + "slug", options)
-    .then((res) => res.json())
-    .then((json) => json)
-    .catch((err) => console.error("error00000:" + err));
+    try {
+      const response = await axios(options);
+      businessLandingPage = response.data;
+    } catch (error) {
+      console.error("error00000:" + error);
+    }
+  }
 
-  const businessData = businessLandingPage.data;
+  const businessData = businessLandingPage?.data;
 
   const title = businessData?.businessName;
   const about = businessData?.about;
   const address = businessData?.address;
-
-  return (
-    <main className="flex bg-background flex-col w-[100vw] min-h-[100vh] ">
-      <div className="relative h-auto w-full  ">
-        <ScreenWrapper>
-          <Navbar />
-          <Header title={title} about={about} address={address} />
-          <MoreSection businessData={businessData} />
-        </ScreenWrapper>
-      </div>
-    </main>
-  );
+  if (businessData) {
+    store.dispatch(setUserData(businessData));
+  }
+  if (businessData) {
+    return (
+      <main className="flex bg-background flex-col w-[100vw] min-h-[100vh] ">
+        <div className="relative h-auto w-full  ">
+          <ScreenWrapper>
+            <Navbar />
+            <Header title={title} about={about} address={address} />
+            <MoreSection businessData={businessData} />
+          </ScreenWrapper>
+        </div>
+      </main>
+    );
+  } else {
+    return redirect(params.landingpage + "/appointment");
+  }
 }
 
 export default page;

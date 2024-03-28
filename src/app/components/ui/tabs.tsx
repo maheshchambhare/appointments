@@ -16,21 +16,28 @@ export const Tabs = ({
   activeTabClassName,
   tabClassName,
   contentClassName,
+  setActiveTab,
+  appointments,
 }: {
   tabs: Tab[];
   containerClassName?: string;
   activeTabClassName?: string;
   tabClassName?: string;
   contentClassName?: string;
+  setActiveTab: (e: any) => void;
+  appointments: any;
 }) => {
   const [active, setActive] = useState<Tab>(propTabs[0]);
   const [tabs, setTabs] = useState<Tab[]>(propTabs);
+
+  console.log(appointments, "APOOI");
 
   const moveSelectedTabToTop = (idx: number) => {
     const newTabs = [...propTabs];
     const selectedTab = newTabs.splice(idx, 1);
     newTabs.unshift(selectedTab[0]);
     setTabs(newTabs);
+
     setActive(newTabs[0]);
   };
 
@@ -46,9 +53,11 @@ export const Tabs = ({
       >
         {propTabs.map((tab, idx) => (
           <button
-            key={tab.title}
+            key={idx}
             onClick={() => {
+              console.log(idx, "x");
               moveSelectedTabToTop(idx);
+              setActiveTab(JSON.stringify(idx));
             }}
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}

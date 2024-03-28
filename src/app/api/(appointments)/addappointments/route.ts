@@ -9,89 +9,75 @@ const POST = async (req: NextRequest) => {
   try {
     const body = await req.json();
 
-    const doesUserExist = body.doesUserExist;
-    const businessId = body.businessId;
+    const cookie = req.cookies.get("token");
 
-    const cookie = req.cookies.get("appointmentform");
-    const customerDataCookie = req.cookies.get("customer");
+    const businessUserCookie = cookie?.value;
+    const businessUSER: any = await jwt.verify(businessUserCookie, JWTKEY);
+    const user = await prisma.user.findUnique({
+      where: {
+        mobile: JSON.stringify(body.mobile),
+      },
+    });
 
-    if (cookie) {
-      const appointmentFromCookie = cookie?.value;
-
-      const appintmentForm: any = await jwt.verify(
-        appointmentFromCookie,
-        JWTKEY
-      );
-
-      const customerData = {
-        name: body.name,
-        mobile: body.mobile,
-        dob: body.dob,
-        sex: body.sex,
-        verified: body.verified,
+    if (user) {
+      const appointmentData = {
+        userId: user.id,
+        businessUserId: businessUSER.id,
+        slot: body.slot,
+        date: body.date,
+        status: "0",
+        memberId: body.memberId,
       };
 
-      if (!doesUserExist) {
-        const user = await prisma.user.create({
-          data: customerData,
-        });
+      const addAppointment = await prisma.appointments.create({
+        data: appointmentData,
+      });
 
-        const appointment = {
-          userId: user.id,
-          businessUserId: businessId,
-          slot: "",
-          status: "",
-          ticketId: "",
-        };
+      console.log(addAppointment, "JJJJ");
 
-        const addAppointment = await prisma.appointments.create({
-          data: appointment,
-        });
+      return NextResponse.json(
+        { message: "Appointment added" },
+        { status: 200 }
+      );
+    } else {
+      const verificationCode = Math.floor(Math.random() * 100000)
+        .toString()
+        .padStart(6, "0");
 
-        let jsonToken = "";
+      let jsonToken = "";
 
-        try {
-          jsonToken = await jwt.sign(user, JWTKEY, {
+      const appointmentData = {
+        businessUserId: businessUSER.id,
+        slot: body.slot,
+        date: body.date,
+        status: "0",
+        name: body.name,
+        mobile: body.mobile,
+        sex: body.sex,
+        memberId: body.memberId,
+      };
+
+      try {
+        jsonToken = await jwt.sign(
+          { otp: verificationCode, appointmentData: appointmentData },
+          JWTKEYOTP,
+          {
             expiresIn: 31556926, // 1 year in seconds
-          });
-        } catch (error) {
-          console.error("Error generating token:", error);
-        }
-
-        const response = NextResponse.json(
-          { message: "Appointment added" },
-          { status: 200 }
+          }
         );
-        response.cookies.set("customer", jsonToken, {
-          httpOnly: true,
-          secure: true,
-          sameSite: true,
-        });
-
-        response.cookies.delete("userauth");
-        return response;
-      } else {
-        const customer = customerDataCookie?.value;
-
-        const appointment = {
-          userId: customer?.id,
-          businessUserId: businessId,
-          slot: "",
-          status: "",
-          ticketId: "",
-        };
-
-        const addAppointment = await prisma.appointments.create({
-          data: appointment,
-        });
-
-        const response = NextResponse.json(
-          { message: "Appointment added" },
-          { status: 200 }
-        );
-
-        return response;
+      } catch (error) {
+        console.error("Error generating token:", error);
       }
+      const response = NextResponse.json(
+        { message: "Success", otp: verificationCode },
+        { status: 201 }
+      );
+      response.cookies.set("appointmentauth", jsonToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: false,
+      });
+      return response;
     }
   } catch (error) {
     console.error(error);

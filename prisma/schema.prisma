@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -20,26 +14,30 @@ model User {
   dob           DateTime?
   sex           String?
   verified      Boolean
-  tickets       Appointments[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
-  BusinessUsers BusinessUser[]
+  memberId      String?
+  tickets       Appointments[]
+  Member        Member?        @relation(fields: [memberId], references: [id])
+  BusinessUsers BusinessUser[] @relation("BusinessUserToUser")
 
   @@index([mobile, name])
 }
 
 model Appointments {
   id             String       @id @default(uuid())
-  User           User         @relation(fields: [userId], references: [id])
   userId         String
-  BusinessUser   BusinessUser @relation(fields: [businessUserId], references: [id])
   businessUserId String
-  ticketId       String
-  slot           String
   status         String
-  date           DateTime
+  date           String
+  ticketId       Int          @unique @default(autoincrement())
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+  slot           Json
+  memberId       String
+  BusinessUser   BusinessUser @relation(fields: [businessUserId], references: [id])
+  Member         Member       @relation(fields: [memberId], references: [id])
+  User           User         @relation(fields: [userId], references: [id])
 }
 
 model BusinessUser {
@@ -54,12 +52,28 @@ model BusinessUser {
   address      String?
   verified     Boolean
   approved     Boolean
-  tickets      Appointments[]
-  customers    User[]
-  slots        String[]
+  slots        Json?
   weekdays     Json?
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
+  tickets      Appointments[]
+  members      Member[]
+  customers    User[]         @relation("BusinessUserToUser")
+
+  @@index([mobile, name])
+}
+
+model Member {
+  id             String         @id @default(uuid())
+  name           String
+  mobile         String         @unique
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  businessUserId String?
+  password       String
+  tickets        Appointments[]
+  BusinessUser   BusinessUser?  @relation(fields: [businessUserId], references: [id])
+  customers      User[]
 
   @@index([mobile, name])
 }

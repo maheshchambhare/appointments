@@ -113,8 +113,6 @@ const Calender = ({
 
       var availablDays = true;
 
-      console.log(isDisabledDay, disDays, day.format("YYYY-MM-DD"), "UUUU");
-
       const isDateInFuture = endDate
         ? date.isAfter(moment(endDate), "day")
         : false;

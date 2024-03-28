@@ -8,6 +8,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
 import Button from "../ui/Button";
+import { apicall } from "@/utils/getdata";
+import { useRouter } from "next/navigation";
 
 interface timeselector {
   startTime: Date | null;
@@ -17,8 +19,8 @@ interface timeselector {
 }
 
 interface selecteddur {
-  hours: string;
-  minutes: string;
+  hours: number;
+  minutes: number;
 }
 
 interface slot {
@@ -29,7 +31,6 @@ interface slot {
 function generateTimeSlots(data: any) {
   const { startTime, endTime, breakTimeStart, breakTimeEnd, hours, minutes } =
     data;
-
   const start = new Date(startTime);
   const end = new Date(endTime);
   const breakStart = new Date(breakTimeStart);
@@ -70,6 +71,7 @@ function Slots() {
   const hoursRef = useRef(null);
   const minutesRef = useRef(null);
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const [timeSelector, setTimeSelector] = useState<timeselector>({
     startTime: moment("09:00:00", "HH:mm:ss").toDate(),
@@ -79,8 +81,8 @@ function Slots() {
   });
 
   const [selectedDuration, setSelectedDuration] = useState<selecteddur>({
-    hours: "0",
-    minutes: "0",
+    hours: 0,
+    minutes: 0,
   });
 
   const [generatedSlots, setGeneratedSlots] = useState<any>([]);
@@ -246,20 +248,47 @@ function Slots() {
   ]);
 
   const [durationErr, setDurationErr] = useState("");
+  const [dayOfWeekErr, setDayOfWeekErr] = useState("");
 
   const handleSubmit = () => {
-    if (selectedDuration.hours === "0" && selectedDuration.minutes === "0") {
+    if (selectedDuration.hours === 0 && selectedDuration.minutes === 0) {
       setDurationErr(
         "Please enter duration to create slots, duration cannot be empty"
       );
-      setDurationErr("");
+
       return;
+    } else {
+      setDurationErr("");
     }
+
+    const dayofWeekSelected = dayOfWeek.find((d) => d.isActive == true);
+
+    if (!dayofWeekSelected) {
+      setDayOfWeekErr("Please select available days for available slots");
+      return;
+    } else {
+      setDayOfWeekErr("");
+    }
+    console.log(dayofWeekSelected, "YYYYY");
 
     const data = { ...selectedDuration, ...timeSelector };
 
     const timeSlots = generateTimeSlots(data);
     setGeneratedSlots(timeSlots);
+
+    apicall({
+      path: "slots",
+      getResponse: (res) => {
+        console.log(res.data, "HEY");
+      },
+      getError: (err) => {},
+      router,
+      method: "post",
+      data: JSON.stringify({
+        slots: timeSlots,
+        weekDays: dayOfWeek,
+      }),
+    });
   };
 
   return (
@@ -392,6 +421,10 @@ function Slots() {
             );
           })}
         </div>
+
+        <div>
+          <p className="text-sm mt-[5px] text-red-500">{dayOfWeekErr}</p>
+        </div>
       </div>
 
       <div className="my-[20px] w-full flex justify-between md:justify-start">
@@ -413,7 +446,7 @@ function Slots() {
               setTimeSelector({ ...timeSelector });
             }}
             showTimeSelect
-            className="h-[40px] text-md text-black rounded-[7px] p-[10px] w-full border-[1px] border-[#ced4da] sm:text-sm xsm:text-sm"
+            className="h-[40px] text-md bg-background  text-textPrimary dark:text-textPrimary dark:bg-background rounded-[7px] p-[10px] w-full border-[1px] border-[#ced4da] sm:text-sm xsm:text-sm"
             showTimeSelectOnly
             timeIntervals={15}
             timeCaption="Time"
@@ -439,7 +472,7 @@ function Slots() {
               setTimeSelector({ ...timeSelector });
             }}
             showTimeSelect
-            className="h-[40px] text-md text-black rounded-[7px] p-[10px] w-full border-[1px] border-[#ced4da] sm:text-sm xsm:text-sm"
+            className="h-[40px] text-md bg-background  text-textPrimary dark:text-textPrimary dark:bg-background rounded-[7px] p-[10px] w-full border-[1px] border-[#ced4da] sm:text-sm xsm:text-sm"
             showTimeSelectOnly
             timeIntervals={15}
             timeCaption="Time"
@@ -467,7 +500,7 @@ function Slots() {
               setTimeSelector({ ...timeSelector });
             }}
             showTimeSelect
-            className="h-[40px] text-md text-black rounded-[7px] p-[10px] w-full border-[1px] border-[#ced4da] sm:text-sm xsm:text-sm"
+            className="h-[40px] text-md bg-background  text-textPrimary dark:text-textPrimary dark:bg-background rounded-[7px] p-[10px] w-full border-[1px] border-[#ced4da] sm:text-sm xsm:text-sm"
             showTimeSelectOnly
             timeIntervals={15}
             timeCaption="Time"
@@ -493,7 +526,7 @@ function Slots() {
               setTimeSelector({ ...timeSelector });
             }}
             showTimeSelect
-            className="h-[40px] text-md text-black rounded-[7px] p-[10px] w-full border-[1px] border-[#ced4da] sm:text-sm xsm:text-sm"
+            className="h-[40px] text-md bg-background  text-textPrimary dark:text-textPrimary dark:bg-background rounded-[7px] p-[10px] w-full border-[1px] border-[#ced4da] sm:text-sm xsm:text-sm"
             showTimeSelectOnly
             timeIntervals={15}
             timeCaption="Time"

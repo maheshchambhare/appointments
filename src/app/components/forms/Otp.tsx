@@ -29,7 +29,7 @@ const Otp = ({
       path: formType == "1" ? "signup/verify" : "verifyotp",
       getResponse: (res) => {
         if (formType == "1") {
-          Cookies.set("businessUser", { ...res.data });
+          Cookies.set("businessUser", JSON.stringify({ ...res.data }));
           dispatch(setBusinessUserLoggedIn(true));
           dispatch(setUserData(res.data));
         }

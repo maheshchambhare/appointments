@@ -17,18 +17,36 @@ const POST = async (req: NextRequest) => {
 
       const decryptedOtp: any = await jwt.verify(otpEncrypted, JWTKEYOTP);
 
+      console.log(decryptedOtp.otp, otp, "XXXX");
+
       if (decryptedOtp?.otp == otp) {
+        const user = {
+          name: decryptedOtp.appointmentData.name,
+          mobile: JSON.stringify(decryptedOtp.appointmentData.mobile),
+          sex: decryptedOtp.appointmentData.sex,
+          verified: true,
+        };
+
         let jsonToken = "";
 
-        const userPassObject = { ...decryptedOtp, verified: true };
+        const createUser = await prisma.user.create({
+          data: user,
+        });
 
-        try {
-          jsonToken = await jwt.sign(userPassObject, JWTKEY, {
-            expiresIn: 31556926, // 1 year in seconds
-          });
-        } catch (error) {
-          console.error("Error generating token:", error);
-        }
+        const appointmentData = {
+          userId: createUser.id,
+          businessUserId: decryptedOtp.appointmentData.businessUserId,
+          slot: decryptedOtp.appointmentData.slot,
+          date: decryptedOtp.appointmentData.date,
+          memberId: decryptedOtp.appointmentData.memberId,
+          status: "0",
+        };
+
+        const appointments = await prisma.appointments.create({
+          data: appointmentData,
+        });
+
+        console.log(createUser, appointmentData, appointments, "USER DATA");
 
         const response = NextResponse.json(
           { message: "Successfully veified" },
