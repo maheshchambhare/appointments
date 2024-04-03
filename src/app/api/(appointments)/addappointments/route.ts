@@ -1,18 +1,23 @@
 import jwt from "jsonwebtoken";
 import prisma from "@/utils/prisma";
 import { NextResponse, NextRequest } from "next/server";
+import axios from "axios";
+import sendOtp from "../../(auth)/sendOtp";
 
 const JWTKEY: any = process.env.JWT_KEY_TOKEN;
 const JWTKEYOTP: any = process.env.JWT_KEY_OTP;
+const FAST2SMSAUTH: any = process.env.FAST2SMSAUTH;
 
 const POST = async (req: NextRequest) => {
   try {
     const body = await req.json();
 
-    const cookie = req.cookies.get("token");
+    const cookie = req.cookies.get("appointify");
 
     const businessUserCookie = cookie?.value;
+
     const businessUSER: any = await jwt.verify(businessUserCookie, JWTKEY);
+
     const user = await prisma.user.findUnique({
       where: {
         mobile: JSON.stringify(body.mobile),
@@ -33,8 +38,6 @@ const POST = async (req: NextRequest) => {
         data: appointmentData,
       });
 
-      console.log(addAppointment, "JJJJ");
-
       return NextResponse.json(
         { message: "Appointment added" },
         { status: 200 }
@@ -44,7 +47,9 @@ const POST = async (req: NextRequest) => {
         .toString()
         .padStart(6, "0");
 
-      let jsonToken = "";
+      // console.log(verificationCode, "ABCD");
+
+      // sendOtp({ verificationCode, mobileNumber: body.mobile });
 
       const appointmentData = {
         businessUserId: businessUSER.id,
@@ -57,9 +62,10 @@ const POST = async (req: NextRequest) => {
         memberId: body.memberId,
       };
 
+      let jsonToken = "";
       try {
         jsonToken = await jwt.sign(
-          { otp: verificationCode, appointmentData: appointmentData },
+          { appointmentData: appointmentData, otp: verificationCode },
           JWTKEYOTP,
           {
             expiresIn: 31556926, // 1 year in seconds
@@ -69,7 +75,7 @@ const POST = async (req: NextRequest) => {
         console.error("Error generating token:", error);
       }
       const response = NextResponse.json(
-        { message: "Success", otp: verificationCode },
+        { message: "Success" },
         { status: 201 }
       );
       response.cookies.set("appointmentauth", jsonToken, {

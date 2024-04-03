@@ -44,11 +44,11 @@ const POST = async (req: NextRequest) => {
           },
           { status: 200 }
         );
-        response.cookies.set("token", jsonToken, {
-          httpOnly: true,
-          secure: true,
-          sameSite: true,
-        });
+        // response.cookies.set("token", jsonToken, {
+        //   httpOnly: true,
+        //   secure: true,
+        //   sameSite: true,
+        // });
 
         response.cookies.delete("userauth");
         return response;

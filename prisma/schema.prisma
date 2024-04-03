@@ -7,6 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model SuperAdmin {
+  id       String @id @default(uuid())
+  name     String @unique
+  password String
+}
+
 model User {
   id            String         @id @default(uuid())
   name          String
@@ -41,24 +47,25 @@ model Appointments {
 }
 
 model BusinessUser {
-  id           String         @id @default(uuid())
-  name         String
-  businessName String
-  mobile       String         @unique
-  email        String?        @unique
-  password     String
-  slug         String         @unique
-  about        String?
-  address      String?
-  verified     Boolean
-  approved     Boolean
-  slots        Json?
-  weekdays     Json?
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  tickets      Appointments[]
-  members      Member[]
-  customers    User[]         @relation("BusinessUserToUser")
+  id            String         @id @default(uuid())
+  name          String
+  businessName  String
+  mobile        String         @unique
+  email         String?        @unique
+  password      String
+  slug          String         @unique
+  about         String?
+  address       String?
+  verified      Boolean
+  approved      Boolean
+  membersLength Int            @default(2)
+  slots         Json?
+  weekdays      Json?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  tickets       Appointments[]
+  members       Member[]
+  customers     User[]         @relation("BusinessUserToUser")
 
   @@index([mobile, name])
 }

@@ -11,6 +11,8 @@ import {
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import { setBusinessUserLoggedIn, setUserData } from "@/store/slices/authSlice";
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Otp = ({
   setIsOpen,
@@ -29,9 +31,20 @@ const Otp = ({
       path: formType == "1" ? "signup/verify" : "verifyotp",
       getResponse: (res) => {
         if (formType == "1") {
-          Cookies.set("businessUser", JSON.stringify({ ...res.data }));
-          dispatch(setBusinessUserLoggedIn(true));
-          dispatch(setUserData(res.data));
+          toast("🥳 Sign up successful,now you can log in", {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+          });
+          // Cookies.set("businessUser", JSON.stringify({ ...res.data }));
+          // dispatch(setBusinessUserLoggedIn(true));
+          // dispatch(setUserData(res.data));
         }
 
         setIsOpen(false);

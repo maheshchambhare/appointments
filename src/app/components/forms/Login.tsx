@@ -6,7 +6,12 @@ import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { apicall } from "@/utils/getdata";
-import { setBusinessUserLoggedIn, setUserData } from "@/store/slices/authSlice";
+import {
+  setBusinessUserLoggedIn,
+  setUserData,
+  setUserType,
+} from "@/store/slices/authSlice";
+import { Bounce, toast } from "react-toastify";
 
 const Login = ({
   resetForm,
@@ -60,9 +65,22 @@ const Login = ({
               Cookies.set("businessUser", JSON.stringify({ ...res.data }));
               dispatch(setBusinessUserLoggedIn(true));
               dispatch(setUserData(res.data));
+              dispatch(setUserType(res.data.userType));
               setIsOpen(false);
             },
-            getError: (err) => {},
+            getError: (err) => {
+              toast(err.response.data.message, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+              });
+            },
             router,
             method: "post",
             data: {
@@ -126,7 +144,7 @@ const Login = ({
             </p>
 
             <div className="mb-2">
-              <Button type="submit" onClick={handleSubmit} title="Login" />
+              <Button type="submit" title="Login" />
             </div>
           </form>
         )}

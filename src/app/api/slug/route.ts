@@ -8,6 +8,7 @@ const POST = async (req: NextRequest) => {
   try {
     const body = await req.json();
     const slug = body?.slug;
+    const page = body?.page;
 
     const businessUser = await prisma.businessUser.findUnique({
       where: {
@@ -28,7 +29,7 @@ const POST = async (req: NextRequest) => {
       let jsonToken = "";
 
       try {
-        jsonToken = await jwt.sign(businessUser, JWTKEY, {
+        jsonToken = await jwt.sign({ id: businessUser.id }, JWTKEY, {
           expiresIn: 31556926, // 1 year in seconds
         });
       } catch (error) {
@@ -36,9 +37,33 @@ const POST = async (req: NextRequest) => {
       }
 
       const response = NextResponse.json(
-        { data: businessUser },
+        {
+          data:
+            page == "0"
+              ? {
+                  name: businessUser.businessName,
+                  about: businessUser.about,
+                  address: businessUser.address,
+                  slug: businessUser.slug,
+                }
+              : {
+                  name: businessUser.businessName,
+                  about: businessUser.about,
+                  address: businessUser.address,
+                  members: businessUser.members,
+                  weekdays: businessUser.weekdays,
+                  slots: businessUser.slots,
+                  slug: businessUser.slug,
+                },
+        },
         { status: 200 }
       );
+
+      response.cookies.set("appointify", jsonToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: false,
+      });
 
       return response;
     }

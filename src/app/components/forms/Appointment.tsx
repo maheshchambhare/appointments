@@ -214,23 +214,26 @@ const Appointment = ({ businessData }: { businessData: any }) => {
                 });
                 // resetForm();
               } else {
+                resetForm();
+                if (showOtpField) {
+                  setLoader(false);
+                }
                 setShowOtpField(false);
                 setSelectedDate(null);
-                toast("🎉 Appointment added successfully", {
-                  position: "bottom-right",
-                  autoClose: 5000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: "light",
-                  transition: Bounce,
-                });
-                resetForm();
-              }
-              if (showOtpField) {
-                setLoader(false);
+                setOtp("");
+                setTimeout(() => {
+                  toast("🎉 Appointment added successfully", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Bounce,
+                  });
+                }, 500);
               }
             },
             getError: (err) => {},
@@ -479,7 +482,7 @@ const Appointment = ({ businessData }: { businessData: any }) => {
           </form>
         )}
       </Formik>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </div>
   );
 };

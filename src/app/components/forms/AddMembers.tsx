@@ -4,11 +4,15 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import CustomInput from "../CustomInput";
 import Button from "../ui/Button";
+import { useSelector } from "react-redux";
+import { getdisablememberAdd } from "@/store/slices/commonSlices";
 
 function AddMembers() {
   const [showPassword, setShowPassword] = useState(false);
   const [showCnfPassword, setShowCnfPassword] = useState(false);
+  const disableAdd = useSelector(getdisablememberAdd);
   const router = useRouter();
+
   return (
     <div>
       <Formik
@@ -146,9 +150,16 @@ function AddMembers() {
                 }}
               />
             </div>
-            <div className="mb-2">
-              <Button type="submit" title="Submit" />
-            </div>
+            {disableAdd ? (
+              <p>
+                You cannot add any additional members. If you wish to add more
+                members, please contact the administrator
+              </p>
+            ) : (
+              <div className="mb-2">
+                <Button type="submit" title="Submit" />
+              </div>
+            )}
           </form>
         )}
       </Formik>

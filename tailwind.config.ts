@@ -40,7 +40,7 @@ const config: Config = {
         spotlight: "spotlight 2s ease .75s 1 forwards",
         "meteor-effect": "meteor 5s linear infinite",
         updown: "upDown 1s linear infinite",
-        "caret-blink": "caret-blink 1.25s ease-out infinite",
+        caretblink: "caret-blink 1.25s ease-out infinite",
       },
       keyframes: {
         shimmer: {

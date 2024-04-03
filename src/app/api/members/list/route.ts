@@ -30,7 +30,10 @@ const GET = async (req: NextRequest) => {
       });
 
       const response = NextResponse.json(
-        { members: membersArr },
+        {
+          members: membersArr,
+          disableAdd: businessVal.membersLength == membersArr.length,
+        },
         { status: 200 }
       );
 

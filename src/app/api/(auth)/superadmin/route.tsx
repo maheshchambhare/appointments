@@ -7,19 +7,11 @@ import sendOtp from "../sendOtp";
 const saltRounds = 10;
 const JWTKEY = process.env.JWT_KEY_OTP;
 
-function generateRandomString(length: number) {
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let result = "";
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-  return result;
-}
-
 const POST = async (req: Request) => {
   try {
     const body = await req.json();
+
+    console.log(body, "CCCCC");
     //    Encrypt Password
     const password = body.password;
     const encryptedPass = await bcrypt
@@ -28,35 +20,22 @@ const POST = async (req: Request) => {
         return hash;
       });
 
-    const verificationCode = Math.floor(Math.random() * 100000)
-      .toString()
-      .padStart(6, "0");
-
-    const slugCode = generateRandomString(10);
-
     const updatedUser = {
       ...body,
       password: encryptedPass,
-      slug: body.businessName.replace(/\s+/g, "-") + "-" + slugCode,
     };
+
+    const superadmin = await prisma.superAdmin.create({ data: updatedUser });
 
     let jsonToken = "";
 
     try {
-      jsonToken = await jwt.sign(
-        { otp: verificationCode, businessUser: updatedUser },
-        JWTKEY,
-        {
-          expiresIn: 31556926, // 1 year in seconds
-        }
-      );
+      jsonToken = await jwt.sign({ superadmin }, JWTKEY, {
+        expiresIn: 31556926, // 1 year in seconds
+      });
     } catch (error) {
       console.error("Error generating token:", error);
     }
-
-    // sendOtp({ verificationCode, mobileNumber: body.mobile });
-
-    console.log(verificationCode, "BBBBBBB");
 
     const response = NextResponse.json({ user: updatedUser }, { status: 200 });
 

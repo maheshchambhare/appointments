@@ -5,16 +5,28 @@ import Login from "../forms/Login";
 import ResetPassword from "../forms/ResetPassword";
 import Otp from "../forms/Otp";
 import Menu from "./Menu";
-import { User, CalendarPlus, UsersRound, Users2Icon } from "lucide-react";
+import {
+  User,
+  CalendarPlus,
+  UsersRound,
+  Users2Icon,
+  LogOut,
+} from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { setBusinessSectionType } from "@/store/slices/commonSlices";
 import {
   getBusinessLoggedIn,
   getUserData,
+  getUserTypeData,
+  setBusinessUserLoggedIn,
   setUserData,
+  setUserType,
 } from "@/store/slices/authSlice";
 import { useRouter } from "next/navigation";
 import { AlignJustify, SquareKanban } from "lucide-react";
+import Cookies from "js-cookie";
+import { apicall } from "@/utils/getdata";
+import { Bounce, toast } from "react-toastify";
 
 interface menuItem {
   name: string;
@@ -30,6 +42,7 @@ function Navbar() {
   const [openMenu, setOpenMenu] = useState(false);
   const isBusinessLoggedIn = useSelector(getBusinessLoggedIn);
   const businessUserData = useSelector(getUserData);
+  const getUserType = useSelector(getUserTypeData);
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -37,14 +50,15 @@ function Navbar() {
 
   const menu = [
     {
-      name: "All Tickets",
+      name: getUserType == 1 ? "My Tickets" : "All Tickets",
       route: "home",
       icon: <SquareKanban size={18} />,
       onClick: () => {
         router.push("/" + businessUserData.slug);
+        dispatch(setBusinessSectionType("1"));
       },
     },
-    {
+    getUserType == 0 && {
       name: "Profile",
       route: "profile",
       icon: <User size={18} />,
@@ -52,20 +66,20 @@ function Navbar() {
         router.push("/" + businessUserData.slug + "/profile");
       },
     },
-    {
+    getUserType == 0 && {
       name: "Generate Slots",
       route: "slots",
       icon: <CalendarPlus size={18} />,
       onClick: () => {
         setOpenMenu(false);
-        router.push(businessUserData.slug);
+        router.push("/" + businessUserData.slug);
 
         setTimeout(() => {
           dispatch(setBusinessSectionType("2"));
         }, 200);
       },
     },
-    {
+    getUserType == 0 && {
       name: "Members",
       route: "members",
       icon: <Users2Icon size={18} />,
@@ -76,6 +90,37 @@ function Navbar() {
         // setTimeout(() => {
         //    dispatch(setUserData("2"));
         // }, 200);
+      },
+    },
+    {
+      name: "Logout",
+      route: "logout",
+      icon: <LogOut size={18} />,
+      onClick: () => {
+        apicall({
+          path: "logout",
+          getResponse: (res) => {
+            dispatch(setBusinessUserLoggedIn(false));
+            dispatch(setUserData(null));
+            dispatch(setUserType(null));
+            setOpenMenu(false);
+            router.push("/");
+            toast("logged out successfully", {
+              position: "bottom-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              transition: Bounce,
+            });
+          },
+          getError: (err) => {},
+          router,
+          method: "get",
+        });
       },
     },
   ];
@@ -167,14 +212,16 @@ function Navbar() {
         <div className="px-2 sm:px-4 py-10">
           {menu.map((item, ind) => {
             return (
-              <div
-                onClick={item.onClick}
-                className="flex cursor-pointer items-center my-4 "
-                key={ind}
-              >
-                {item.icon}
-                <p className="font-poppins text-base ml-2">{item.name}</p>
-              </div>
+              item && (
+                <div
+                  onClick={item.onClick}
+                  className="flex cursor-pointer items-center my-4 "
+                  key={ind}
+                >
+                  {item.icon}
+                  <p className="font-poppins text-base ml-2">{item.name}</p>
+                </div>
+              )
             );
           })}
         </div>

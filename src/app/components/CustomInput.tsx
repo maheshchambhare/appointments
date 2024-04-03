@@ -95,14 +95,14 @@ const CustomInput: React.FC<CustomInputProps> = ({
           autoFocus={isAutoFocus ? true : false}
           autoComplete="off"
           disabled={isDisabled ? true : false}
+          placeholder={placeholder ? placeholder : label}
+          type={type}
+          id={id}
           style={{
             marginTop: marginTop && marginTop,
             cursor: isDisabled && "not-allowed",
             borderColor: focusedInput ? "black" : touched && error && "#f46a6a",
           }}
-          placeholder={placeholder ? placeholder : label}
-          type={type}
-          id={id}
           className={`bg-transparent text-md  pr-4 ${
             inputHeight
               ? `h-[${inputHeight}px] xsm:h-[37px] sm:h-[37px] md:h-[37px]`

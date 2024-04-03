@@ -12,7 +12,7 @@ import {
   getUserData,
   setUserData,
 } from "@/store/slices/authSlice";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { apicall } from "@/utils/getdata";
 import Tab from "@/app/components/ui/Tab";
 
@@ -22,6 +22,7 @@ import "react-toastify/dist/ReactToastify.css";
 function MoreSection({ businessData }: { businessData: any }) {
   const businessPageType = useSelector(getBusinessSectionType);
   const router = useRouter();
+  const { landingpage } = useParams();
   const isBusinessLoggedIn = useSelector(getBusinessLoggedIn);
   const [activeTab, setActiveTab] = useState(0);
 
@@ -39,7 +40,9 @@ function MoreSection({ businessData }: { businessData: any }) {
       getResponse: (res) => {
         setAppointments(res.data.appointments);
       },
-      getError: (err) => {},
+      getError: (err) => {
+        router.push(landingpage + "/appointment");
+      },
       router,
       method: "post",
       data: {
@@ -225,7 +228,7 @@ function MoreSection({ businessData }: { businessData: any }) {
           />
         </div>
       )}
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </div>
   );
 }

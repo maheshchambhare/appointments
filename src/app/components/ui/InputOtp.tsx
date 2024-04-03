@@ -11,7 +11,7 @@ const InputOTP = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <OTPInput
     ref={ref}
-    containerClassName={cn("flex items-center gap-2", className)}
+    containerClassName={cn("flex items-center gap-2 ", className)}
     {...props}
   />
 ));
@@ -42,7 +42,7 @@ const InputOTPSlot = React.forwardRef<
       {char}
       {hasFakeCaret && (
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="animate-caret-blink h-4 w-px bg-foreground duration-1000" />
+          <div className="animate-caretblink h-4 w-px bg-white duration-1000" />
         </div>
       )}
     </div>
