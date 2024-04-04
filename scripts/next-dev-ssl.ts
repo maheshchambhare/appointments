@@ -19,7 +19,7 @@ const certificate = {
 const app = express();
 
 application.prepare().then(() => {
-  app.get("*", function (req, res) {
+  app.get("*", function (req:any, res:any) {
     return handle(req, res);
   });
 

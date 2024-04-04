@@ -14,7 +14,7 @@ const POST = async (req: NextRequest) => {
 
     const cookie = req.cookies.get("appointify");
 
-    const businessUserCookie = cookie?.value;
+    const businessUserCookie: any = cookie?.value;
 
     const businessUSER: any = await jwt.verify(businessUserCookie, JWTKEY);
 

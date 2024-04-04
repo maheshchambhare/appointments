@@ -16,7 +16,7 @@ function Tab({
   const [tabUnderlineWidth, setTabUnderlineWidth] = useState(0);
   const [tabUnderlineLeft, setTabUnderlineLeft] = useState(0);
 
-  const tabsRef = useRef([]);
+  const tabsRef: any = useRef([]);
 
   useEffect(() => {
     setActiveTabIndex(activateTab);
@@ -24,7 +24,7 @@ function Tab({
 
   useEffect(() => {
     function setTabPosition() {
-      const currentTab = tabsRef.current[activeTabIndex];
+      const currentTab: any = tabsRef.current[activeTabIndex];
 
       setTabUnderlineLeft(currentTab?.offsetLeft ?? 0);
       setTabUnderlineWidth(currentTab?.clientWidth ?? 0);

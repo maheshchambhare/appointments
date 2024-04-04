@@ -2,10 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 import jwt from "jsonwebtoken";
 
-const JWTUSER: string = process.env.NEXT_PUBLIC_USER;
+const JWTUSER: any = process.env.NEXT_PUBLIC_USER;
 
-const BUSINESSUSER = process.env.NEXT_PUBLIC_USERBUSINESS;
-const MEMBERUSER = process.env.NEXT_PUBLIC_USERMEMBER;
+const BUSINESSUSER: any = process.env.NEXT_PUBLIC_USERBUSINESS;
+const MEMBERUSER: any = process.env.NEXT_PUBLIC_USERMEMBER;
 
 console.log(JWTUSER, "UU");
 

@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const saltRounds = 10;
-const JWTKEY = process.env.JWT_KEY_OTP;
+const JWTKEY: any = process.env.JWT_KEY_OTP;
 
 const POST = async (req: Request) => {
   try {
@@ -14,7 +14,7 @@ const POST = async (req: Request) => {
     const mobile = body.mobile;
     const encryptedPass = await bcrypt
       .hash(password, saltRounds)
-      .then((hash: String, err: any) => {
+      .then((hash: String) => {
         return hash;
       });
 

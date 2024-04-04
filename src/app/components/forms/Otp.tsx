@@ -18,7 +18,7 @@ const Otp = ({
   setIsOpen,
   formType,
 }: {
-  setIsOpen: (val: boolean) => void;
+  setIsOpen?: (val: boolean) => void;
   formType: string;
 }) => {
   const router = useRouter();
@@ -46,8 +46,9 @@ const Otp = ({
           // dispatch(setBusinessUserLoggedIn(true));
           // dispatch(setUserData(res.data));
         }
-
-        setIsOpen(false);
+        if (setIsOpen) {
+          setIsOpen(false);
+        }
       },
       getError: (err) => {},
       router,

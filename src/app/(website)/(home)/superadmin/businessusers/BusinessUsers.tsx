@@ -37,7 +37,7 @@ function BusinessUsers() {
       <p className="font-sans text-sm mt-6">All business users</p>
 
       <div className="flex  w-full mt-4 flex-wrap">
-        {businessUsers.map((d, i) => {
+        {businessUsers.map((d: any, i: any) => {
           return (
             <div
               onClick={() => {

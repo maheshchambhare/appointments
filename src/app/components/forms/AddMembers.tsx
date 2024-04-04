@@ -6,8 +6,13 @@ import CustomInput from "../CustomInput";
 import Button from "../ui/Button";
 import { useSelector } from "react-redux";
 import { getdisablememberAdd } from "@/store/slices/commonSlices";
+import { Bounce, toast } from "react-toastify";
 
-function AddMembers() {
+function AddMembers({
+  addMemberToList,
+}: {
+  addMemberToList: (e: any) => void;
+}) {
   const [showPassword, setShowPassword] = useState(false);
   const [showCnfPassword, setShowCnfPassword] = useState(false);
   const disableAdd = useSelector(getdisablememberAdd);
@@ -70,7 +75,18 @@ function AddMembers() {
           apicall({
             path: "members/add",
             getResponse: (res) => {
-              console.log(res.data, "HEY");
+              addMemberToList(data);
+              toast("Member added successfully", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+              });
             },
             getError: (err) => {},
             router,

@@ -2,14 +2,14 @@ import React, { useState, ChangeEvent, KeyboardEvent } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
 interface CustomInputProps {
-  error?: string;
+  error?: any;
   value?: string;
   label: string;
   ref?: React.Ref<HTMLInputElement>;
   id: string;
   onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  touched?: boolean;
+  touched?: any;
   type: string;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
   isFocused?: boolean;
@@ -71,7 +71,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
             style={{
               borderColor: focusedInput
                 ? "black"
-                : touched && error && "#f46a6a",
+                : (touched && error && "#f46a6a") || "none",
             }}
             className={`border-l-[1px] ${
               inputHeight
@@ -100,8 +100,10 @@ const CustomInput: React.FC<CustomInputProps> = ({
           id={id}
           style={{
             marginTop: marginTop && marginTop,
-            cursor: isDisabled && "not-allowed",
-            borderColor: focusedInput ? "black" : touched && error && "#f46a6a",
+            cursor: isDisabled ? "not-allowed" : "default",
+            borderColor: focusedInput
+              ? "black"
+              : (touched && error && "#f46a6a") || "none",
           }}
           className={`bg-transparent text-md  pr-4 ${
             inputHeight
@@ -137,7 +139,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
           }}
           maxLength={inputMaxLength}
           onChange={(e) => {
-            let value = e.target.value;
+            let value: any = e.target.value;
 
             if (!isNaN(value) && parseFloat(value) < 0) {
               e.preventDefault();

@@ -26,7 +26,7 @@ function MoreSection({ businessData }: { businessData: any }) {
   const isBusinessLoggedIn = useSelector(getBusinessLoggedIn);
   const [activeTab, setActiveTab] = useState(0);
 
-  const [appointments, setAppointments] = useState(null);
+  const [appointments, setAppointments] = useState<any>(null);
 
   const tabHeaders = ["Upcoming", "In Progress", "Completed"];
 
@@ -56,7 +56,7 @@ function MoreSection({ businessData }: { businessData: any }) {
     apicall({
       path: "statuschange",
       getResponse: (res) => {
-        const removeApp = appointments?.filter((d) => d.id !== id);
+        const removeApp = appointments?.filter((d: any) => d.id !== id);
 
         setAppointments(removeApp);
 

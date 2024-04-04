@@ -10,7 +10,12 @@ interface ticketTypes {
   ticketId: string;
   mobile: string;
   id: string;
-  slot: string;
+  slot: {
+    startTime: string;
+    endTime: string;
+  };
+  User: any;
+  status: string;
 }
 
 function TicketCards({
@@ -38,7 +43,7 @@ function TicketCards({
               #{ticket.ticketId}
             </p>
             <p className="text-textPrimary font-poppins text-sm sm:text-base">
-              {!customerView && ticket.User.name}
+              {!customerView && ticket?.User.name}
             </p>
             <p className="text-textSecondary font-poppins text-sm sm:text-sm">
               {ticket.slot?.startTime} - {ticket.slot?.endTime}

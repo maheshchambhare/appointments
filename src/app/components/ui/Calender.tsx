@@ -1,11 +1,21 @@
 import React, { useEffect, useState } from "react";
-import moment from "moment";
+import moment, { Moment } from "moment";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const Calender = ({
-  packageId,
+interface CalendarProps {
+  startDate: any;
+  endDate: string;
+  selDays?: string[] | null;
+  showCalendar: (value: boolean) => void;
+  setSelDays: (days: string) => void;
+  disDays?: string[];
+  colors: any;
+  isFiltered?: boolean;
+  daysOfWeek: { isActive: boolean }[];
+}
+
+const Calendar: React.FC<CalendarProps> = ({
   startDate,
-  activeDays,
   endDate,
   selDays,
   showCalendar,
@@ -15,33 +25,33 @@ const Calender = ({
   isFiltered,
   daysOfWeek,
 }) => {
-  const [monthData, setMonthData] = useState([]);
-  const [monthIndex, setMonthIndex] = useState(0);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [indexOfElement, setIndexOfElement] = useState();
-  const [startTime, setStartTime] = useState(
+  const [monthData, setMonthData] = useState<Moment[]>([]);
+  const [monthIndex, setMonthIndex] = useState<number>(0);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [indexOfElement, setIndexOfElement] = useState<number | undefined>();
+  const [startTime, setStartTime] = useState<Date>(
     moment("09:00:00", "HH:mm:ss").toDate()
   );
-  const [endTime, setEndTime] = useState(
+  const [endTime, setEndTime] = useState<Date>(
     moment("19:00:00", "HH:mm:ss").toDate()
   );
   const selectedDays = selDays !== null ? selDays : [];
 
-  const getMonthData = (selectedMonth) => {
-    const monthData = [];
+  const getMonthData = (selectedMonth: Moment): Moment[] => {
+    const monthData: Moment[] = [];
 
     if (endDate) {
-      let month = moment(startDate).startOf("month");
+      let month: Moment = moment(startDate).startOf("month");
       while (month.isBefore(endDate)) {
-        let monthName = month.startOf("month").format("MMMM");
+        let monthName: string = month.startOf("month").format("MMMM");
 
-        if (monthName === selectedMonth) {
+        if (monthName === selectedMonth.format("MMMM")) {
           monthData.push(month);
         }
         month = month.clone().add(1, "month");
       }
     } else {
-      const date = moment(startDate).startOf("month");
+      const date: Moment = moment(startDate).startOf("month");
       while (date.isBefore(moment(startDate).add(1, "year").endOf("month"))) {
         monthData.push(date.clone());
         date.add(1, "month");
@@ -51,23 +61,26 @@ const Calender = ({
     return monthData;
   };
 
-  function getMonthList(startDate, endDate) {
-    const startMonth = startDate.getMonth();
-    let endMonth = endDate.getMonth();
+  function getMonthList(
+    startDate: Date,
+    endDate: Date
+  ): { monthName: string; monthNumber: number }[] {
+    const startMonth: number = startDate.getMonth();
+    let endMonth: number = endDate.getMonth();
 
     if (endMonth < startMonth) {
       endMonth += 12; // Add 12 months to the end month to cover the next year
     }
 
-    const monthList = [];
+    const monthList: { monthName: string; monthNumber: number }[] = [];
 
     for (let i = startMonth; i <= endMonth; i++) {
-      const monthIndex = i % 12; // Use modulo 12 to wrap around to the correct month index
-      const date = new Date(startDate.getFullYear(), monthIndex, 1);
-      const monthName = new Intl.DateTimeFormat("en", { month: "long" }).format(
-        date
-      );
-      const monthNumber = monthIndex + 1; // Add 1 to get the month number (January is 0-based)
+      const monthIndex: number = i % 12; // Use modulo 12 to wrap around to the correct month index
+      const date: Date = new Date(startDate.getFullYear(), monthIndex, 1);
+      const monthName: string = new Intl.DateTimeFormat("en", {
+        month: "long",
+      }).format(date);
+      const monthNumber: number = monthIndex + 1; // Add 1 to get the month number (January is 0-based)
       monthList.push({ monthName, monthNumber });
     }
 
@@ -76,19 +89,22 @@ const Calender = ({
 
   useEffect(() => {
     if (startDate || endDate) {
-      const months = getMonthList(new Date(startDate), new Date(endDate));
-      setMonthData(months);
+      const months: { monthName: string; monthNumber: number }[] = getMonthList(
+        new Date(startDate),
+        new Date(endDate)
+      );
+      setMonthData(months.map((month) => moment(month.monthName, "MMMM")));
     }
   }, [startDate, endDate]);
 
-  const renderMonth = (month) => {
-    const daysInMonth = month.daysInMonth();
-    const firstDayOfMonth = month.startOf("month").format("d");
-    const monthStartDate = moment(month).startOf("month");
-    const days = [];
-    const monthDays = [];
+  const renderMonth = (month: Moment) => {
+    const daysInMonth: number = month.daysInMonth();
+    const firstDayOfMonth: string = month.startOf("month").format("d");
+    const monthStartDate: Moment = moment(month).startOf("month");
+    const days: JSX.Element[] = [];
+    const monthDays: JSX.Element[] = [];
 
-    for (let i = 0; i < firstDayOfMonth; i++) {
+    for (let i = 0; i < parseInt(firstDayOfMonth); i++) {
       monthDays.push(
         <p
           key={i}
@@ -98,22 +114,23 @@ const Calender = ({
     }
 
     for (let i = 1; i <= daysInMonth; i++) {
-      const day = moment(monthStartDate).date(i);
-      const isDisabledDay = disDays.includes(day.format("DD/MM/YYYY"));
+      const day: Moment = moment(monthStartDate).date(i);
+      const isDisabledDay: boolean =
+        disDays?.includes(day.format("DD/MM/YYYY")) || false;
 
-      const date = month.clone().date(i);
-      const isPastDate = date.isBefore(moment(startDate), "day");
+      const date: Moment = month.clone().date(i);
+      const isPastDate: boolean = date.isBefore(moment(startDate), "day");
 
-      const isDaySelectable = (day: moment.Moment): boolean => {
-        const dayOfWeekIndex = day.day();
+      const isDaySelectable = (day: Moment): boolean => {
+        const dayOfWeekIndex: number = day.day();
         return daysOfWeek[dayOfWeekIndex].isActive;
       };
 
-      const canSelect = isDaySelectable(day);
+      const canSelect: boolean = isDaySelectable(day);
 
-      var availablDays = true;
+      var availablDays: boolean = true;
 
-      const isDateInFuture = endDate
+      const isDateInFuture: boolean = endDate
         ? date.isAfter(moment(endDate), "day")
         : false;
 
@@ -158,7 +175,7 @@ const Calender = ({
               background:
                 isDisabledDay || !canSelect
                   ? "#fff"
-                  : day.format("YYYY-MM-DD") == selectedDate
+                  : day.format("YYYY-MM-DD") === selectedDate
                   ? "#2E70FF"
                   : availablDays
                   ? "#FFFFFF"
@@ -168,7 +185,7 @@ const Calender = ({
                   ? "gray"
                   : isDisabledDay
                   ? "gray"
-                  : day.format("YYYY-MM-DD") == selectedDate
+                  : day.format("YYYY-MM-DD") === selectedDate
                   ? "white"
                   : availablDays
                   ? "black"
@@ -187,9 +204,17 @@ const Calender = ({
       );
     }
 
-    const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const weekDays: string[] = [
+      "Sun",
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+    ];
 
-    const weekDaysRow = (
+    const weekDaysRow: JSX.Element = (
       <div
         key={`${month.format("MMMM YYYY")}-weekdays`}
         className="grid mb-[10px] grid-cols-7"
@@ -258,11 +283,11 @@ const Calender = ({
 
   return (
     <div className="rounded-xl scrollbar-hide  overflow-hidden overflow-x-scroll ">
-      {getMonthData(monthData[monthIndex]?.monthName).map((month) =>
+      {getMonthData(monthData[monthIndex] as Moment).map((month) =>
         renderMonth(month)
       )}
     </div>
   );
 };
 
-export default Calender;
+export default Calendar;

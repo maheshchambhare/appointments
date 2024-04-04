@@ -1,14 +1,14 @@
 import React, { useState, ChangeEvent, FocusEvent, KeyboardEvent } from "react";
 
 interface Props {
-  inputError?: string;
+  inputError?: any;
   value: string;
   inputLabel: string;
   inputRef?: React.RefObject<HTMLTextAreaElement>;
   inputId: string;
   inputOnFocus?: (event: React.FocusEvent<HTMLTextAreaElement>) => void;
   onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  inputTouched: boolean;
+  inputTouched: any;
   inputType?: string;
   onBlur: (event: React.FocusEvent<HTMLTextAreaElement>) => void;
   passwordEye?: React.ReactNode;
@@ -71,14 +71,13 @@ const CustomTextArea: React.FC<Props> = ({
           autoComplete="off"
           disabled={isDisabled ? true : false}
           placeholder={placeholder ? placeholder : inputLabel}
-          type={inputType}
           id={inputId}
           style={{
             marginTop: marginTop && marginTop,
-            cursor: isDisabled && "not-allowed",
+            cursor: isDisabled ? "not-allowed" : "default",
             borderColor: focusedInput
               ? "black"
-              : inputTouched && inputError && "#f46a6a",
+              : (inputTouched && inputError && "#f46a6a") || "none",
           }}
           className={`text-md  pr-4 h-[80px] xsm:h-[80px] sm:h-[80px] md:h-[80px] appearance-none mt-[5px] border-[1px] rounded-md px-2 ${
             isDisabled ? "bg-[#eeeeee80]" : "bg-zinc-800 dark:bg-zinc-800"

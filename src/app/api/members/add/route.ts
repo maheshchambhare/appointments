@@ -1,19 +1,19 @@
 import prisma from "@/utils/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const saltRounds = 10;
-const JWTKEY = process.env.JWT_KEY_TOKEN;
+const JWTKEY: any = process.env.JWT_KEY_TOKEN;
 
-const POST = async (req: Request) => {
+const POST = async (req: NextRequest) => {
   try {
     const body = await req.json();
     //    Encrypt Password
     const password = body.password;
     const encryptedPass = await bcrypt
       .hash(password, saltRounds)
-      .then((hash: String, err: any) => {
+      .then((hash: string) => {
         return hash;
       });
 
@@ -22,7 +22,7 @@ const POST = async (req: Request) => {
     if (tokenJWT) {
       const tokenJWTVal = tokenJWT?.value;
 
-      const businessVal = await jwt.verify(tokenJWTVal, JWTKEY);
+      const businessVal: any = await jwt.verify(tokenJWTVal, JWTKEY);
       const updatedUser = {
         ...body,
         password: encryptedPass,

@@ -12,7 +12,7 @@ interface MultiSelectCompProps {
   onChange: (selectedOption: Option | Option[] | null) => void;
   isMulti?: boolean;
   placeholder?: string;
-  options: Option[];
+  options: any;
   styles?: CSSProperties;
   defaultValue?: Option | Option[];
   full?: boolean;
@@ -61,7 +61,7 @@ function MultiSelectComp({
         }  xsm:w-full sm:w-full md:w-full`}
       >
         <Select
-          onChange={(e) => {
+          onChange={(e: any) => {
             onChange(e);
           }}
           isMulti={isMulti}
@@ -70,9 +70,9 @@ function MultiSelectComp({
           options={options}
           value={selectedOption}
           isDisabled={disabled}
-          ref={refSelect}
+          // ref={refSelect || }
           menuPlacement={menuPlacement || "auto"}
-          theme={(theme) => ({
+          theme={(theme: any) => ({
             ...theme,
             colors: {
               neutral50: "#fff",

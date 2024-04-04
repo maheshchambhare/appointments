@@ -4,7 +4,7 @@ import { NextResponse, NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
 
 const saltRounds = 10;
-const JWTKEY = process.env.JWT_KEY_TOKEN;
+const JWTKEY: any = process.env.JWT_KEY_TOKEN;
 
 const GET = async (req: NextRequest) => {
   try {
@@ -13,7 +13,7 @@ const GET = async (req: NextRequest) => {
     if (tokenJWT) {
       const tokenJWTVal = tokenJWT?.value;
 
-      const businessVal = await jwt.verify(tokenJWTVal, JWTKEY);
+      const businessVal: any = await jwt.verify(tokenJWTVal, JWTKEY);
 
       const memberList = await prisma.member.findMany({
         where: {

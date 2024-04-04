@@ -60,11 +60,20 @@ const Appointment = ({ businessData }: { businessData: any }) => {
 
   const daysOfWeek = businessData.weekdays;
 
-  const finalForm = {
+  interface FinalForm {
+    name: string;
+    mobile: string;
+    sex: string;
+    date: null | string;
+    slot: null | { startTime: string; endTime: string }; // Assuming slot can be either null or a string
+    memberId: null | string; // Assuming memberId can be either null or a string
+  }
+
+  const finalForm: FinalForm = {
     name: "",
     mobile: "",
     sex: "",
-    date: "",
+    date: null,
     slot: null,
     memberId: null,
   };
@@ -379,13 +388,11 @@ const Appointment = ({ businessData }: { businessData: any }) => {
                   className="w-[300px] z-10  bg-white p-2 absolute rounded-lg mt-1"
                 >
                   <Calender
-                    selectedDays={null}
                     daysOfWeek={daysOfWeek}
-                    disDays={["24/03/2024"]}
-                    showCalendar={(e) => {
+                    showCalendar={(e: any) => {
                       setShowCalenar(e);
                     }}
-                    setSelDays={(e) => {
+                    setSelDays={(e: any) => {
                       values.date = e;
                       errors.date = "";
                       setSelectedDate(e);
@@ -399,9 +406,6 @@ const Appointment = ({ businessData }: { businessData: any }) => {
                       .add(2, "month")
                       .endOf("month")
                       .format("YYYY-MM-DD")}
-                    onDateClick={(e) => {
-                      console.log(e, "ON DATE CLICKED");
-                    }}
                     colors={{
                       text: "#131313",
                       background: "#ffff",

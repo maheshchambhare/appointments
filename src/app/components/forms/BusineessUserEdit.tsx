@@ -65,7 +65,7 @@ const BusineessUserEdit = ({
                 id="members"
                 onChange={handleChange}
                 onBlur={handleBlur}
-                value={values.members}
+                value={JSON.stringify(values.members)}
                 error={errors.members}
                 touched={touched.members}
               />

@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const JWTKEY = process.env.JWT_KEY_TOKEN;
+const JWTKEY: any = process.env.JWT_KEY_TOKEN;
 
 const POST = async (req: Request) => {
   try {
@@ -11,17 +11,15 @@ const POST = async (req: Request) => {
     const password = body.password;
     const name = body.name;
 
-    const businessUser = await prisma.superAdmin.findUnique({
+    const businessUser: any = await prisma.superAdmin.findUnique({
       where: {
         name: name,
       },
     });
 
-    console.log(businessUser, "POPOPPPPP");
-
     const checkPass = await bcrypt
       .compare(password, businessUser?.password)
-      .then((result: boolean, err: any) => {
+      .then((result: boolean) => {
         return result == true;
       });
 

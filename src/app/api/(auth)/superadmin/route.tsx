@@ -5,18 +5,17 @@ import jwt from "jsonwebtoken";
 import sendOtp from "../sendOtp";
 
 const saltRounds = 10;
-const JWTKEY = process.env.JWT_KEY_OTP;
+const JWTKEY: any = process.env.JWT_KEY_OTP;
 
 const POST = async (req: Request) => {
   try {
     const body = await req.json();
 
-    console.log(body, "CCCCC");
     //    Encrypt Password
     const password = body.password;
     const encryptedPass = await bcrypt
       .hash(password, saltRounds)
-      .then((hash: String, err: any) => {
+      .then((hash: String) => {
         return hash;
       });
 

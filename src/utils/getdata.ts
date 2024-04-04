@@ -23,7 +23,7 @@ export const apicall = ({
   data = null,
   contentType = "application/json",
 }: apicall) => {
-  var config = {
+  var config: any = {
     method: method,
     url: `${API_URL}${path}`,
     headers: {

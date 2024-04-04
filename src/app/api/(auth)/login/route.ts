@@ -3,11 +3,9 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const saltRounds = 10;
-const JWTKEYOTP = process.env.JWT_KEY_OTP;
-const JWTKEY = process.env.JWT_KEY_TOKEN;
-const BUSINESSUSER = process.env.USERBUSINESS;
-const MEMBERUSER = process.env.USERMEMBER;
+const JWTKEY: any = process.env.JWT_KEY_TOKEN;
+const BUSINESSUSER: any = process.env.USERBUSINESS;
+const MEMBERUSER: any = process.env.USERMEMBER;
 
 const JWTUSER = process.env.JWT_KEY_USER;
 
@@ -28,7 +26,7 @@ const POST = async (req: Request) => {
     });
 
     if (businessUser == null) {
-      const member = await prisma.member.findUnique({
+      const member: any = await prisma.member.findUnique({
         where: {
           mobile: mobile,
         },
@@ -51,7 +49,7 @@ const POST = async (req: Request) => {
 
     const checkPass = await bcrypt
       .compare(password, businessUser?.password)
-      .then((result: boolean, err: any) => {
+      .then((result: boolean) => {
         return result == true;
       });
 

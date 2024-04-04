@@ -2,8 +2,8 @@ import jwt from "jsonwebtoken";
 import prisma from "@/utils/prisma";
 import { NextResponse, NextRequest } from "next/server";
 
-const JWTKEY = process.env.JWT_KEY_TOKEN;
-const JWTKEYOTP = process.env.JWT_KEY_OTP;
+const JWTKEY: any = process.env.JWT_KEY_TOKEN;
+const JWTKEYOTP: any = process.env.JWT_KEY_OTP;
 
 const POST = async (req: NextRequest) => {
   try {
@@ -15,7 +15,7 @@ const POST = async (req: NextRequest) => {
     if (cookie) {
       const userToken = cookie?.value;
 
-      const userTokenDecrypted = await jwt.verify(userToken, JWTKEYOTP);
+      const userTokenDecrypted: any = await jwt.verify(userToken, JWTKEYOTP);
 
       const businessUser = userTokenDecrypted.businessUser;
 

@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import sendOtp from "../sendOtp";
 
 const saltRounds = 10;
-const JWTKEY = process.env.JWT_KEY_OTP;
+const JWTKEY: any = process.env.JWT_KEY_OTP;
 
 function generateRandomString(length: number) {
   const characters =
@@ -24,7 +24,7 @@ const POST = async (req: Request) => {
     const password = body.password;
     const encryptedPass = await bcrypt
       .hash(password, saltRounds)
-      .then((hash: String, err: any) => {
+      .then((hash: String) => {
         return hash;
       });
 

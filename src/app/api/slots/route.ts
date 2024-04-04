@@ -1,7 +1,7 @@
 import prisma from "@/utils/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
-const JWTKEY = process.env.JWT_KEY_TOKEN;
+const JWTKEY: any = process.env.JWT_KEY_TOKEN;
 const POST = async (req: NextRequest) => {
   try {
     const body = await req.json();
@@ -11,7 +11,7 @@ const POST = async (req: NextRequest) => {
     if (tokenJWT) {
       const tokenJWTVal = tokenJWT?.value;
 
-      const businessVal = await jwt.verify(tokenJWTVal, JWTKEY);
+      const businessVal: any = await jwt.verify(tokenJWTVal, JWTKEY);
 
       const businessUser = await prisma.businessUser.update({
         where: {
