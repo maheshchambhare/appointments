@@ -54,7 +54,7 @@ const POST = async (req: Request) => {
       console.error("Error generating token:", error);
     }
 
-    // sendOtp({ verificationCode, mobileNumber: body.mobile });
+    sendOtp({ verificationCode, mobileNumber: body.mobile });
 
     console.log(verificationCode, "BBBBBBB");
 

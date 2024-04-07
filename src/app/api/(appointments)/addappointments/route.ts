@@ -49,7 +49,7 @@ const POST = async (req: NextRequest) => {
 
       console.log(verificationCode, "ABCD");
 
-      // sendOtp({ verificationCode, mobileNumber: body.mobile });
+      sendOtp({ verificationCode, mobileNumber: body.mobile });
 
       const appointmentData = {
         businessUserId: businessUSER.id,
