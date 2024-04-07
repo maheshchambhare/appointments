@@ -40,7 +40,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 server {
 
 listen 80;
-server_name app.launchwaitlist.in;
+server_name appointify.in;
 
 location / {
 proxy_pass http://127.0.0.1:3000/;
@@ -58,3 +58,7 @@ mkswap /swapfile
 swapon /swapfile
 swapon --show
 free -h
+
+<!-- set domain https -->
+
+sudo certbot --nginx

@@ -50,7 +50,7 @@ const Appointment = ({
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [showTicket, setShowticket] = useState(false);
-  const [ticket, setTicket] = useState(null);
+  const [ticket, setTicket] = useState<any>(null);
 
   const [loader, setLoader] = useState<boolean>(false);
 
@@ -130,14 +130,14 @@ const Appointment = ({
   };
 
   const handleDownload = () => {
-    html2canvas(document?.querySelector("#ticket")).then(function (
-      canvas: any
-    ) {
-      const link = document.createElement("a");
-      link.download = "appointment.png";
-      link.href = canvas.toDataURL();
-      link.click();
-    });
+    html2canvas(document?.querySelector("#ticket") as HTMLElement).then(
+      function (canvas: any) {
+        const link = document.createElement("a");
+        link.download = "appointment.png";
+        link.href = canvas.toDataURL();
+        link.click();
+      }
+    );
   };
 
   if (loader) {
