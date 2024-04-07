@@ -39,7 +39,7 @@ const POST = async (req: NextRequest) => {
       });
 
       return NextResponse.json(
-        { message: "Appointment added" },
+        { message: "Appointment added", data: addAppointment },
         { status: 200 }
       );
     } else {
@@ -47,7 +47,7 @@ const POST = async (req: NextRequest) => {
         .toString()
         .padStart(6, "0");
 
-      // console.log(verificationCode, "ABCD");
+      console.log(verificationCode, "ABCD");
 
       // sendOtp({ verificationCode, mobileNumber: body.mobile });
 

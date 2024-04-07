@@ -32,7 +32,7 @@ export default function Home() {
         {/* How it works section */}
 
         <ScreenWrapper>
-          <p className="text-center my-2">@2024 briefology</p>
+          <p className="text-center my-2">@2024 appointify</p>
           <div className="flex  w-full justify-center mb-6">
             <Link
               href="https://twitter.com/maheshchambhare"
@@ -57,6 +57,6 @@ export const metadata: Metadata = {
   title: `Appointify - ${homeData.title}`,
   description: homeData.description,
   icons: {
-    icon: "/reading.webp",
+    icon: "/logo.webp",
   },
 };

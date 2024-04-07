@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 
 interface ModalLayoutProps {
   isOpen: boolean;
-  modalTitle: string;
+  modalTitle?: string;
   setIsOpen: (isOpen: boolean) => void;
   children: ReactNode;
   modalWidth?: string;
@@ -92,17 +92,25 @@ const ModalLayout: React.FC<ModalLayoutProps> = ({
           xsm:w-full sm:w-full md:w-full overflow-scroll
         `}
         >
-          <div className="cursor-pointer  py-3 mb-5  px-1 items-center  border-b-[1px] border-gray-20 flex justify-center">
-            <h3 className="mx-auto flex justify-center items-center w-full font-heading  text-[22px]  font-medium">
-              {isMobile ? (
-                <>
-                  {modalTitle.substring(0, 20)}
-                  {modalTitle.length > 20 && "..."}
-                </>
-              ) : (
-                modalTitle
-              )}
-            </h3>{" "}
+          <div
+            className={`cursor-pointer   ${
+              modalTitle ? "mb-5 py-3" : "mb-0 pt-3"
+            }   px-1 items-center  ${
+              modalTitle ? "border-b-[1px] border-gray-20" : ""
+            }  flex justify-center`}
+          >
+            {modalTitle && (
+              <h3 className="mx-auto flex justify-center items-center w-full font-heading  text-[22px]  font-medium">
+                {isMobile ? (
+                  <>
+                    {modalTitle.substring(0, 20)}
+                    {modalTitle.length > 20 && "..."}
+                  </>
+                ) : (
+                  modalTitle
+                )}
+              </h3>
+            )}
             {!hideX && (
               <X
                 onClick={(e) => {

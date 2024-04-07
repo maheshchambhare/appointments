@@ -45,7 +45,7 @@ const Calendar: React.FC<CalendarProps> = ({
       while (month.isBefore(endDate)) {
         let monthName: string = month.startOf("month").format("MMMM");
 
-        if (monthName === selectedMonth.format("MMMM")) {
+        if (monthName === selectedMonth?.format("MMMM")) {
           monthData.push(month);
         }
         month = month.clone().add(1, "month");

@@ -42,7 +42,7 @@ function PageSection({ landingpage }: { landingpage: string }) {
           about={businessUser.about}
           address={businessUser.address}
         />
-        <Appointment businessData={businessUser} />
+        <Appointment title={businessUser.name} businessData={businessUser} />
       </ScreenWrapper>
     </div>
   );

@@ -8,6 +8,7 @@ import CustomTextArea from "@/app/components/CustomTextArea";
 import { useSelector } from "react-redux";
 import { getUserData } from "@/store/slices/authSlice";
 import Cookies from "js-cookie";
+import { Bounce, ToastContainer, toast } from "react-toastify";
 
 const Profile = () => {
   const router = useRouter();
@@ -44,6 +45,17 @@ const Profile = () => {
                 address: data.address,
               };
               Cookies.set("businessUser", JSON.stringify(business));
+              toast("Your profile updated successfully", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+              });
             },
             getError: (err) => {},
             router,

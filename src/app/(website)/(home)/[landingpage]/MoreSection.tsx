@@ -18,6 +18,7 @@ import Tab from "@/app/components/ui/Tab";
 
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Loader from "@/app/components/ui/Loader";
 
 function MoreSection({ businessData }: { businessData: any }) {
   const businessPageType = useSelector(getBusinessSectionType);
@@ -194,7 +195,7 @@ function MoreSection({ businessData }: { businessData: any }) {
   };
 
   if (appointments == null) {
-    return <p>...loading</p>;
+    return <Loader />;
   }
   return (
     <div className="relative max-h-max ">
@@ -224,7 +225,7 @@ function MoreSection({ businessData }: { businessData: any }) {
           <Button
             type="button"
             onClick={handleSubmit}
-            title="Book Your Appointment"
+            title="Book New Appointment"
           />
         </div>
       )}

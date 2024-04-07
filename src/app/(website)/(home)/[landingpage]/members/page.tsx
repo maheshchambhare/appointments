@@ -1,9 +1,9 @@
 import Navbar from "@/app/components/Layouts/Navbar";
 import ScreenWrapper from "@/app/components/Layouts/ScreenWrapper";
 import React from "react";
-import Header from "../Header";
-import store from "@/store/store";
 import Members from "./Members";
+import homeData from "@/utils/data/homepage.json";
+import { Metadata } from "next";
 
 function page() {
   //   const businessData = store.getState().auth.userData;
@@ -26,3 +26,11 @@ function page() {
 }
 
 export default page;
+
+export const metadata: Metadata = {
+  title: `Appointify - members`,
+  description: homeData.description,
+  icons: {
+    icon: "/logo.webp",
+  },
+};

@@ -46,10 +46,8 @@ const POST = async (req: NextRequest) => {
           data: appointmentData,
         });
 
-        console.log(createUser, appointmentData, appointments, "USER DATA");
-
         const response = NextResponse.json(
-          { message: "Successfully veified" },
+          { message: "Successfully veified", data: appointments },
           { status: 200 }
         );
         response.cookies.set("appointmentform", jsonToken, {

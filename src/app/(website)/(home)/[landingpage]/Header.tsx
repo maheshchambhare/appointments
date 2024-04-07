@@ -13,7 +13,7 @@ function Header({
   address: string;
 }) {
   return (
-    <div className="h-auto mt-0 mb-10  md:mb-20  ">
+    <div className="h-auto  mt-0 mb-6  md:mb-4  ">
       <h1 className="font-mont text-center text-[50px] text-textPrimary capitalize md:text-[70px]">
         {title}
       </h1>

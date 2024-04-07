@@ -25,7 +25,7 @@ function HowItWorks() {
           return (
             <div key={ind}>
               <CardContainer className="w-full h-full inter-var cursor-pointer ">
-                <CardBody className="bg-gray-50  min-h-[200px] h-full  group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-[30rem]  rounded-xl p-6 border  ">
+                <CardBody className="bg-gray-50  min-h-[200px] h-full group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-[30rem]  rounded-xl p-6 border  ">
                   <CardItem
                     translateZ="20"
                     className="text-xl font-bold text-neutral-600 dark:text-white"
@@ -39,9 +39,10 @@ function HowItWorks() {
                     className="text-xl font-bold text-neutral-600 dark:text-white"
                   >
                     <p className="xsm:text-sm md:text-base lg:text-md font-mont text-gray-400">
-                      {fetaure.description.length > 150
+                      {/* {fetaure.description.length > 150
                         ? fetaure.description.substring(0, 150) + "...Read More"
-                        : fetaure.description}
+                        :                         */}
+                      {fetaure.description}
                     </p>
                   </CardItem>
                 </CardBody>
@@ -58,7 +59,7 @@ function HowItWorks() {
               behavior: "smooth",
             });
           }}
-          title="Subscribe"
+          title="Sign Up"
         />
       </div>
     </div>

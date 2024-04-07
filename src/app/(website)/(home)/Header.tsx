@@ -76,8 +76,19 @@ const Header = () => {
         )}
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 w-full flex justify-center">
-        <ChevronsDown className="animate-updown transition-all" size={35} />
+      <div
+        onClick={() => {
+          window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: "smooth",
+          });
+        }}
+        className="absolute bottom-0 left-0 right-0 w-full flex justify-center"
+      >
+        <ChevronsDown
+          className="animate-updown transition-all cursor-pointer"
+          size={35}
+        />
       </div>
       {signupModal && (
         <ModalLayout
