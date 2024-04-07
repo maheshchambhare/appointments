@@ -131,6 +131,8 @@ function Navbar() {
         onClick={() => {
           if (isBusinessLoggedIn) {
             router.push("/" + businessUserData.slug);
+          } else {
+            router.push("/");
           }
         }}
         className="xsm:w-[40%] md:w-[50%] h-full  "
