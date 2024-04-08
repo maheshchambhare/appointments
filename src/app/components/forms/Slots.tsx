@@ -269,7 +269,6 @@ function Slots() {
     } else {
       setDayOfWeekErr("");
     }
-    console.log(dayofWeekSelected, "YYYYY");
 
     const data = { ...selectedDuration, ...timeSelector };
 
@@ -278,9 +277,7 @@ function Slots() {
 
     apicall({
       path: "slots",
-      getResponse: (res) => {
-        console.log(res.data, "HEY");
-      },
+      getResponse: (res) => {},
       getError: (err) => {},
       router,
       method: "post",

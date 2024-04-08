@@ -27,6 +27,7 @@ const POST = async (req: NextRequest) => {
     if (user) {
       const appointmentData = {
         userId: user.id,
+
         businessUserId: businessUSER.id,
         slot: body.slot,
         date: body.date,
@@ -39,15 +40,16 @@ const POST = async (req: NextRequest) => {
       });
 
       return NextResponse.json(
-        { message: "Appointment added", data: addAppointment },
-        { status: 200 }
+        {
+          message: "Appointment added",
+          data: { ...addAppointment, name: user.name },
+        },
+        { status: 202 }
       );
     } else {
       const verificationCode = Math.floor(Math.random() * 100000)
         .toString()
         .padStart(6, "0");
-
-      console.log(verificationCode, "ABCD");
 
       sendOtp({ verificationCode, mobileNumber: body.mobile });
 

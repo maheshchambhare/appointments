@@ -37,7 +37,8 @@ const POST = async (req: Request) => {
     const updatedUser = {
       ...body,
       password: encryptedPass,
-      slug: body.businessName.replace(/\s+/g, "-") + "-" + slugCode,
+      slug:
+        body.businessName.toLowerCase().replace(/\s+/g, "-") + "-" + slugCode,
     };
 
     let jsonToken = "";
@@ -55,8 +56,6 @@ const POST = async (req: Request) => {
     }
 
     sendOtp({ verificationCode, mobileNumber: body.mobile });
-
-    console.log(verificationCode, "BBBBBBB");
 
     const response = NextResponse.json({ user: updatedUser }, { status: 200 });
 

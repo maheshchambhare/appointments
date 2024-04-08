@@ -17,8 +17,6 @@ const POST = async (req: NextRequest) => {
 
       const decryptedOtp: any = await jwt.verify(otpEncrypted, JWTKEYOTP);
 
-      console.log(decryptedOtp?.otp, otp, "OTPS");
-
       if (decryptedOtp?.otp == otp) {
         const user = {
           name: decryptedOtp.appointmentData.name,

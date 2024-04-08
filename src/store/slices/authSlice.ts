@@ -7,8 +7,6 @@ const JWTUSER: any = process.env.NEXT_PUBLIC_USER;
 const BUSINESSUSER: any = process.env.NEXT_PUBLIC_USERBUSINESS;
 const MEMBERUSER: any = process.env.NEXT_PUBLIC_USERMEMBER;
 
-console.log(JWTUSER, "UU");
-
 interface initialStateTypes {
   userLoggedIn: boolean;
   businessUserLoggedIn: boolean;

@@ -75,9 +75,7 @@ const SignUp = ({ setotpform }: { setotpform: (val: boolean) => void }) => {
 
           apicall({
             path: "signup",
-            getResponse: (res) => {
-              console.log(res.data, "HEY");
-            },
+            getResponse: (res) => {},
             getError: (err) => {},
             router,
             method: "post",

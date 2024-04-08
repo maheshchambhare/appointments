@@ -53,7 +53,7 @@ function MoreSection({ businessData }: { businessData: any }) {
   }, [activeTab]);
 
   const updateTicket = ({ status, id }: { status: string; id: string }) => {
-    console.log(status, id, "XX");
+ 
     apicall({
       path: "statuschange",
       getResponse: (res) => {

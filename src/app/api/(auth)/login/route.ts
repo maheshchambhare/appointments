@@ -128,7 +128,7 @@ const POST = async (req: Request) => {
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { message: "Something failed", error },
+      { message: "Something failed on server,contact admin", error },
       { status: 500 }
     );
   }

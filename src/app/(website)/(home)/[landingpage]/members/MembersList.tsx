@@ -31,7 +31,6 @@ function MembersList({ memberList }: { memberList: any }) {
                 <AnimatedBtn
                   title="Call"
                   onClick={() => {
-                    console.log(member, "PPP");
                     var telUrl = "tel:" + member?.mobile;
                     window.open(telUrl);
                   }}

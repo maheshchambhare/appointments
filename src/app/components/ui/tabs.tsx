@@ -30,8 +30,6 @@ export const Tabs = ({
   const [active, setActive] = useState<Tab>(propTabs[0]);
   const [tabs, setTabs] = useState<Tab[]>(propTabs);
 
-  console.log(appointments, "APOOI");
-
   const moveSelectedTabToTop = (idx: number) => {
     const newTabs = [...propTabs];
     const selectedTab = newTabs.splice(idx, 1);
@@ -55,7 +53,6 @@ export const Tabs = ({
           <button
             key={idx}
             onClick={() => {
-              console.log(idx, "x");
               moveSelectedTabToTop(idx);
               setActiveTab(JSON.stringify(idx));
             }}

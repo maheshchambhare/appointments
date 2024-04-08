@@ -22,8 +22,6 @@ const POST = async (req: Request) => {
       .toString()
       .padStart(6, "0");
 
-    console.log(verificationCode, "PPPPP");
-
     const businessUser = await prisma.businessUser.findUnique({
       where: {
         mobile: mobile,

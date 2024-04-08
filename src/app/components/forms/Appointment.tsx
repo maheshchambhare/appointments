@@ -53,6 +53,8 @@ const Appointment = ({
   const [ticket, setTicket] = useState<any>(null);
 
   const [loader, setLoader] = useState<boolean>(false);
+  const [slotsLoader, setSlotsLoader] = useState<boolean>(false);
+  const [userAlreadyExist, setUserAlreadyExist] = useState<boolean>(false);
 
   const businessUserData = businessData;
 
@@ -91,6 +93,7 @@ const Appointment = ({
   };
 
   const getAllSlots = ({ date, member }: { date: string; member: string }) => {
+    setSlotsLoader(true);
     apicall({
       path: "getslots",
       getResponse: (res) => {
@@ -121,8 +124,12 @@ const Appointment = ({
 
           setSlotsArr(slots);
         }
+
+        setSlotsLoader(false);
       },
-      getError: (err) => {},
+      getError: (err) => {
+        setSlotsLoader(false);
+      },
       router,
       method: "post",
       data: { date, member },
@@ -211,24 +218,19 @@ const Appointment = ({
                   transition: Bounce,
                 });
                 // resetForm();
+              } else if (res.status == 202) {
+                setUserAlreadyExist(true);
+                setTicket(res.data.data);
+                setShowOtpField(false);
+                setSelectedDate(null);
+                setOtp("");
+                setShowticket(true);
               } else {
                 setTicket(res.data.data);
                 setShowOtpField(false);
                 setSelectedDate(null);
                 setOtp("");
                 setShowticket(true);
-
-                // toast("🎉 Appointment added successfully", {
-                //   position: "bottom-right",
-                //   autoClose: 5000,
-                //   hideProgressBar: false,
-                //   closeOnClick: true,
-                //   pauseOnHover: true,
-                //   draggable: true,
-                //   progress: undefined,
-                //   theme: "light",
-                //   transition: Bounce,
-                // });
               }
             },
             getError: (err) => {},
@@ -406,34 +408,47 @@ const Appointment = ({
                 )}
 
                 <div className="mt-4 w-full">
-                  <div className="w-full ">
-                    <MultiSelectComp
-                      full={true}
-                      title="Pick a Appointment Slot"
-                      required={true}
-                      onChange={(e: any) => {
-                        errors.slot = "";
-                        values.slot = {
-                          startTime: e.startTime,
-                          endTime: e.endTime,
-                        };
-                        setSelectedSlot({
-                          startTime: e.startTime,
-                          endTime: e.endTime,
-                        });
-                        // selectedDuration.minutes = e.value;
-                        // setSelectedDuration({ ...selectedDuration });
-                      }}
-                      isMulti={false}
-                      placeholder="Slots"
-                      options={slotsArr.length > 0 ? slotsArr : []}
-                    />
-                    {submitCount > 0 && errors.slot && (
-                      <p className=" font-poppins mt-1 text-[10px] mb-[-10px] text-[#f46a6a]">
-                        {errors.slot}
-                      </p>
-                    )}
-                  </div>
+                  {slotsLoader ? (
+                    <>
+                      <div className="flex mt-4  justify-center items-center">
+                        <div className="flex flex-row gap-2">
+                          <div className="w-2 h-2 rounded-full bg-white animate-bounce"></div>
+                          <div className="w-2 h-2 rounded-full bg-white animate-bounce [animation-delay:-.3s]"></div>
+                          <div className="w-2 h-2 rounded-full bg-white animate-bounce [animation-delay:-.5s]"></div>
+                        </div>
+                      </div>
+                      <p className="text-center">Slots loading...</p>
+                    </>
+                  ) : (
+                    <div className="w-full ">
+                      <MultiSelectComp
+                        full={true}
+                        title="Pick a Appointment Slot"
+                        required={true}
+                        onChange={(e: any) => {
+                          errors.slot = "";
+                          values.slot = {
+                            startTime: e.startTime,
+                            endTime: e.endTime,
+                          };
+                          setSelectedSlot({
+                            startTime: e.startTime,
+                            endTime: e.endTime,
+                          });
+                          // selectedDuration.minutes = e.value;
+                          // setSelectedDuration({ ...selectedDuration });
+                        }}
+                        isMulti={false}
+                        placeholder="Slots"
+                        options={slotsArr.length > 0 ? slotsArr : []}
+                      />
+                      {submitCount > 0 && errors.slot && (
+                        <p className=" font-poppins mt-1 text-[10px] mb-[-10px] text-[#f46a6a]">
+                          {errors.slot}
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
               {showOtpField && (
@@ -503,20 +518,38 @@ const Appointment = ({
                   </p>
                 </div>
                 <p className="text-textPrimary font-poppins text-sm sm:text-base">
-                  {values.name}
+                  {userAlreadyExist ? ticket.name : values.name}
                 </p>
                 <p className="text-textSecondary pb-2 font-poppins text-sm sm:text-sm">
                   {ticket?.slot?.startTime} - {ticket?.slot?.endTime}
                 </p>
               </div>
 
-              <div className="mb-2 mt-8 flex justify-between items-end">
+              {userAlreadyExist && (
+                <p className="font-sans w-[90%] mx-auto text-center text-red-500 text-sm">
+                  An account with the same mobile number already existed. A
+                  ticket has been generated using the name from the existing
+                  account
+                </p>
+              )}
+              <div className="mb-2 mt-8 flex justify-between items-center">
                 <Button
-                  onClick={handleDownload}
+                  onClick={() => {
+                    handleDownload();
+
+                    setShowticket(false);
+                    resetForm();
+
+                    setLoader(true);
+
+                    setTimeout(() => {
+                      setLoader(false);
+                    }, 500);
+                  }}
                   type="button"
                   title={"Download"}
                 />
-                <p className="ml-4">
+                <p className="ml-4 font-sans text-sm">
                   Successfully generated appointment,please download your ticket
                   for future reference
                 </p>

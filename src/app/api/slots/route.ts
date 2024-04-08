@@ -36,7 +36,6 @@ const POST = async (req: NextRequest) => {
     );
     return response;
   } catch (error) {
-    console.log(error, "ERRR");
     return NextResponse.json(
       { message: "Something failed", error },
       { status: 500 }
