@@ -1,6 +1,6 @@
 "use client";
 import AnimatedBtn from "@/app/components/ui/AnimatedBtn";
-import { getBusinessLoggedIn } from "@/store/slices/authSlice";
+import { getBusinessLoggedIn, getUserTypeData } from "@/store/slices/authSlice";
 import { apicall } from "@/utils/getdata";
 import React from "react";
 import { useSelector } from "react-redux";
@@ -16,6 +16,7 @@ interface ticketTypes {
   };
   User: any;
   status: string;
+  Member: any;
 }
 
 function TicketCards({
@@ -28,7 +29,7 @@ function TicketCards({
   update: ({ status, id }: { status: string; id: string }) => void;
 }) {
   const isBusinessLoggedIn = useSelector(getBusinessLoggedIn);
-
+  const getUserType = useSelector(getUserTypeData);
   const customerView = !isBusinessLoggedIn;
 
   return (
@@ -46,32 +47,37 @@ function TicketCards({
               <p className="text-textPrimary font-poppins text-sm sm:text-base">
                 {!customerView && ticket?.User.name}
               </p>
+              <p className="text-textPrimary font-poppins text-sm sm:text-base">
+                {getUserType != 1 && "Member: " + ticket?.Member.name}
+              </p>
               <p className="text-textSecondary font-poppins text-sm sm:text-sm">
                 {ticket.slot?.startTime} - {ticket.slot?.endTime}
               </p>
 
-              <div className="flex justify-between mt-2">
-                {ticket?.status != "2" && (
+              {!customerView && (
+                <div className="flex justify-between mt-2">
+                  {ticket?.status != "2" && (
+                    <AnimatedBtn
+                      title={ticket?.status == "1" ? "Complete" : "In progress"}
+                      onClick={() => {
+                        update({
+                          status: ticket?.status == "1" ? "2" : "1",
+                          id: ticket.id,
+                        });
+                      }}
+                    />
+                  )}
                   <AnimatedBtn
-                    title={ticket?.status == "1" ? "Complete" : "In progress"}
+                    title="Call"
                     onClick={() => {
-                      update({
-                        status: ticket?.status == "1" ? "2" : "1",
-                        id: ticket.id,
-                      });
+                      var telUrl = "tel:" + ticket.mobile;
+
+                      // Open the dialer with the constructed URL
+                      window.open(telUrl);
                     }}
                   />
-                )}
-                <AnimatedBtn
-                  title="Call"
-                  onClick={() => {
-                    var telUrl = "tel:" + ticket.mobile;
-
-                    // Open the dialer with the constructed URL
-                    window.open(telUrl);
-                  }}
-                />
-              </div>
+                </div>
+              )}
             </div>
           );
         })

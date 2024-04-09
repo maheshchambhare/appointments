@@ -8,11 +8,15 @@ const POST = async (req: NextRequest) => {
 
     const cookie = req.cookies.get("token");
 
-    const businessUserCookie: any = cookie?.value;
-    const businessUSER: any = await jwt.verify(businessUserCookie, JWTKEY);
+    const businessUserCookie: any =
+      typeof cookie != "undefined" ? cookie?.value : null;
+    const businessUSER: any =
+      typeof cookie != "undefined"
+        ? await jwt.verify(businessUserCookie, JWTKEY)
+        : null;
 
     const status = body.status;
-    const id = businessUSER.id;
+    const id = typeof cookie != "undefined" ? businessUSER.id : body.id;
 
     const allAppointments = await prisma.appointments.findMany({
       where: {
@@ -28,6 +32,11 @@ const POST = async (req: NextRequest) => {
       },
       include: {
         User: {
+          select: {
+            name: true,
+          },
+        },
+        Member: {
           select: {
             name: true,
           },

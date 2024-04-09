@@ -42,18 +42,18 @@ function MoreSection({ businessData }: { businessData: any }) {
         setAppointments(res.data.appointments);
       },
       getError: (err) => {
-        router.push(landingpage + "/appointment");
+        // router.push(landingpage + "/appointment");
       },
       router,
       method: "post",
       data: {
         status: JSON.stringify(activeTab),
+        id: businessData.id,
       },
     });
   }, [activeTab]);
 
   const updateTicket = ({ status, id }: { status: string; id: string }) => {
- 
     apicall({
       path: "statuschange",
       getResponse: (res) => {
@@ -195,8 +195,17 @@ function MoreSection({ businessData }: { businessData: any }) {
   };
 
   if (appointments == null) {
-    return <Loader />;
+    return (
+      <div className="flex  h-[40vh] justify-center items-center">
+        <div className="flex flex-row gap-2">
+          <div className="w-4 h-4 rounded-full bg-white animate-bounce"></div>
+          <div className="w-4 h-4 rounded-full bg-white animate-bounce [animation-delay:-.3s]"></div>
+          <div className="w-4 h-4 rounded-full bg-white animate-bounce [animation-delay:-.5s]"></div>
+        </div>
+      </div>
+    );
   }
+
   return (
     <div className="relative max-h-max ">
       {businessPageType === "1" ? (

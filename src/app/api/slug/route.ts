@@ -45,6 +45,7 @@ const POST = async (req: NextRequest) => {
                   about: businessUser.about,
                   address: businessUser.address,
                   slug: businessUser.slug,
+                  id: businessUser.id,
                 }
               : {
                   name: businessUser.businessName,
@@ -54,6 +55,7 @@ const POST = async (req: NextRequest) => {
                   weekdays: businessUser.weekdays,
                   slots: businessUser.slots,
                   slug: businessUser.slug,
+                  id: businessUser.id,
                 },
         },
         { status: 200 }
