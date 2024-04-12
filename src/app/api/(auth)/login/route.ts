@@ -110,7 +110,7 @@ const POST = async (req: Request) => {
             expires: sixMonthsFromNow,
           });
           response.cookies.set("appointifyUser", userTypeId, {
-            httpOnly: true,
+            httpOnly: false,
             secure: false,
             sameSite: "lax",
             expires: sixMonthsFromNow,
@@ -165,7 +165,7 @@ const POST = async (req: Request) => {
           expires: sixMonthsFromNow,
         });
         response.cookies.set("appointifyUser", userTypeId, {
-          httpOnly: true,
+          httpOnly: false,
           secure: false,
           sameSite: "lax",
           expires: sixMonthsFromNow,
