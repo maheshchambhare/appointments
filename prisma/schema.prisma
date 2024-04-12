@@ -26,6 +26,7 @@ model User {
   tickets       Appointments[]
   Member        Member?        @relation(fields: [memberId], references: [id])
   BusinessUsers BusinessUser[] @relation("BusinessUserToUser")
+  fcmToken      String?
 
   @@index([mobile, name])
 }

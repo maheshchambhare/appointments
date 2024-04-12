@@ -56,6 +56,7 @@ CREATE TABLE "BusinessUser" (
     "weekdays" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "fcmToken" TEXT,
 
     CONSTRAINT "BusinessUser_pkey" PRIMARY KEY ("id")
 );
@@ -69,6 +70,7 @@ CREATE TABLE "Member" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "businessUserId" TEXT,
     "password" TEXT NOT NULL,
+    "fcmToken" TEXT,
 
     CONSTRAINT "Member_pkey" PRIMARY KEY ("id")
 );
