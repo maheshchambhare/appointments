@@ -66,10 +66,7 @@ const POST = async (req: Request) => {
       return response;
     }
 
-    const response = NextResponse.json(
-      { user: updatedUser, verificationCode },
-      { status: 200 }
-    );
+    const response = NextResponse.json({ user: updatedUser }, { status: 200 });
 
     response.cookies.set("userauth", jsonToken, {
       httpOnly: true,

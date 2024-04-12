@@ -17,7 +17,14 @@ const POST = async (req: NextRequest) => {
 
     const businessUSER: any = await jwt.verify(businessUserCookie, JWTKEY);
 
-    const tokens = [businessUSER.fcmToken, body.fcmToken];
+    console.log(businessUSER.fcmToken, body.fcmToken, "OOO");
+
+    const tokens =
+      businessUSER.fcmToken == body.fcmToken
+        ? [businessUSER.fcmToken]
+        : businessUSER.fcmToken && body.fcmToken
+        ? [businessUSER.fcmToken, body.fcmToken]
+        : [businessUSER.fcmToken];
 
     // Send the notification
 
@@ -112,7 +119,7 @@ const POST = async (req: NextRequest) => {
         console.error("Error generating token:", error);
       }
       const response = NextResponse.json(
-        { message: "Success", otp: verificationCode },
+        { message: "Success" },
         { status: 201 }
       );
       response.cookies.set("appointmentauth", jsonToken, {

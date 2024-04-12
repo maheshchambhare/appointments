@@ -44,7 +44,12 @@ const POST = async (req: NextRequest) => {
           data: appointmentData,
         });
 
-        const tokens = [decryptedOtp.businessFcm, decryptedOtp.memberFcm];
+        const tokens =
+          decryptedOtp.businessFcm == decryptedOtp.memberFcm
+            ? [decryptedOtp.businessFcm]
+            : decryptedOtp.businessFcm && decryptedOtp.memberFcm
+            ? [decryptedOtp.businessFcm, decryptedOtp.memberFcm]
+            : [decryptedOtp.businessFcm];
 
         const message: any = {
           data: {
