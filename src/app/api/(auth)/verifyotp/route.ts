@@ -43,10 +43,14 @@ const POST = async (req: NextRequest) => {
           { message: "Successfully veified" },
           { status: 200 }
         );
+
+        const sixMonthsFromNow = new Date();
+        sixMonthsFromNow.setMonth(sixMonthsFromNow.getMonth() + 6);
         response.cookies.set("token", jsonToken, {
           httpOnly: true,
           secure: true,
           sameSite: true,
+          expires: sixMonthsFromNow,
         });
 
         response.cookies.delete("userauth");

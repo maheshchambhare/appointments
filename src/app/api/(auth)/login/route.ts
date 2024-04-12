@@ -85,6 +85,8 @@ const POST = async (req: Request) => {
       } catch (error) {
         console.error("Error generating token:", error);
       }
+      const sixMonthsFromNow = new Date();
+      sixMonthsFromNow.setMonth(sixMonthsFromNow.getMonth() + 6);
 
       if (userTypeId == BUSINESSUSER) {
         if (businessUser?.approved) {
@@ -104,9 +106,34 @@ const POST = async (req: Request) => {
           response.cookies.set("token", jsonToken, {
             httpOnly: true,
             secure: false,
-            sameSite: false,
+            sameSite: "lax",
+            expires: sixMonthsFromNow,
           });
-          response.cookies.set("appointifyUser", userTypeId);
+          response.cookies.set("appointifyUser", userTypeId, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax",
+            expires: sixMonthsFromNow,
+          });
+
+          response.cookies.set(
+            "businessUser",
+            JSON.stringify({
+              name: businessUser.name,
+              slug: businessUser.slug,
+              about: businessUser.about,
+              businessName: businessUser.businessName,
+              address: businessUser.address,
+              mobile: businessUser.mobile,
+              userType: userTypeId == BUSINESSUSER ? 0 : 1,
+            }),
+            {
+              httpOnly: false,
+              secure: false,
+              sameSite: false,
+              expires: sixMonthsFromNow,
+            }
+          );
           return response;
         } else {
           return NextResponse.json(
@@ -134,9 +161,34 @@ const POST = async (req: Request) => {
         response.cookies.set("token", jsonToken, {
           httpOnly: true,
           secure: false,
-          sameSite: false,
+          sameSite: "lax",
+          expires: sixMonthsFromNow,
         });
-        response.cookies.set("appointifyUser", userTypeId);
+        response.cookies.set("appointifyUser", userTypeId, {
+          httpOnly: true,
+          secure: false,
+          sameSite: "lax",
+          expires: sixMonthsFromNow,
+        });
+        response.cookies.set(
+          "businessUser",
+          JSON.stringify({
+            name: businessUser.name,
+            slug: businessUser.slug,
+            about: businessUser.about,
+            businessName: businessUser.businessName,
+            address: businessUser.address,
+            mobile: businessUser.mobile,
+            userType: userTypeId == BUSINESSUSER ? 0 : 1,
+          }),
+          {
+            httpOnly: false,
+            secure: false,
+            sameSite: false,
+            expires: sixMonthsFromNow,
+          }
+        );
+
         return response;
       }
     }

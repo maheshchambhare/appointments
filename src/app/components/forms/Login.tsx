@@ -13,6 +13,7 @@ import {
 } from "@/store/slices/authSlice";
 import { Bounce, toast } from "react-toastify";
 import useFcmToken from "../utils/firebase/useFcmToken";
+import moment from "moment";
 
 const Login = ({
   resetForm,
@@ -26,6 +27,7 @@ const Login = ({
   const { fcmToken, notificationPermissionStatus } = useFcmToken();
 
   const router = useRouter();
+
   return (
     <div>
       <Formik
@@ -65,7 +67,13 @@ const Login = ({
           apicall({
             path: "login",
             getResponse: (res) => {
-              Cookies.set("businessUser", JSON.stringify({ ...res.data }));
+              // const sixMonthsFromNow = moment().add(6, "months").toDate();
+
+              // console.log(sixMonthsFromNow, "XYZ");
+
+              // Cookies.set("businessUser", JSON.stringify({ ...res.data }), {
+              //   expires: sixMonthsFromNow,
+              // });
               dispatch(setBusinessUserLoggedIn(true));
               dispatch(setUserData(res.data));
               dispatch(setUserType(res.data.userType));

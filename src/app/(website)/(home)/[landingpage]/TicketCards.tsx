@@ -37,7 +37,6 @@ function TicketCards({
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 ">
       {tickets.length > 0 ? (
         tickets.map((ticket: ticketTypes, index) => {
-          console.log(ticket, "II");
           return (
             <div
               className="p-2 border border-[#ffffff30] rounded-md shadow-md"

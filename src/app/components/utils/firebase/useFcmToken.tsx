@@ -28,7 +28,7 @@ const useFcmToken = () => {
               }).then((currentToken: any) => {
                 if (currentToken) {
                   setToken(currentToken);
-                  console.log("No registration token available.", currentToken);
+
                   // Send the token to your server and update the UI if necessary
                   // ...
                 } else {

@@ -19,11 +19,11 @@ const Profile = () => {
     <div>
       <Formik
         initialValues={{
-          name: businessUser.name || "",
-          businessName: businessUser.businessName || "",
-          mobile: businessUser.mobile || "",
-          about: businessUser.about || "",
-          address: businessUser.address || "",
+          name: businessUser?.name || "",
+          businessName: businessUser?.businessName || "",
+          mobile: businessUser?.mobile || "",
+          about: businessUser?.about || "",
+          address: businessUser?.address || "",
         }}
         validate={(values) => {
           const errors: any = {};
@@ -39,12 +39,6 @@ const Profile = () => {
           apicall({
             path: "editprofile",
             getResponse: (res) => {
-              const business = {
-                ...businessUser,
-                about: data.about,
-                address: data.address,
-              };
-              Cookies.set("businessUser", JSON.stringify(business));
               toast("Your profile updated successfully", {
                 position: "bottom-right",
                 autoClose: 5000,

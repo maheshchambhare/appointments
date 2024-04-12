@@ -49,11 +49,14 @@ const POST = async (req: Request) => {
         { message: "otp send successfully" },
         { status: 200 }
       );
+      const sixMonthsFromNow = new Date();
+      sixMonthsFromNow.setMonth(sixMonthsFromNow.getMonth() + 6);
 
       response.cookies.set("userauth", jsonToken, {
         httpOnly: true,
         secure: false,
-        sameSite: false,
+        sameSite: "lax",
+        expires: sixMonthsFromNow,
       });
 
       return response;

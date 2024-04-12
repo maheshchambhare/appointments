@@ -122,10 +122,14 @@ const POST = async (req: NextRequest) => {
         { message: "Success" },
         { status: 201 }
       );
+
+      const sixMonthsFromNow = new Date();
+      sixMonthsFromNow.setMonth(sixMonthsFromNow.getMonth() + 6);
       response.cookies.set("appointmentauth", jsonToken, {
         httpOnly: true,
         secure: false,
-        sameSite: false,
+        sameSite: "lax",
+        expires: sixMonthsFromNow,
       });
       return response;
     }

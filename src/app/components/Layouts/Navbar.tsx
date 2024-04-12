@@ -97,6 +97,8 @@ function Navbar() {
       route: "logout",
       icon: <LogOut size={18} />,
       onClick: () => {
+        router.push("/");
+
         apicall({
           path: "logout",
           getResponse: (res) => {
@@ -104,7 +106,7 @@ function Navbar() {
             dispatch(setUserData(null));
             dispatch(setUserType(null));
             setOpenMenu(false);
-            router.push("/");
+
             toast("logged out successfully", {
               position: "bottom-right",
               autoClose: 5000,
