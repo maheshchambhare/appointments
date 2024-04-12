@@ -34,6 +34,7 @@ const POST = async (req: NextRequest) => {
         User: {
           select: {
             name: true,
+            mobile: true,
           },
         },
         Member: {
