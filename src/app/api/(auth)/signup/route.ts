@@ -34,11 +34,12 @@ const POST = async (req: Request) => {
 
     const slugCode = generateRandomString(10);
 
+    const slug = body.businessName.replace(/\s+/g, "-") + "-" + slugCode;
+
     const updatedUser = {
       ...body,
       password: encryptedPass,
-      slug:
-        body.businessName.toLowerCase().replace(/\s+/g, "-") + "-" + slugCode,
+      slug: slug.toLowerCase(),
     };
 
     let jsonToken = "";
@@ -55,9 +56,20 @@ const POST = async (req: Request) => {
       console.error("Error generating token:", error);
     }
 
-    sendOtp({ verificationCode, mobileNumber: body.mobile });
+    try {
+      sendOtp({ verificationCode, mobileNumber: body.mobile });
+    } catch (e) {
+      const response = NextResponse.json(
+        { message: "send otp failed" },
+        { status: 400 }
+      );
+      return response;
+    }
 
-    const response = NextResponse.json({ user: updatedUser }, { status: 200 });
+    const response = NextResponse.json(
+      { user: updatedUser, verificationCode },
+      { status: 200 }
+    );
 
     response.cookies.set("userauth", jsonToken, {
       httpOnly: true,

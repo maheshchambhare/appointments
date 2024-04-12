@@ -7,7 +7,7 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "dev-ssh": "node scripts/next-dev-ssl.ts"
+    "dev-ssh": "node scripts/next-dev-ssl.js"
   },
   "dependencies": {
     "@prisma/client": "5.11.0",
@@ -20,11 +20,14 @@
     "@reduxjs/toolkit": "^2.2.1",
     "@supabase/supabase-js": "^2.39.7",
     "@tabler/icons-react": "^2.47.0",
+    "@types/firebase": "^3.2.1",
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "date-fns": "^3.6.0",
+    "firebase": "^10.10.0",
+    "firebase-admin": "^12.0.0",
     "formik": "^2.4.5",
     "framer-motion": "^11.0.5",
     "html2canvas": "^1.4.1",

@@ -20,9 +20,15 @@
     "paths": {
       "@/*": ["./src/*"]
     }
-    
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/script.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/script.js",
+    "scripts/next-dev-ssl.js"
+  ],
   "exclude": ["node_modules"],
   "ts-node": { "esm": true, "experimentalSpecifierResolution": "node" }
 }

@@ -1,7 +1,10 @@
 "use client";
 
 import { Tabs } from "@/app/components/ui/tabs";
-import { getBusinessSectionType } from "@/store/slices/commonSlices";
+import {
+  getBusinessSectionType,
+  getCallAppointments,
+} from "@/store/slices/commonSlices";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TicketCards from "./TicketCards";
@@ -26,6 +29,7 @@ function MoreSection({ businessData }: { businessData: any }) {
   const { landingpage } = useParams();
   const isBusinessLoggedIn = useSelector(getBusinessLoggedIn);
   const [activeTab, setActiveTab] = useState(0);
+  const callAppointments = useSelector(getCallAppointments);
 
   const [appointments, setAppointments] = useState<any>(null);
 
@@ -51,7 +55,7 @@ function MoreSection({ businessData }: { businessData: any }) {
         id: businessData.id,
       },
     });
-  }, [activeTab]);
+  }, [activeTab, callAppointments]);
 
   const updateTicket = ({ status, id }: { status: string; id: string }) => {
     apicall({

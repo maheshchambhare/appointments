@@ -66,6 +66,7 @@ model BusinessUser {
   tickets       Appointments[]
   members       Member[]
   customers     User[]         @relation("BusinessUserToUser")
+  fcmToken      String?
 
   @@index([mobile, name])
 }
@@ -81,6 +82,7 @@ model Member {
   tickets        Appointments[]
   BusinessUser   BusinessUser?  @relation(fields: [businessUserId], references: [id])
   customers      User[]
+  fcmToken       String?
 
   @@index([mobile, name])
 }

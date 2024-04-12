@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import prisma from "@/utils/prisma";
 import { NextResponse, NextRequest } from "next/server";
-
+import adminApp from "@/app/components/utils/firebase/firebaseServer";
 const JWTKEY: any = process.env.JWT_KEY_TOKEN;
 const JWTKEYOTP: any = process.env.JWT_KEY_OTP;
 
@@ -44,6 +44,28 @@ const POST = async (req: NextRequest) => {
           data: appointmentData,
         });
 
+        const tokens = [decryptedOtp.businessFcm, decryptedOtp.memberFcm];
+
+        const message: any = {
+          data: {
+            appointment: JSON.stringify(appointments),
+            customer: user.name,
+            message: "Appointment added successfully",
+          },
+          tokens: tokens,
+        };
+
+        adminApp
+          .messaging()
+          .sendMulticast(message)
+          .then((response) => {
+            // Response is a message ID string.
+            console.log("Successfully sent message:", response);
+          })
+          .catch((error) => {
+            console.log("Error sending message:", error);
+          });
+
         const response = NextResponse.json(
           { message: "Successfully veified", data: appointments },
           { status: 200 }
@@ -55,6 +77,7 @@ const POST = async (req: NextRequest) => {
         });
 
         response.cookies.delete("appointmentauth");
+
         return response;
       }
 

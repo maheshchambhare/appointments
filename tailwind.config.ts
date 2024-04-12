@@ -34,6 +34,7 @@ const config: Config = {
         poppins: ["Poppins", "sans-serif"],
         mont: ["Montserrat", "sans-serif"],
         brand: ["NicoMoji", "sans-serif"],
+        ramchin: ["ramchin", "sans-serif"],
       },
       animation: {
         shimmer: "shimmer 2s linear infinite",

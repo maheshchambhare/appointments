@@ -12,6 +12,7 @@ import {
   setUserType,
 } from "@/store/slices/authSlice";
 import { Bounce, toast } from "react-toastify";
+import useFcmToken from "../utils/firebase/useFcmToken";
 
 const Login = ({
   resetForm,
@@ -22,6 +23,8 @@ const Login = ({
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
+  const { fcmToken, notificationPermissionStatus } = useFcmToken();
+
   const router = useRouter();
   return (
     <div>
@@ -86,6 +89,7 @@ const Login = ({
             data: {
               mobile: values.mobile,
               password: values.password,
+              fcmToken,
             },
           });
         }}

@@ -65,6 +65,7 @@ const Appointment = ({
         let obj = {
           label: member.name,
           value: member.id,
+          fcmToken: member.fcmToken,
         };
         people.push(obj);
       });
@@ -81,6 +82,7 @@ const Appointment = ({
     date: null | string;
     slot: null | { startTime: string; endTime: string }; // Assuming slot can be either null or a string
     memberId: null | string; // Assuming memberId can be either null or a string
+    fcmToken?: String;
   }
 
   const finalForm: FinalForm = {
@@ -90,6 +92,7 @@ const Appointment = ({
     date: null,
     slot: null,
     memberId: null,
+    fcmToken: "",
   };
 
   const getAllSlots = ({ date, member }: { date: string; member: string }) => {
@@ -233,7 +236,20 @@ const Appointment = ({
                 setShowticket(true);
               }
             },
-            getError: (err) => {},
+            getError: (err) => {
+              toast(err.response.data.message, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                type: "error",
+                transition: Bounce,
+              });
+            },
             router,
             method: "post",
             data: showOtpField ? { otp: otp } : values,
@@ -325,9 +341,11 @@ const Appointment = ({
                       title="Pick a Member"
                       required={true}
                       onChange={(e: any) => {
+                        console.log(e, "HHHHH");
                         setSelectedDate(null);
                         values.date = null;
                         values.memberId = e.value;
+                        values.fcmToken = e.fcmToken;
                         setMembersArrErr("");
                       }}
                       isMulti={false}

@@ -31,17 +31,20 @@ const Otp = ({
       path: formType == "1" ? "signup/verify" : "verifyotp",
       getResponse: (res) => {
         if (formType == "1") {
-          toast("🥳 Sign up successful,now you can log in", {
-            position: "bottom-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Bounce,
-          });
+          toast(
+            "🥳 Sign up successful, you can login after admin verifies your account",
+            {
+              position: "bottom-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              transition: Bounce,
+            }
+          );
           // Cookies.set("businessUser", JSON.stringify({ ...res.data }));
           // dispatch(setBusinessUserLoggedIn(true));
           // dispatch(setUserData(res.data));
@@ -50,7 +53,20 @@ const Otp = ({
           setIsOpen(false);
         }
       },
-      getError: (err) => {},
+      getError: (err) => {
+        toast(err.response.data.message, {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          type: "error",
+          transition: Bounce,
+        });
+      },
       router,
       method: "post",
       data: { otp: otpData },

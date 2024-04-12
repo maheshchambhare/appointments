@@ -1,12 +1,11 @@
 import jwt from "jsonwebtoken";
 import prisma from "@/utils/prisma";
 import { NextResponse, NextRequest } from "next/server";
-import axios from "axios";
+import adminApp from "@/app/components/utils/firebase/firebaseServer";
 import sendOtp from "../../(auth)/sendOtp";
 
 const JWTKEY: any = process.env.JWT_KEY_TOKEN;
 const JWTKEYOTP: any = process.env.JWT_KEY_OTP;
-const FAST2SMSAUTH: any = process.env.FAST2SMSAUTH;
 
 const POST = async (req: NextRequest) => {
   try {
@@ -17,6 +16,10 @@ const POST = async (req: NextRequest) => {
     const businessUserCookie: any = cookie?.value;
 
     const businessUSER: any = await jwt.verify(businessUserCookie, JWTKEY);
+
+    const tokens = [businessUSER.fcmToken, body.fcmToken];
+
+    // Send the notification
 
     const user = await prisma.user.findUnique({
       where: {
@@ -39,6 +42,25 @@ const POST = async (req: NextRequest) => {
         data: appointmentData,
       });
 
+      const message: any = {
+        data: {
+          appointment: JSON.stringify(addAppointment),
+          customer: user.name,
+          message: "Appointment added successfully",
+        },
+        tokens: tokens,
+      };
+
+      adminApp
+        .messaging()
+        .sendMulticast(message)
+        .then((response) => {
+          console.log("Successfully sent message:", response);
+        })
+        .catch((error) => {
+          console.log("Error sending message:", error);
+        });
+
       return NextResponse.json(
         {
           message: "Appointment added",
@@ -51,7 +73,15 @@ const POST = async (req: NextRequest) => {
         .toString()
         .padStart(6, "0");
 
-      sendOtp({ verificationCode, mobileNumber: body.mobile });
+      try {
+        sendOtp({ verificationCode, mobileNumber: body.mobile });
+      } catch (e) {
+        const response = NextResponse.json(
+          { message: "send otp failed" },
+          { status: 400 }
+        );
+        return response;
+      }
 
       const appointmentData = {
         businessUserId: businessUSER.id,
@@ -67,7 +97,12 @@ const POST = async (req: NextRequest) => {
       let jsonToken = "";
       try {
         jsonToken = await jwt.sign(
-          { appointmentData: appointmentData, otp: verificationCode },
+          {
+            appointmentData: appointmentData,
+            otp: verificationCode,
+            businessFcm: businessUSER.fcmToken,
+            memberFcm: body.fcmToken,
+          },
           JWTKEYOTP,
           {
             expiresIn: 31556926, // 1 year in seconds
@@ -77,7 +112,7 @@ const POST = async (req: NextRequest) => {
         console.error("Error generating token:", error);
       }
       const response = NextResponse.json(
-        { message: "Success" },
+        { message: "Success", otp: verificationCode },
         { status: 201 }
       );
       response.cookies.set("appointmentauth", jsonToken, {

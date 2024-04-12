@@ -39,12 +39,33 @@ const POST = async (req: Request) => {
           },
         },
       });
+
+      const updatedMember = await prisma.member.update({
+        where: {
+          mobile: mobile,
+        },
+        data: {
+          fcmToken: body.fcmToken,
+        },
+      });
+
       userTypeId = MEMBERUSER;
       businessUser = {
         ...member,
         slug: member?.BusinessUser?.slug,
         businessName: member?.BusinessUser?.businessName,
+        businessFcmToken: member.BusinessUser.fcmToken,
+        memberFcmToken: body.fcmToken,
       };
+    } else {
+      const updated = await prisma.businessUser.update({
+        where: {
+          mobile: mobile,
+        },
+        data: {
+          fcmToken: body.fcmToken,
+        },
+      });
     }
 
     const checkPass = await bcrypt

@@ -126,7 +126,7 @@ function Navbar() {
   ];
 
   return (
-    <div className="w-[100%] z-10  mMax:w-[80%] lMax:w-[70%] mt-4 mx-auto h-[60px]  flex xsm:flex-row md:flex-row justify-between items-center  ">
+    <div className="w-[100%]  z-10  mMax:w-[80%] lMax:w-[70%] mt-4 mx-auto  flex xsm:flex-row md:flex-row justify-between items-center  ">
       <div
         onClick={() => {
           if (isBusinessLoggedIn) {

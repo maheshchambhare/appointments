@@ -17,6 +17,7 @@ interface ticketTypes {
   User: any;
   status: string;
   Member: any;
+  date: string;
 }
 
 function TicketCards({
@@ -41,13 +42,19 @@ function TicketCards({
               className="p-2 border border-[#ffffff30] rounded-md shadow-md"
               key={ticket.id}
             >
-              <p className="text-textPrimary font-mont text-base sm:text-lg">
-                #{ticket.ticketId}
-              </p>
+              <div className="flex justify-between ">
+                <p className="text-textPrimary font-mont text-base sm:text-lg">
+                  #{ticket.ticketId}
+                </p>
+
+                <p className="text-textSecondary font-poppins text-sm sm:text-sm">
+                  {ticket.date}
+                </p>
+              </div>
               <p className="text-textPrimary font-poppins text-sm sm:text-base">
                 {!customerView && ticket?.User.name}
               </p>
-              <p className="text-textPrimary font-poppins text-sm sm:text-base">
+              <p className="text-textSecondary font-poppins text-sm sm:text-sm">
                 {getUserType != 1 && "Member: " + ticket?.Member.name}
               </p>
               <p className="text-textSecondary font-poppins text-sm sm:text-sm">

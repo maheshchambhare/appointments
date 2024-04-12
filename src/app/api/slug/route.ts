@@ -15,11 +15,13 @@ const POST = async (req: NextRequest) => {
         slug: slug,
         AND: [{ verified: true }, { approved: true }],
       },
+
       include: {
         members: {
           select: {
             id: true,
             name: true,
+            fcmToken: true,
           },
         },
       },
@@ -29,9 +31,13 @@ const POST = async (req: NextRequest) => {
       let jsonToken = "";
 
       try {
-        jsonToken = await jwt.sign({ id: businessUser.id }, JWTKEY, {
-          expiresIn: 31556926, // 1 year in seconds
-        });
+        jsonToken = await jwt.sign(
+          { id: businessUser.id, fcmToken: businessUser.fcmToken },
+          JWTKEY,
+          {
+            expiresIn: 31556926, // 1 year in seconds
+          }
+        );
       } catch (error) {
         console.error("Error generating token:", error);
       }

@@ -35,4 +35,9 @@ export const metadata: Metadata = {
   icons: {
     icon: "/logo.webp",
   },
+  openGraph: {
+    title: `Appointify - Book Your Appointment`,
+    description: homeData.description,
+    images: [{ url: "/banner.webp" }],
+  },
 };
