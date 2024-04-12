@@ -1,9 +1,11 @@
 import admin from "firebase-admin";
 import * as creds from "./appointify-service.json";
 
+const cred: any = creds;
+
 try {
   admin.initializeApp({
-    credential: admin.credential.cert({ ...creds }),
+    credential: admin.credential.cert({ ...cred }),
     projectId: "appointify-e6cff",
   });
   console.log("Initialized.");
