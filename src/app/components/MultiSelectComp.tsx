@@ -48,7 +48,7 @@ function MultiSelectComp({
       w-full justify-between xsm:flex-col sm:flex-col md:flex-col"
     >
       <label
-        className={`font-sans text-md font-medium  transition-all duration-200 ease-in-out left-4`}
+        className={`font-sans text-textPrimary text-md font-medium  transition-all duration-200 ease-in-out left-4`}
       >
         {title} {required && <span className="text-[red]">*</span>}
         {addExpBtn}

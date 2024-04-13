@@ -6,10 +6,11 @@ import Button from "../ui/Button";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { apicall } from "@/utils/getdata";
+import useFcmToken from "../utils/firebase/useFcmToken";
 
 const SuperAdminlogin = () => {
   const [showPassword, setShowPassword] = useState(false);
-
+  const { fcmToken, notificationPermissionStatus } = useFcmToken();
   const router = useRouter();
   return (
     <div>
@@ -43,6 +44,7 @@ const SuperAdminlogin = () => {
             data: {
               name: values.name,
               password: values.password,
+              fcmToken,
             },
           });
         }}

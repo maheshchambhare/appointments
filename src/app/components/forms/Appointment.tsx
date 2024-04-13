@@ -164,6 +164,12 @@ const Appointment = ({
 
   return (
     <div className="max-w-[300px] mx-auto">
+      <p className="font-sans text-textPrimary text-xl font-semibold">
+        Welcome to {title}
+      </p>
+      <p className="font-sans text-textSecondary text-base font-normal">
+        Fill out the form below to book your appointment
+      </p>
       <Formik
         initialValues={finalForm}
         validate={(values) => {
@@ -311,19 +317,25 @@ const Appointment = ({
                       errors.sex = "";
                       values.sex = e;
                     }}
-                    className="flex flex-wrap"
+                    className="flex flex-wrap "
                   >
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="male" id="male" />
-                      <Label htmlFor="male">Male</Label>
+                      <Label className="text-textPrimary" htmlFor="male">
+                        Male
+                      </Label>
                     </div>
                     <div className="flex ml-4 items-center space-x-2">
                       <RadioGroupItem value="female" id="female" />
-                      <Label htmlFor="female">Female</Label>
+                      <Label className="text-textPrimary" htmlFor="female">
+                        Female
+                      </Label>
                     </div>
                     <div className="flex ml-4 items-center space-x-2">
                       <RadioGroupItem value="other" id="other" />
-                      <Label htmlFor="other">Other</Label>
+                      <Label className="text-textPrimary" htmlFor="other">
+                        Other
+                      </Label>
                     </div>
                   </RadioGroup>
 
@@ -378,11 +390,11 @@ const Appointment = ({
                       !values.date && "text-muted-foreground"
                     )}
                   >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {/* <CalendarIcon className="mr-2 h-4 w-4 text-textPrimary" /> */}
                     {selectedDate ? (
-                      <p className="text-textprimary font-sm">{values.date}</p>
+                      <p className="text-textPrimary font-sm">{values.date}</p>
                     ) : (
-                      <span>Pick a date</span>
+                      <span className="text-textPrimary">Pick a date</span>
                     )}
                   </Buttons>
                   {submitCount > 0 && errors.date && (
@@ -428,7 +440,7 @@ const Appointment = ({
                 <div className="mt-4 w-full">
                   {slotsLoader ? (
                     <>
-                      <div className="flex mt-4  justify-center items-center">
+                      <div className="flex mt-4  justify-center items-center text-textPrimary">
                         <div className="flex flex-row gap-2">
                           <div className="w-2 h-2 rounded-full bg-white animate-bounce"></div>
                           <div className="w-2 h-2 rounded-full bg-white animate-bounce [animation-delay:-.3s]"></div>

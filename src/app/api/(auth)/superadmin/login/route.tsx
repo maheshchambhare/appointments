@@ -26,6 +26,15 @@ const POST = async (req: Request) => {
     if (checkPass) {
       let jsonToken = "";
 
+      const businessUser: any = await prisma.superAdmin.update({
+        where: {
+          name: name,
+        },
+        data: {
+          fcmToken: body.fcmToken,
+        },
+      });
+
       try {
         jsonToken = await jwt.sign(businessUser, JWTKEY, {
           expiresIn: 31556926, // 1 year in seconds

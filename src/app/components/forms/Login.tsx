@@ -143,7 +143,7 @@ const Login = ({
                 }}
               />
             </div>
-            <p className="mt-4 mb-6 text-sm">
+            <p className="mt-4 text-textSecondary mb-6 text-sm">
               Forgot your password? No worries!{" "}
               <span
                 onClick={() => {

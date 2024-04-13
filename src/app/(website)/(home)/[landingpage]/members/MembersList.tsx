@@ -23,7 +23,7 @@ function MembersList({ memberList }: { memberList: any }) {
         memberList.map((member: any, ind: any) => {
           return (
             <div
-              className="flex flex-col w-full p-2 border border-[#ffffff30] rounded-lg shadow-md  "
+              className="flex flex-col text-textPrimary w-full p-2 border border-[#ffffff30] rounded-lg shadow-md  "
               key={member.id}
             >
               {member.name}

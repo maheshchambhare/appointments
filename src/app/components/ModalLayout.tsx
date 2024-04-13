@@ -100,7 +100,7 @@ const ModalLayout: React.FC<ModalLayoutProps> = ({
             }  flex justify-center`}
           >
             {modalTitle && (
-              <h3 className="mx-auto flex justify-center items-center w-full font-heading  text-[22px]  font-medium">
+              <h3 className="mx-auto flex text-textPrimary justify-center items-center w-full font-heading  text-[22px]  font-medium">
                 {isMobile ? (
                   <>
                     {modalTitle.substring(0, 20)}
@@ -121,7 +121,7 @@ const ModalLayout: React.FC<ModalLayoutProps> = ({
                     setIsMainDiv(false);
                   }, 500);
                 }}
-                className="text-[20px] ml-auto"
+                className="text-[20px] ml-auto text-textPrimary"
               />
             )}
           </div>

@@ -5,7 +5,7 @@ function AnimatedBtn({
   onClick,
 }: {
   title: string;
-  onClick: () => void;
+  onClick: (e: any) => void;
 }) {
   return (
     <button

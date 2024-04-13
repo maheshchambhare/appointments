@@ -8,8 +8,9 @@ datasource db {
 }
 
 model SuperAdmin {
-  id       String @id @default(uuid())
-  name     String @unique
+  id       String  @id @default(uuid())
+  name     String  @unique
+  fcmToken String?
   password String
 }
 

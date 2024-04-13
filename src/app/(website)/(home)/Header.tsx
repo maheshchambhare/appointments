@@ -86,7 +86,7 @@ const Header = () => {
         className="absolute bottom-0 left-0 right-0 w-full flex justify-center"
       >
         <ChevronsDown
-          className="animate-updown transition-all cursor-pointer"
+          className="animate-updown transition-all cursor-pointer text-textPrimary"
           size={35}
         />
       </div>

@@ -52,7 +52,7 @@ function Navbar() {
     {
       name: getUserType == 1 ? "My Tickets" : "All Tickets",
       route: "home",
-      icon: <SquareKanban size={18} />,
+      icon: <SquareKanban className="text-textPrimary" size={18} />,
       onClick: () => {
         router.push("/" + businessUserData.slug);
         dispatch(setBusinessSectionType("1"));
@@ -61,7 +61,7 @@ function Navbar() {
     getUserType == 0 && {
       name: "Profile",
       route: "profile",
-      icon: <User size={18} />,
+      icon: <User className="text-textPrimary" size={18} />,
       onClick: () => {
         router.push("/" + businessUserData.slug + "/profile");
       },
@@ -69,7 +69,7 @@ function Navbar() {
     getUserType == 0 && {
       name: "Generate Slots",
       route: "slots",
-      icon: <CalendarPlus size={18} />,
+      icon: <CalendarPlus className="text-textPrimary" size={18} />,
       onClick: () => {
         setOpenMenu(false);
         router.push("/" + businessUserData.slug);
@@ -82,7 +82,7 @@ function Navbar() {
     getUserType == 0 && {
       name: "Members",
       route: "members",
-      icon: <Users2Icon size={18} />,
+      icon: <Users2Icon className="text-textPrimary" size={18} />,
       onClick: () => {
         setOpenMenu(false);
         router.push("/" + businessUserData.slug + "/members");
@@ -95,7 +95,7 @@ function Navbar() {
     {
       name: "Logout",
       route: "logout",
-      icon: <LogOut size={18} />,
+      icon: <LogOut className="text-textPrimary" size={18} />,
       onClick: () => {
         router.push("/");
 
@@ -151,7 +151,7 @@ function Navbar() {
           className="flex  xsm:w-[50%] md:w-[30%] h-full justify-end"
         >
           <p className="cursor-pointer font-mono font-semibold">
-            <AlignJustify />
+            <AlignJustify className="text-textPrimary" />
           </p>
         </div>
       ) : (
@@ -161,7 +161,9 @@ function Navbar() {
           }}
           className="flex  xsm:w-[50%] md:w-[30%] h-full justify-end"
         >
-          <p className="cursor-pointer font-mono font-semibold">Login</p>
+          <p className="cursor-pointer font-mono font-semibold text-textPrimary">
+            Login
+          </p>
         </div>
       )}
 
@@ -225,7 +227,9 @@ function Navbar() {
                   key={ind}
                 >
                   {item.icon}
-                  <p className="font-poppins text-base ml-2">{item.name}</p>
+                  <p className="font-poppins text-base ml-2 text-textPrimary">
+                    {item.name}
+                  </p>
                 </div>
               )
             );

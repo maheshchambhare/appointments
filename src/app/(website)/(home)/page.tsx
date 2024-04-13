@@ -32,19 +32,19 @@ export default function Home() {
         {/* How it works section */}
 
         <ScreenWrapper>
-          <p className="text-center my-2">@2024 appointify</p>
+          <p className="text-center my-2 text-textPrimary">@2024 appointify</p>
           <div className="flex  w-full justify-center mb-6">
             <Link
               href="https://twitter.com/maheshchambhare"
               className="mr-4 cursor-pointer"
             >
-              <Twitter />
+              <Twitter className="text-textPrimary" />
             </Link>
             <Link
               href="https://www.linkedin.com/in/maheshchambhare/"
               className=" cursor-pointer"
             >
-              <Linkedin className="cursor-pointer" />
+              <Linkedin className="cursor-pointer text-textPrimary" />
             </Link>
           </div>
         </ScreenWrapper>
@@ -62,6 +62,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: `Appointify - ${homeData.title}`,
     description: homeData.description,
-    images: [{ url: "/banner.webp" }],
+    images: [{ url: "https://appointify.in/banner.webp" }],
+    url: "https://appointify.in",
+    siteName: "Appointify",
   },
 };

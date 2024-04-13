@@ -57,7 +57,7 @@ const CustomTextArea: React.FC<Props> = ({
   return (
     <div className="relative">
       <label
-        className={`font-sans text-md  font-medium  transition-all duration-200 ease-in-out left-4`}
+        className={`font-sans text-md text-textPrimary font-medium  transition-all duration-200 ease-in-out left-4`}
       >
         {inputLabel}{" "}
         {inputLabel && required && <label className="text-red-500"> *</label>}{" "}

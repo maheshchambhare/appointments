@@ -38,6 +38,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `Appointify - Book Your Appointment`,
     description: homeData.description,
-    images: [{ url: "/banner.webp" }],
+    images: [{ url: "https://appointify.in/banner.webp" }],
+    url: "https://appointify.in",
   },
 };

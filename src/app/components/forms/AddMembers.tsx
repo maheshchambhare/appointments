@@ -65,7 +65,7 @@ function AddMembers({
 
           return errors;
         }}
-        onSubmit={(values, { setSubmitting }) => {
+        onSubmit={(values, { setSubmitting, resetForm }) => {
           const data = {
             name: values.name,
             mobile: JSON.stringify(values.mobile),
@@ -76,6 +76,7 @@ function AddMembers({
             path: "members/add",
             getResponse: (res) => {
               addMemberToList(data);
+              resetForm();
               toast("Member added successfully", {
                 position: "bottom-right",
                 autoClose: 5000,
@@ -88,7 +89,20 @@ function AddMembers({
                 transition: Bounce,
               });
             },
-            getError: (err) => {},
+            getError: (err) => {
+              toast("Something failed on server", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                type: "error",
+                transition: Bounce,
+              });
+            },
             router,
             method: "post",
             data,

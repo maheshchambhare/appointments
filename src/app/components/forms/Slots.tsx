@@ -296,13 +296,13 @@ function Slots() {
         }}
         className="my-4 flex cursor-pointer"
       >
-        <ChevronLeft />
-        <p className="text-base font-poppins ">Go Back</p>
+        <ChevronLeft className="text-textPrimary" />
+        <p className="text-base font-poppins text-textPrimary ">Go Back</p>
       </div>
       <div className="my-[20px] w-full">
         <div className="flex flex-col w-full">
           <label
-            className={`font-sans text-md  font-medium  transition-all duration-200 ease-in-out left-4`}
+            className={`font-sans text-md text-textPrimary font-medium  transition-all duration-200 ease-in-out left-4`}
           >
             Duration of Slot
           </label>{" "}
@@ -360,7 +360,7 @@ function Slots() {
         <div className="w-full flex justify-between ">
           <div>
             <label
-              className={`font-sans text-md  font-medium  transition-all duration-200 ease-in-out left-4`}
+              className={`font-sans text-textPrimary text-md  font-medium  transition-all duration-200 ease-in-out left-4`}
             >
               Select available days
             </label>
@@ -373,7 +373,7 @@ function Slots() {
                 });
                 setDaysOfWeek([...dayOfWeek]);
               }}
-              className={`font-sans text-md  font-medium  transition-all duration-200 ease-in-out left-4`}
+              className={`font-sans text-md text-textPrimary font-medium  transition-all duration-200 ease-in-out left-4`}
             >
               Select All
             </label>
@@ -428,7 +428,7 @@ function Slots() {
         <div className="flex flex-col w-[47%] my-[5px] md:w-[20%] md:mr-4">
           <div className="mb-2">
             <label
-              className={`font-sans text-md  font-medium  transition-all duration-200 ease-in-out left-4 `}
+              className={`font-sans text-md  text-textPrimary font-medium  transition-all duration-200 ease-in-out left-4 `}
               htmlFor="startTime"
             >
               Start Time
@@ -454,7 +454,7 @@ function Slots() {
         <div className="flex flex-col w-[47%] my-[5px] md:w-[20%] ">
           <div className="mb-2">
             <label
-              className={`font-sans text-md  font-medium  transition-all duration-200 ease-in-out left-4 `}
+              className={`font-sans text-md text-textPrimary font-medium  transition-all duration-200 ease-in-out left-4 `}
               htmlFor="startTime"
             >
               End Time
@@ -482,7 +482,7 @@ function Slots() {
         <div className="flex flex-col w-[47%] my-[5px] md:w-[20%] md:mr-4">
           <div className="mb-2">
             <label
-              className={`font-sans text-md  font-medium  transition-all duration-200 ease-in-out left-4 `}
+              className={`font-sans text-md text-textPrimary  font-medium  transition-all duration-200 ease-in-out left-4 `}
               htmlFor="startTime"
             >
               Break Start Time
@@ -508,7 +508,7 @@ function Slots() {
         <div className="flex flex-col w-[47%] my-[5px] md:w-[20%] ">
           <div className="mb-2">
             <label
-              className={`font-sans text-md  font-medium  transition-all duration-200 ease-in-out left-4 `}
+              className={`font-sans text-md text-textPrimary  font-medium  transition-all duration-200 ease-in-out left-4 `}
               htmlFor="startTime"
             >
               Break End Time

@@ -1,6 +1,7 @@
 "use client";
 import ModalLayout from "@/app/components/ModalLayout";
 import BusineessUserEdit from "@/app/components/forms/BusineessUserEdit";
+import AnimatedBtn from "@/app/components/ui/AnimatedBtn";
 import Loader from "@/app/components/ui/Loader";
 import { apicall } from "@/utils/getdata";
 import { useRouter } from "next/navigation";
@@ -44,13 +45,23 @@ function BusinessUsers() {
                 setSelectedBusUser(d);
                 setBusinessUserModal(true);
               }}
-              className="border-[1px]  my-2 max-h-max px-2 py-1 rounded-md border-white mx-4 cursor-pointer"
+              className="border-[1px] min-w-[100px]  my-2 max-h-max px-2 py-1 text-textPrimary rounded-md border-white mx-4 cursor-pointer"
               key={d.id}
             >
               <p>{d.name}</p>
-              <p className="font-sans text-sm mt-2">
+              <p className="font-sans mb-2 text-sm mt-2">
                 {d.approved ? "Approved" : "not approved"}
               </p>
+              <AnimatedBtn
+                title="Call"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  var telUrl = "tel:" + d.mobile;
+
+                  // Open the dialer with the constructed URL
+                  window.open(telUrl);
+                }}
+              />
             </div>
           );
         })}
