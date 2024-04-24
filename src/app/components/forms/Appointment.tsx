@@ -534,9 +534,9 @@ const Appointment = ({
             >
               <div
                 id="ticket"
-                className="p-2 bg-background dark:bg-background "
+                className="p-2 z-[-10] bg-background dark:bg-background "
               >
-                <p className="text-center  pb-2 font-sans text-lg border-b border-b-white">
+                <p className="text-center text-textPrimary  pb-2 font-sans text-lg border-b border-b-white">
                   {title}
                 </p>
                 <div className="flex mt-2 justify-between">
