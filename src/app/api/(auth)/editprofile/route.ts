@@ -21,6 +21,11 @@ const POST = async (req: NextRequest) => {
         data: {
           about: body.about,
           address: body.address,
+          weekdays: body.weekdays,
+          startTime: body.duration.startTime,
+          endTime: body.duration.endTime,
+          breakTimeStart: body.duration.breakTimeStart,
+          breakTimeEnd: body.duration.breakTimeEnd,
         },
       });
 

@@ -30,6 +30,49 @@ import html2canvas from "html2canvas";
 import ModalLayout from "../ModalLayout";
 import Loader from "../ui/Loader";
 
+function generateTimeSlots(data: any) {
+  const { startTime, endTime, breakTimeStart, breakTimeEnd, hours, minutes } =
+    data;
+  const start = new Date(startTime);
+  const end = new Date(endTime);
+  const breakStart = new Date(breakTimeStart);
+  const breakEnd = new Date(breakTimeEnd);
+
+  const slotDuration = hours * 60 + minutes; // Slot duration in minutes
+  const slots = [];
+
+  let currentSlotStart = new Date(start);
+
+  // Loop through each slot
+  while (currentSlotStart < end) {
+    const currentSlotEnd = new Date(
+      currentSlotStart.getTime() + slotDuration * 60000
+    );
+
+    // Check if the current slot falls within the break time
+    if (
+      (currentSlotStart >= breakStart && currentSlotStart < breakEnd) ||
+      (currentSlotEnd > breakStart && currentSlotEnd <= breakEnd) ||
+      (currentSlotStart < breakStart && currentSlotEnd > breakEnd)
+    ) {
+      // Move the slot to the end of the break
+      currentSlotStart.setTime(breakEnd.getTime());
+      currentSlotEnd.setTime(currentSlotStart.getTime() + slotDuration * 60000);
+    }
+
+    // Add slot to the array
+    slots.push({
+      startTime: moment(new Date(currentSlotStart)).format("hh:mm A"),
+      endTime: moment(new Date(currentSlotEnd)).format("hh:mm A"),
+    });
+
+    // Move to the next slot
+    currentSlotStart.setTime(currentSlotStart.getTime() + slotDuration * 60000);
+  }
+
+  return slots;
+}
+
 const Appointment = ({
   businessData,
   title,
@@ -47,6 +90,7 @@ const Appointment = ({
   const [membersArrErr, setMembersArrErr] = useState<any>();
   const [slotErr, setSlotErr] = useState<any>(null);
   const [selectedSlot, setSelectedSlot] = useState<any>(null);
+  const [slots, setSlots] = useState<any>([]);
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [showTicket, setShowticket] = useState(false);
@@ -57,6 +101,36 @@ const Appointment = ({
   const [userAlreadyExist, setUserAlreadyExist] = useState<boolean>(false);
 
   const businessUserData = businessData;
+
+  const [packageList, setPackageList] = useState<any>([]);
+  const [selectedPackage, setSelectedPackage] = useState<any>(null);
+
+  console.log(
+    moment(new Date(businessUserData.breakTimeStart)).format("hh:mm A"),
+    "OOOO"
+  ),
+    useEffect(() => {
+      apicall({
+        path: "package/list",
+        getResponse: (res) => {
+          // dispatch(setdisablememberAdd(res.data.disableAdd));
+          let pkgArr: any[] = [];
+          res.data.packages.map((d: any, i: any) => {
+            let obj = {
+              label: d.name,
+              value: d.id,
+              durationMale: d.durationMale,
+              durationFemale: d.durationFemale,
+            };
+            pkgArr.push(obj);
+          });
+          setPackageList(pkgArr);
+        },
+        getError: (err) => {},
+        router,
+        method: "get",
+      });
+    }, []);
 
   useEffect(() => {
     if (businessUserData.members) {
@@ -102,30 +176,34 @@ const Appointment = ({
       getResponse: (res) => {
         const disSlots = res.data.slots;
 
-        if (businessUserData.slots) {
-          const filteredSlots = businessUserData.slots.filter((slot: any) => {
+        if (slots) {
+          const filteredSlots = slots?.filter((slot: any) => {
             // Check if the slot exists in disSlots array
             return !disSlots.some((disSlot: any) => {
               // You need to define the condition for matching slots
               // For example, if the slots are objects and you want to match based on startTime and endTime
               return (
-                slot.startTime === disSlot.slot.startTime &&
-                slot.endTime === disSlot.slot.endTime
+                (slot.startTime >= disSlot.slot.startTime &&
+                  slot.startTime < disSlot.slot.endTime) ||
+                (slot.endTime > disSlot.slot.startTime &&
+                  slot.endTime <= disSlot.slot.endTime) ||
+                (slot.startTime < disSlot.slot.startTime &&
+                  slot.endTime > disSlot.slot.endTime)
               );
             });
           });
 
-          let slots: any[] = [];
+          let slotsArr: any[] = [];
           filteredSlots.map((d: any, i: number) => {
             let obj = {
-              label: `${d.startTime} - ${d.endTime}`,
+              label: `${d.startTime}`,
               value: `${d.startTime} - ${d.endTime}`,
               ...d,
             };
-            slots.push(obj);
+            slotsArr.push(obj);
           });
 
-          setSlotsArr(slots);
+          setSlotsArr(slotsArr);
         }
 
         setSlotsLoader(false);
@@ -310,7 +388,7 @@ const Appointment = ({
                 </div>
                 <div className="mt-4 w-full">
                   <p className="mb-2 font-poppins text-white">
-                    Sex <span className="text-red-500">*</span>
+                    Gender <span className="text-red-500">*</span>
                   </p>
                   <RadioGroup
                     onValueChange={(e) => {
@@ -350,10 +428,9 @@ const Appointment = ({
                   <div className="w-full ">
                     <MultiSelectComp
                       full={true}
-                      title="Pick a Member"
+                      title="Select Professional"
                       required={true}
                       onChange={(e: any) => {
-                        console.log(e, "HHHHH");
                         setSelectedDate(null);
                         values.date = null;
                         values.memberId = e.value;
@@ -361,13 +438,48 @@ const Appointment = ({
                         setMembersArrErr("");
                       }}
                       isMulti={false}
-                      placeholder="Members"
+                      placeholder="Professional"
                       options={membersArr.length > 0 ? membersArr : []}
                       error={submitCount > 0 && membersArrErr}
                     />
                   </div>
                 </div>
 
+                <div className="mt-4 w-full">
+                  <div className="w-full ">
+                    <MultiSelectComp
+                      full={true}
+                      title="Select Package"
+                      required={true}
+                      onChange={(e: any) => {
+                        setSelectedPackage(e);
+
+                        const data = {
+                          startTime: businessUserData.startTime,
+                          endTime: businessUserData.endTime,
+                          breakTimeStart: businessUserData.breakTimeStart,
+                          breakTimeEnd: businessUserData.breakTimeEnd,
+                          hours:
+                            values.sex == "male"
+                              ? e.durationMale.hours
+                              : e.durationFemale.hours,
+                          minutes:
+                            values.sex == "male"
+                              ? e.durationMale.minutes
+                              : e.durationFemale.minutes,
+                        };
+
+                        const timeSlots = generateTimeSlots(data);
+
+                        setSlots(timeSlots);
+                      }}
+                      isMulti={false}
+                      placeholder="Packages"
+                      options={packageList.length > 0 ? packageList : []}
+                      error={submitCount > 0 && membersArrErr}
+                    />
+                  </div>
+                </div>
                 <div className="mt-4 w-full ">
                   <p className="mb-1 font-poppins text-white">
                     Pick a Appointment Date{" "}

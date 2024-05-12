@@ -52,6 +52,10 @@ const POST = async (req: NextRequest) => {
                   address: businessUser.address,
                   slug: businessUser.slug,
                   id: businessUser.id,
+                  startTime: businessUser.startTime,
+                  endTime: businessUser.endTime,
+                  breakTimeStart: businessUser.breakTimeStart,
+                  breakTimeEnd: businessUser.breakTimeEnd,
                 }
               : {
                   name: businessUser.businessName,
@@ -59,6 +63,10 @@ const POST = async (req: NextRequest) => {
                   address: businessUser.address,
                   members: businessUser.members,
                   weekdays: businessUser.weekdays,
+                  startTime: businessUser.startTime,
+                  endTime: businessUser.endTime,
+                  breakTimeStart: businessUser.breakTimeStart,
+                  breakTimeEnd: businessUser.breakTimeEnd,
                   slots: businessUser.slots,
                   slug: businessUser.slug,
                   id: businessUser.id,

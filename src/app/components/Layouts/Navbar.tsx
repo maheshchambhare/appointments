@@ -80,12 +80,12 @@ function Navbar() {
       },
     },
     getUserType == 0 && {
-      name: "Members",
-      route: "members",
+      name: "Employees",
+      route: "employee",
       icon: <Users2Icon className="text-textPrimary" size={18} />,
       onClick: () => {
         setOpenMenu(false);
-        router.push("/" + businessUserData.slug + "/members");
+        router.push("/" + businessUserData.slug + "/employee");
 
         // setTimeout(() => {
         //    dispatch(setUserData("2"));

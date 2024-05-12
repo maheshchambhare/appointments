@@ -8,10 +8,10 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 
 function Members() {
-  const [memberList, setMemberList] = useState<any>(null);
   const router = useRouter();
   const dispatch = useDispatch();
 
+  const [memberList, setMemberList] = useState<any>(null);
   useEffect(() => {
     apicall({
       path: "members/list",
@@ -29,7 +29,7 @@ function Members() {
       {/* <div className="absolute z-[0] bg-black/20 h-full w-full rounded-md backdrop-blur-md blur-xl" /> */}
       <div className="relative xsm:w-[95%] mx-auto  md:w-[40%] z-1 ">
         <p className="text-base text-textPrimary dark:text-textPrimary">
-          Add Member
+          Add Employee
         </p>
         <AddMembers
           addMemberToList={(e) => {
@@ -44,7 +44,7 @@ function Members() {
       </div>
       <div className="relative xsm:w-[95%] mx-auto  md:w-[50%] z-1 mb-10">
         <p className="text-base text-textPrimary dark:text-textPrimary">
-          Members List
+          Employee List
         </p>
         <MembersList memberList={memberList} />
       </div>

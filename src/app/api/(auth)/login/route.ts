@@ -180,6 +180,8 @@ const POST = async (req: Request) => {
             address: businessUser.address,
             mobile: businessUser.mobile,
             userType: userTypeId == BUSINESSUSER ? 0 : 1,
+            startTime: businessUser.startTime,
+            endTime: businessUser.endTime,
           }),
           {
             httpOnly: false,

@@ -32,6 +32,16 @@ model User {
   @@index([mobile, name])
 }
 
+model Package {
+  id             String       @id @unique @default(uuid())
+  name           String
+  businessUserId String
+  price          String?
+  durationMale   Json
+  durationFemale Json
+  BusinessUser   BusinessUser @relation(fields: [businessUserId], references: [id])
+}
+
 model Appointments {
   id             String       @id @default(uuid())
   userId         String
@@ -49,26 +59,32 @@ model Appointments {
 }
 
 model BusinessUser {
-  id            String         @id @default(uuid())
-  name          String
-  businessName  String
-  mobile        String         @unique
-  email         String?        @unique
-  password      String
-  slug          String         @unique
-  about         String?
-  address       String?
-  verified      Boolean
-  approved      Boolean
-  membersLength Int            @default(2)
-  slots         Json?
-  weekdays      Json?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  tickets       Appointments[]
-  members       Member[]
-  customers     User[]         @relation("BusinessUserToUser")
-  fcmToken      String?
+  id             String         @id @unique @default(uuid())
+  name           String
+  businessName   String
+  mobile         String         @unique
+  email          String?        @unique
+  password       String
+  slug           String         @unique
+  about          String?
+  address        String?
+  verified       Boolean
+  approved       Boolean
+  membersLength  Int            @default(2)
+  slots          Json?
+  breakTimeEnd   String?
+  breakTimeStart String?
+  endTime        String?
+  startTime      String?
+  weekdays       Json?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  type           String?
+  tickets        Appointments[]
+  members        Member[]
+  packages       Package[]
+  customers      User[]         @relation("BusinessUserToUser")
+  fcmToken       String?
 
   @@index([mobile, name])
 }
