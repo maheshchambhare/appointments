@@ -46,7 +46,7 @@ function Package() {
                   className="text-textPrimary cursor-pointer"
                 />
                 <p className="text-xl text-textPrimary dark:text-textPrimary">
-                  Add Package
+                  Add Service
                 </p>
               </div>
               <AddPackage

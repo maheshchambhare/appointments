@@ -33,13 +33,14 @@ model User {
 }
 
 model Package {
-  id             String       @id @unique @default(uuid())
+  id             String         @id @unique @default(uuid())
   name           String
   businessUserId String
   price          String?
   durationMale   Json
   durationFemale Json
-  BusinessUser   BusinessUser @relation(fields: [businessUserId], references: [id])
+  BusinessUser   BusinessUser   @relation(fields: [businessUserId], references: [id])
+  Appointments   Appointments[]
 }
 
 model Appointments {
@@ -53,6 +54,8 @@ model Appointments {
   updatedAt      DateTime     @updatedAt
   slot           Json
   memberId       String
+  serviceId      String
+  service        Package      @relation(fields: [serviceId], references: [id])
   BusinessUser   BusinessUser @relation(fields: [businessUserId], references: [id])
   Member         Member       @relation(fields: [memberId], references: [id])
   User           User         @relation(fields: [userId], references: [id])

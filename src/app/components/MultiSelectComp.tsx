@@ -1,6 +1,12 @@
 import Select from "react-select";
 
-import React, { ChangeEvent, CSSProperties, ReactNode, Ref } from "react";
+import React, {
+  ChangeEvent,
+  CSSProperties,
+  ReactNode,
+  Ref,
+  useRef,
+} from "react";
 
 interface Option {
   label: string;
@@ -18,7 +24,7 @@ interface MultiSelectCompProps {
   full?: boolean;
   error?: string;
   required?: boolean;
-  refSelect?: Ref<HTMLSelectElement>;
+  refSelect?: any;
   disabled?: boolean;
   addExpBtn?: ReactNode;
   selectedOption?: Option | Option[];
@@ -70,7 +76,7 @@ function MultiSelectComp({
           options={options}
           value={selectedOption}
           isDisabled={disabled}
-          // ref={refSelect || }
+          ref={refSelect}
           menuPlacement={menuPlacement || "auto"}
           theme={(theme: any) => ({
             ...theme,

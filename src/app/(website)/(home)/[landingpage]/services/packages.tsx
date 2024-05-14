@@ -16,13 +16,13 @@ function Packages({ packages }: { packages: any }) {
     );
   }
   return (
-    <div className="w-[100%] md:w-[50%] ">
+    <div className="w-[100%] md:w-[50%] mb-10">
       <p className="text-xl text-textPrimary dark:text-textPrimary">
-        Package List
+        Services List
       </p>
       <div className="grid gap-4 xsm:grid-cols-1 pt-6 md:grid-cols-2">
         {packages.length == 0 ? (
-          <p>No Packages found</p>
+          <p>No Services found</p>
         ) : (
           packages.map((packageData: any, ind: any) => {
             return (

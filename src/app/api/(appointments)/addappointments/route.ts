@@ -17,8 +17,6 @@ const POST = async (req: NextRequest) => {
 
     const businessUSER: any = await jwt.verify(businessUserCookie, JWTKEY);
 
-    console.log(businessUSER.fcmToken, body.fcmToken, "OOO");
-
     const tokens =
       businessUSER.fcmToken == body.fcmToken
         ? [businessUSER.fcmToken]
@@ -43,6 +41,7 @@ const POST = async (req: NextRequest) => {
         date: body.date,
         status: "0",
         memberId: body.memberId,
+        serviceId: body.serviceId,
       };
 
       const addAppointment = await prisma.appointments.create({
@@ -99,6 +98,7 @@ const POST = async (req: NextRequest) => {
         mobile: body.mobile,
         sex: body.sex,
         memberId: body.memberId,
+        serviceId: body.serviceId,
       };
 
       let jsonToken = "";

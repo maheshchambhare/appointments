@@ -37,11 +37,11 @@ function PageSection({ landingpage }: { landingpage: string }) {
     <div className="relative h-auto w-full  ">
       <ScreenWrapper>
         <Navbar />
-        <Header
+        {/* <Header
           title={businessUser.name}
           about={businessUser.about}
           address={businessUser.address}
-        />
+        /> */}
         <Appointment title={businessUser.name} businessData={businessUser} />
       </ScreenWrapper>
     </div>

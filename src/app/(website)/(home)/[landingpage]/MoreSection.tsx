@@ -33,7 +33,7 @@ function MoreSection({ businessData }: { businessData: any }) {
 
   const [appointments, setAppointments] = useState<any>(null);
 
-  const tabHeaders = ["Upcoming", "In Progress", "Completed"];
+  const tabHeaders = ["Upcoming", "In Progress", "Completed", "Cancelled"];
 
   const dispatch = useDispatch();
 
@@ -67,7 +67,11 @@ function MoreSection({ businessData }: { businessData: any }) {
 
         toast(
           `🫡 Appointment moved to  ${
-            status == "1" ? "In Progress" : "Complete"
+            status == "1"
+              ? "In Progress"
+              : status == "3"
+              ? "Cancelled"
+              : "Complete"
           }`,
           {
             position: "bottom-right",
@@ -88,110 +92,6 @@ function MoreSection({ businessData }: { businessData: any }) {
       data: { status, id },
     });
   };
-
-  const upcomingData = [
-    {
-      name: "Mahesh Chambhare",
-      ticketId: "#0",
-      mobile: "8767431997",
-      id: "0",
-      slot: "09:00AM - 09:30AM",
-    },
-    {
-      name: "Pavan Chambhare",
-      ticketId: "#1787",
-      mobile: "8767431997",
-      id: "1",
-      slot: "09:30AM - 10:00AM",
-    },
-    {
-      name: "Amitabh Shah",
-      ticketId: "#07654",
-      mobile: "8767431997",
-      id: "2",
-      slot: "10:30AM - 11:00AM",
-    },
-    {
-      name: "Elon  Musk",
-      ticketId: "#02344",
-      mobile: "8767431997",
-      id: "3",
-      slot: "11:00AM - 11:30AM",
-    },
-    {
-      name: "Jeff bozos",
-      ticketId: "#05676",
-      mobile: "8767431997",
-      id: "4",
-      slot: "11:30AM - 12:00AM",
-    },
-  ];
-
-  const inProgressData = [
-    {
-      name: "Mahesh Chambhare",
-      ticketId: "#1",
-      mobile: "8767431997",
-      id: "10",
-      slot: "09:00AM - 09:30AM",
-    },
-    {
-      name: "Pavan Chambhare",
-      ticketId: "#17337",
-      mobile: "8767431997",
-      id: "13",
-      slot: "09:30AM - 10:00AM",
-    },
-    {
-      name: "Amitabh Shah",
-      ticketId: "#0454",
-      mobile: "8767431997",
-      id: "22",
-      slot: "10:30AM - 11:00AM",
-    },
-    {
-      name: "Elon  Musk",
-      ticketId: "#023de44",
-      mobile: "8767431997",
-      id: "6",
-      slot: "11:00AM - 11:30AM",
-    },
-    {
-      name: "Jeff bozos",
-      ticketId: "#056tt76",
-      mobile: "8767431997",
-      id: "42",
-      slot: "11:30AM - 12:00AM",
-    },
-    {
-      name: "Pavan Chambhare",
-      ticketId: "#17337",
-      mobile: "8767431997",
-      id: "13",
-      slot: "09:30AM - 10:00AM",
-    },
-    {
-      name: "Amitabh Shah",
-      ticketId: "#0454",
-      mobile: "8767431997",
-      id: "22",
-      slot: "10:30AM - 11:00AM",
-    },
-    {
-      name: "Elon  Musk",
-      ticketId: "#023de44",
-      mobile: "8767431997",
-      id: "6",
-      slot: "11:00AM - 11:30AM",
-    },
-    {
-      name: "Jeff bozos",
-      ticketId: "#056tt76",
-      mobile: "8767431997",
-      id: "42",
-      slot: "11:30AM - 12:00AM",
-    },
-  ];
 
   const handleSubmit = () => {
     router.push(`${businessData.slug}/appointment`);

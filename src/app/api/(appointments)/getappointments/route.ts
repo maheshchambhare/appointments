@@ -37,6 +37,11 @@ const POST = async (req: NextRequest) => {
             mobile: true,
           },
         },
+        service: {
+          select: {
+            name: true,
+          },
+        },
         Member: {
           select: {
             name: true,

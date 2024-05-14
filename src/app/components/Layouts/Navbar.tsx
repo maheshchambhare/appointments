@@ -11,6 +11,7 @@ import {
   UsersRound,
   Users2Icon,
   LogOut,
+  Blocks,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { setBusinessSectionType } from "@/store/slices/commonSlices";
@@ -66,19 +67,19 @@ function Navbar() {
         router.push("/" + businessUserData.slug + "/profile");
       },
     },
-    getUserType == 0 && {
-      name: "Generate Slots",
-      route: "slots",
-      icon: <CalendarPlus className="text-textPrimary" size={18} />,
-      onClick: () => {
-        setOpenMenu(false);
-        router.push("/" + businessUserData.slug);
+    // getUserType == 0 && {
+    //   name: "Generate Slots",
+    //   route: "slots",
+    //   icon: <CalendarPlus className="text-textPrimary" size={18} />,
+    //   onClick: () => {
+    //     setOpenMenu(false);
+    //     router.push("/" + businessUserData.slug);
 
-        setTimeout(() => {
-          dispatch(setBusinessSectionType("2"));
-        }, 200);
-      },
-    },
+    //     setTimeout(() => {
+    //       dispatch(setBusinessSectionType("2"));
+    //     }, 200);
+    //   },
+    // },
     getUserType == 0 && {
       name: "Employees",
       route: "employee",
@@ -86,6 +87,19 @@ function Navbar() {
       onClick: () => {
         setOpenMenu(false);
         router.push("/" + businessUserData.slug + "/employee");
+
+        // setTimeout(() => {
+        //    dispatch(setUserData("2"));
+        // }, 200);
+      },
+    },
+    getUserType == 0 && {
+      name: "Services",
+      route: "services",
+      icon: <Blocks className="text-textPrimary" size={18} />,
+      onClick: () => {
+        setOpenMenu(false);
+        router.push("/" + businessUserData.slug + "/services");
 
         // setTimeout(() => {
         //    dispatch(setUserData("2"));

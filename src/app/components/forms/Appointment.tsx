@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Formik } from "formik";
 import CustomInput from "../CustomInput";
 import Button from "../ui/Button";
@@ -105,32 +105,31 @@ const Appointment = ({
   const [packageList, setPackageList] = useState<any>([]);
   const [selectedPackage, setSelectedPackage] = useState<any>(null);
 
-  console.log(
-    moment(new Date(businessUserData.breakTimeStart)).format("hh:mm A"),
-    "OOOO"
-  ),
-    useEffect(() => {
-      apicall({
-        path: "package/list",
-        getResponse: (res) => {
-          // dispatch(setdisablememberAdd(res.data.disableAdd));
-          let pkgArr: any[] = [];
-          res.data.packages.map((d: any, i: any) => {
-            let obj = {
-              label: d.name,
-              value: d.id,
-              durationMale: d.durationMale,
-              durationFemale: d.durationFemale,
-            };
-            pkgArr.push(obj);
-          });
-          setPackageList(pkgArr);
-        },
-        getError: (err) => {},
-        router,
-        method: "get",
-      });
-    }, []);
+  const packageRef = useRef(null);
+  const slotRef = useRef(null);
+
+  useEffect(() => {
+    apicall({
+      path: "package/list",
+      getResponse: (res) => {
+        // dispatch(setdisablememberAdd(res.data.disableAdd));
+        let pkgArr: any[] = [];
+        res.data.packages.map((d: any, i: any) => {
+          let obj = {
+            label: d.name,
+            value: d.id,
+            durationMale: d.durationMale,
+            durationFemale: d.durationFemale,
+          };
+          pkgArr.push(obj);
+        });
+        setPackageList(pkgArr);
+      },
+      getError: (err) => {},
+      router,
+      method: "get",
+    });
+  }, []);
 
   useEffect(() => {
     if (businessUserData.members) {
@@ -157,6 +156,7 @@ const Appointment = ({
     slot: null | { startTime: string; endTime: string }; // Assuming slot can be either null or a string
     memberId: null | string; // Assuming memberId can be either null or a string
     fcmToken?: String;
+    serviceId?: string;
   }
 
   const finalForm: FinalForm = {
@@ -167,6 +167,7 @@ const Appointment = ({
     slot: null,
     memberId: null,
     fcmToken: "",
+    serviceId: "",
   };
 
   const getAllSlots = ({ date, member }: { date: string; member: string }) => {
@@ -176,19 +177,31 @@ const Appointment = ({
       getResponse: (res) => {
         const disSlots = res.data.slots;
 
+        const curretDate = moment(new Date(), "DD/MM/YYYY").format(
+          "DD/MM/YYYY"
+        );
+        const currentTime = moment();
+
         if (slots) {
           const filteredSlots = slots?.filter((slot: any) => {
+            const slotStartTime = moment(slot.startTime, "hh:mm A");
+            const isbefore = slotStartTime.isBefore(currentTime, "minute");
+
             // Check if the slot exists in disSlots array
             return !disSlots.some((disSlot: any) => {
               // You need to define the condition for matching slots
               // For example, if the slots are objects and you want to match based on startTime and endTime
+
+              // Get current time as moment object
+
               return (
                 (slot.startTime >= disSlot.slot.startTime &&
                   slot.startTime < disSlot.slot.endTime) ||
                 (slot.endTime > disSlot.slot.startTime &&
                   slot.endTime <= disSlot.slot.endTime) ||
                 (slot.startTime < disSlot.slot.startTime &&
-                  slot.endTime > disSlot.slot.endTime)
+                  slot.endTime > disSlot.slot.endTime) ||
+                (date == curretDate && isbefore)
               );
             });
           });
@@ -196,7 +209,7 @@ const Appointment = ({
           let slotsArr: any[] = [];
           filteredSlots.map((d: any, i: number) => {
             let obj = {
-              label: `${d.startTime}`,
+              label: `${d.startTime} - ${d.endTime}`,
               value: `${d.startTime} - ${d.endTime}`,
               ...d,
             };
@@ -241,8 +254,8 @@ const Appointment = ({
   }
 
   return (
-    <div className="max-w-[300px] mx-auto">
-      <p className="font-sans text-textPrimary text-xl font-semibold">
+    <div className="max-w-[300px] mt-[50px] mx-auto">
+      <p className="font-sans text-textPrimary text-2xl font-semibold">
         Welcome to {title}
       </p>
       <p className="font-sans text-textSecondary text-base font-normal">
@@ -394,6 +407,23 @@ const Appointment = ({
                     onValueChange={(e) => {
                       errors.sex = "";
                       values.sex = e;
+                      setSelectedPackage(null);
+                      values.serviceId = "";
+                      values.date = null;
+                      values.slot = null;
+                      setSelectedDate(null);
+                      setSelectedSlot(null);
+                      if (
+                        packageRef &&
+                        packageRef.current &&
+                        selectedPackage !== null
+                      ) {
+                        packageRef.current.clearValue();
+                      }
+
+                      if (slotRef && slotRef.current && selectedSlot !== null) {
+                        slotRef.current.clearValue();
+                      }
                     }}
                     className="flex flex-wrap "
                   >
@@ -449,32 +479,37 @@ const Appointment = ({
                   <div className="w-full ">
                     <MultiSelectComp
                       full={true}
-                      title="Select Package"
+                      title="Select Service"
+                      refSelect={packageRef}
                       required={true}
                       onChange={(e: any) => {
-                        setSelectedPackage(e);
+                        if (e) {
+                          setSelectedPackage(e);
 
-                        const data = {
-                          startTime: businessUserData.startTime,
-                          endTime: businessUserData.endTime,
-                          breakTimeStart: businessUserData.breakTimeStart,
-                          breakTimeEnd: businessUserData.breakTimeEnd,
-                          hours:
-                            values.sex == "male"
-                              ? e.durationMale.hours
-                              : e.durationFemale.hours,
-                          minutes:
-                            values.sex == "male"
-                              ? e.durationMale.minutes
-                              : e.durationFemale.minutes,
-                        };
+                          const data = {
+                            startTime: businessUserData.startTime,
+                            endTime: businessUserData.endTime,
+                            breakTimeStart: businessUserData.breakTimeStart,
+                            breakTimeEnd: businessUserData.breakTimeEnd,
+                            hours:
+                              values.sex == "male"
+                                ? e.durationMale.hours
+                                : e.durationFemale.hours,
+                            minutes:
+                              values.sex == "male"
+                                ? e.durationMale.minutes
+                                : e.durationFemale.minutes,
+                          };
 
-                        const timeSlots = generateTimeSlots(data);
+                          values.serviceId = e.value;
+                          const timeSlots = generateTimeSlots(data);
 
-                        setSlots(timeSlots);
+                          setSlots(timeSlots);
+                        }
                       }}
                       isMulti={false}
-                      placeholder="Packages"
+                      placeholder="Services"
+                      disabled={values.sex == ""}
                       options={packageList.length > 0 ? packageList : []}
                       error={submitCount > 0 && membersArrErr}
                     />
@@ -567,19 +602,23 @@ const Appointment = ({
                         full={true}
                         title="Pick a Appointment Slot"
                         required={true}
+                        refSelect={slotRef}
                         onChange={(e: any) => {
-                          errors.slot = "";
-                          values.slot = {
-                            startTime: e.startTime,
-                            endTime: e.endTime,
-                          };
-                          setSelectedSlot({
-                            startTime: e.startTime,
-                            endTime: e.endTime,
-                          });
-                          // selectedDuration.minutes = e.value;
-                          // setSelectedDuration({ ...selectedDuration });
+                          if (e) {
+                            errors.slot = "";
+                            values.slot = {
+                              startTime: e.startTime,
+                              endTime: e.endTime,
+                            };
+                            setSelectedSlot({
+                              startTime: e.startTime,
+                              endTime: e.endTime,
+                            });
+                            // selectedDuration.minutes = e.value;
+                            // setSelectedDuration({ ...selectedDuration });
+                          }
                         }}
+                        disabled={values.sex == ""}
                         isMulti={false}
                         placeholder="Slots"
                         options={slotsArr.length > 0 ? slotsArr : []}
@@ -623,7 +662,7 @@ const Appointment = ({
                   />
                 </div>
               )}
-              <div className="mb-2 mt-8">
+              <div className="mb-10 mt-8">
                 <Button
                   type="submit"
                   title={showOtpField ? "Verify" : "Add Appointment"}
@@ -662,8 +701,11 @@ const Appointment = ({
                 <p className="text-textPrimary font-poppins text-sm sm:text-base">
                   {userAlreadyExist ? ticket.name : values.name}
                 </p>
-                <p className="text-textSecondary pb-2 font-poppins text-sm sm:text-sm">
+                <p className="text-textSecondary  font-poppins text-sm sm:text-sm">
                   {ticket?.slot?.startTime} - {ticket?.slot?.endTime}
+                </p>
+                <p className="text-textSecondary pb-2 font-poppins text-sm sm:text-sm">
+                  Service - {selectedPackage?.label}
                 </p>
               </div>
 

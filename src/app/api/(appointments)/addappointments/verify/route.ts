@@ -37,6 +37,7 @@ const POST = async (req: NextRequest) => {
           slot: decryptedOtp.appointmentData.slot,
           date: decryptedOtp.appointmentData.date,
           memberId: decryptedOtp.appointmentData.memberId,
+          serviceId: decryptedOtp.appointmentData.serviceId,
           status: "0",
         };
 

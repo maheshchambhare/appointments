@@ -18,6 +18,9 @@ interface ticketTypes {
   status: string;
   Member: any;
   date: string;
+  service: {
+    name: string;
+  };
 }
 
 function TicketCards({
@@ -55,7 +58,10 @@ function TicketCards({
                 {!customerView && ticket?.User.name}
               </p>
               <p className="text-textSecondary font-poppins text-sm sm:text-sm">
-                {getUserType != 1 && "Member: " + ticket?.Member.name}
+                {getUserType != 1 && "Employee: " + ticket?.Member.name}
+              </p>
+              <p className="text-textSecondary font-poppins text-sm sm:text-sm">
+                {"Service: " + ticket?.service.name}
               </p>
               <p className="text-textSecondary font-poppins text-sm sm:text-sm">
                 {ticket.slot?.startTime} - {ticket.slot?.endTime}
@@ -63,12 +69,23 @@ function TicketCards({
 
               {!customerView && (
                 <div className="flex justify-between mt-2">
-                  {ticket?.status != "2" && (
+                  {ticket?.status != "2" && ticket?.status != "3" && (
                     <AnimatedBtn
                       title={ticket?.status == "1" ? "Complete" : "In progress"}
                       onClick={() => {
                         update({
                           status: ticket?.status == "1" ? "2" : "1",
+                          id: ticket.id,
+                        });
+                      }}
+                    />
+                  )}
+                  {ticket?.status == "0" && (
+                    <AnimatedBtn
+                      title={"Cancel"}
+                      onClick={() => {
+                        update({
+                          status: "3",
                           id: ticket.id,
                         });
                       }}
