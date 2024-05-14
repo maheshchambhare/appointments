@@ -105,8 +105,8 @@ const Appointment = ({
   const [packageList, setPackageList] = useState<any>([]);
   const [selectedPackage, setSelectedPackage] = useState<any>(null);
 
-  const packageRef = useRef(null);
-  const slotRef = useRef(null);
+  const packageRef: any = useRef(null);
+  const slotRef: any = useRef(null);
 
   useEffect(() => {
     apicall({
@@ -418,11 +418,11 @@ const Appointment = ({
                         packageRef.current &&
                         selectedPackage !== null
                       ) {
-                        packageRef.current.clearValue();
+                        packageRef.current?.clearValue();
                       }
 
                       if (slotRef && slotRef.current && selectedSlot !== null) {
-                        slotRef.current.clearValue();
+                        slotRef.current?.clearValue();
                       }
                     }}
                     className="flex flex-wrap "

@@ -25,7 +25,7 @@ const Profile = () => {
   const router = useRouter();
 
   const businessUser = useSelector(getUserData);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<any>(null);
   const [loader, setLoader] = useState(true);
 
   const [timeSelector, setTimeSelector] = useState<timeselector>({
