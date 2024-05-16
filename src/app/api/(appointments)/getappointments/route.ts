@@ -40,6 +40,7 @@ const POST = async (req: NextRequest) => {
         service: {
           select: {
             name: true,
+            price: true,
           },
         },
         Member: {

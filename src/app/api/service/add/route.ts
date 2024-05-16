@@ -21,7 +21,7 @@ const POST = async (req: NextRequest) => {
         businessUserId: businessVal.id,
       };
 
-      const addPackage = await prisma.package.create({
+      const addPackage = await prisma.services.create({
         data: packageVal,
       });
 

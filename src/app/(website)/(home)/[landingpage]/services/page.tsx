@@ -1,7 +1,7 @@
 "use client";
 import Navbar from "@/app/components/Layouts/Navbar";
 import ScreenWrapper from "@/app/components/Layouts/ScreenWrapper";
-import AddPackage from "@/app/components/forms/AddPackage";
+
 import Profile from "@/app/components/forms/Profile";
 import { apicall } from "@/utils/getdata";
 import { ChevronLeft } from "lucide-react";
@@ -10,6 +10,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Packages from "./packages";
 import { getUserData } from "@/store/slices/authSlice";
+import AddService from "@/app/components/forms/AddService";
 
 function Package() {
   const router = useRouter();
@@ -19,7 +20,7 @@ function Package() {
   const [packageList, setPackageList] = useState<any>(null);
   useEffect(() => {
     apicall({
-      path: "package/list",
+      path: "service/list",
       getResponse: (res) => {
         setPackageList(res.data.packages);
         // dispatch(setdisablememberAdd(res.data.disableAdd));
@@ -49,7 +50,7 @@ function Package() {
                   Add Service
                 </p>
               </div>
-              <AddPackage
+              <AddService
                 addPackageToList={(e: any) => {
                   if (packageList && (packageList as any[]).length >= 0) {
                     let packageListData: any[] = packageList;

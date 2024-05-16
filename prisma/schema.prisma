@@ -32,13 +32,13 @@ model User {
   @@index([mobile, name])
 }
 
-model Package {
+model Services {
   id             String         @id @unique @default(uuid())
   name           String
   businessUserId String
-  price          String?
-  durationMale   Json
-  durationFemale Json
+  price          Int
+  gender         String
+  duration       Json
   BusinessUser   BusinessUser   @relation(fields: [businessUserId], references: [id])
   Appointments   Appointments[]
 }
@@ -55,7 +55,7 @@ model Appointments {
   slot           Json
   memberId       String
   serviceId      String
-  service        Package      @relation(fields: [serviceId], references: [id])
+  service        Services     @relation(fields: [serviceId], references: [id])
   BusinessUser   BusinessUser @relation(fields: [businessUserId], references: [id])
   Member         Member       @relation(fields: [memberId], references: [id])
   User           User         @relation(fields: [userId], references: [id])
@@ -85,7 +85,7 @@ model BusinessUser {
   type           String?
   tickets        Appointments[]
   members        Member[]
-  packages       Package[]
+  services       Services[]
   customers      User[]         @relation("BusinessUserToUser")
   fcmToken       String?
 

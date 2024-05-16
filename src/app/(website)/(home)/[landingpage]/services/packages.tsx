@@ -32,22 +32,15 @@ function Packages({ packages }: { packages: any }) {
               >
                 {packageData.name}
 
-                <p>Duration</p>
                 <p>
-                  Male:{" "}
-                  {packageData.durationMale.hours > 0 &&
-                    packageData.durationMale.hours + " hr,"}
-                  {packageData.durationMale.minutes > 0 &&
-                    packageData.durationMale.minutes + " min"}
+                  Duration:{" "}
+                  {packageData.duration.hours > 0 &&
+                    packageData.duration.hours + " hr,"}
+                  {packageData.duration.minutes > 0 &&
+                    packageData.duration.minutes + " min"}
                 </p>
-
-                <p>
-                  Female:{" "}
-                  {packageData.durationFemale.hours > 0 &&
-                    packageData.durationFemale.hours + " hr,"}
-                  {packageData.durationFemale.minutes > 0 &&
-                    packageData.durationFemale.minutes + " min"}
-                </p>
+                <p>{packageData.gender}</p>
+                <p>₹ {packageData.price}</p>
               </div>
             );
           })

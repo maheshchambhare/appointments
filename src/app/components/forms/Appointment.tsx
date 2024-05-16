@@ -103,27 +103,40 @@ const Appointment = ({
   const businessUserData = businessData;
 
   const [packageList, setPackageList] = useState<any>([]);
+  const [packageListExt, setPackageListExt] = useState<any>([]);
   const [selectedPackage, setSelectedPackage] = useState<any>(null);
 
   const packageRef: any = useRef(null);
   const slotRef: any = useRef(null);
 
+  const [seconds, setSeconds] = useState(60);
+
+  useEffect(() => {
+    if (seconds > 0 && showOtpField) {
+      const timer = setTimeout(() => {
+        setSeconds(seconds - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [seconds, showOtpField]);
+
   useEffect(() => {
     apicall({
-      path: "package/list",
+      path: "service/list",
       getResponse: (res) => {
         // dispatch(setdisablememberAdd(res.data.disableAdd));
         let pkgArr: any[] = [];
         res.data.packages.map((d: any, i: any) => {
           let obj = {
-            label: d.name,
+            label: d.name + " - ₹" + d.price,
             value: d.id,
-            durationMale: d.durationMale,
-            durationFemale: d.durationFemale,
+            duration: d.duration,
+            gender: d.gender,
           };
           pkgArr.push(obj);
         });
         setPackageList(pkgArr);
+        setPackageListExt(pkgArr);
       },
       getError: (err) => {},
       router,
@@ -215,6 +228,8 @@ const Appointment = ({
             };
             slotsArr.push(obj);
           });
+
+          console.log(slotsArr, "XYZZZ");
 
           setSlotsArr(slotsArr);
         }
@@ -413,6 +428,11 @@ const Appointment = ({
                       values.slot = null;
                       setSelectedDate(null);
                       setSelectedSlot(null);
+
+                      const packages = packageListExt.filter(
+                        (d: any, i: any) => d.gender == values.sex
+                      );
+                      setPackageList([...packages]);
                       if (
                         packageRef &&
                         packageRef.current &&
@@ -485,20 +505,15 @@ const Appointment = ({
                       onChange={(e: any) => {
                         if (e) {
                           setSelectedPackage(e);
+                          console.log(e, "XTTTT");
 
                           const data = {
                             startTime: businessUserData.startTime,
                             endTime: businessUserData.endTime,
                             breakTimeStart: businessUserData.breakTimeStart,
                             breakTimeEnd: businessUserData.breakTimeEnd,
-                            hours:
-                              values.sex == "male"
-                                ? e.durationMale.hours
-                                : e.durationFemale.hours,
-                            minutes:
-                              values.sex == "male"
-                                ? e.durationMale.minutes
-                                : e.durationFemale.minutes,
+                            hours: e.duration.hours,
+                            minutes: e.duration.minutes,
                           };
 
                           values.serviceId = e.value;
@@ -660,6 +675,53 @@ const Appointment = ({
                       </>
                     )}
                   />
+                  {seconds == 0 ? (
+                    <p
+                      onClick={() => {
+                        apicall({
+                          path: "addappointments",
+                          getResponse: (res) => {
+                            toast("💬 Verify OTP", {
+                              position: "bottom-right",
+                              autoClose: 5000,
+                              hideProgressBar: false,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: true,
+                              progress: undefined,
+                              theme: "light",
+                              transition: Bounce,
+                            });
+                            setSeconds(0);
+                          },
+                          getError: (err) => {
+                            toast(err.response.data.message, {
+                              position: "bottom-right",
+                              autoClose: 5000,
+                              hideProgressBar: false,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: true,
+                              progress: undefined,
+                              theme: "light",
+                              type: "error",
+                              transition: Bounce,
+                            });
+                          },
+                          router,
+                          method: "post",
+                          data: values,
+                        });
+                      }}
+                      className="mt-2 text-blue-400 cursor-pointer"
+                    >
+                      Resend OTP
+                    </p>
+                  ) : (
+                    <p className="mt-2 text-blue-200 cursor-disabled">
+                      Resend OTP in {seconds} seconds
+                    </p>
+                  )}
                 </div>
               )}
               <div className="mb-10 mt-8">

@@ -61,7 +61,10 @@ function TicketCards({
                 {getUserType != 1 && "Employee: " + ticket?.Member.name}
               </p>
               <p className="text-textSecondary font-poppins text-sm sm:text-sm">
-                {"Service: " + ticket?.service.name}
+                {"Service: " +
+                  ticket?.service.name +
+                  " - ₹" +
+                  ticket?.service.price}
               </p>
               <p className="text-textSecondary font-poppins text-sm sm:text-sm">
                 {ticket.slot?.startTime} - {ticket.slot?.endTime}

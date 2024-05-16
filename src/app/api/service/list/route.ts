@@ -15,7 +15,7 @@ const GET = async (req: NextRequest) => {
 
       const businessVal: any = await jwt.verify(tokenJWTVal, JWTKEY);
 
-      const packageList = await prisma.package.findMany({
+      const packageList = await prisma.services.findMany({
         where: {
           businessUserId: businessVal.id,
         },

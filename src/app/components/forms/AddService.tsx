@@ -8,13 +8,15 @@ import { useSelector } from "react-redux";
 import { getdisablememberAdd } from "@/store/slices/commonSlices";
 import { Bounce, toast } from "react-toastify";
 import MultiSelectComp from "../MultiSelectComp";
+import { RadioGroup, RadioGroupItem } from "../ui/RadioGrp";
+import { Label } from "../ui/Label";
 
 interface selecteddur {
   hours: number;
   minutes: number;
 }
 
-function AddPackage({
+function AddService({
   addPackageToList,
 }: {
   addPackageToList: (e: any) => void;
@@ -27,21 +29,13 @@ function AddPackage({
   const hoursRef = useRef(null);
   const minutesRef = useRef(null);
 
-  const [durationMaleErr, setDurationMaleErr] = useState("");
+  const [durationErr, setDurationErr] = useState("");
   const [durationFemaleErr, setDurationFemaleErr] = useState("");
 
-  const [selectedDurationMale, setSelectedDurationMale] = useState<selecteddur>(
-    {
-      hours: 0,
-      minutes: 0,
-    }
-  );
-
-  const [selectedDurationFemale, setSelectedDurationFemale] =
-    useState<selecteddur>({
-      hours: 0,
-      minutes: 0,
-    });
+  const [selectedDuration, setSelectedDuration] = useState<selecteddur>({
+    hours: 0,
+    minutes: 0,
+  });
 
   const hoursArr = [
     {
@@ -118,6 +112,8 @@ function AddPackage({
       <Formik
         initialValues={{
           name: "",
+          price: "",
+          gender: "",
         }}
         validate={(values) => {
           const errors: any = {};
@@ -125,43 +121,37 @@ function AddPackage({
           if (!values.name) {
             errors.name = "Required";
           }
+          if (!values.gender) {
+            errors.gender = "Required";
+          }
+
+          if (!values.price) {
+            errors.price = "Required";
+          }
 
           return errors;
         }}
         onSubmit={(values, { setSubmitting, resetForm }) => {
-          if (
-            selectedDurationMale.hours === 0 &&
-            selectedDurationMale.minutes === 0
-          ) {
-            setDurationMaleErr("Duration is required");
+          console.log(values, "CCCC");
+          if (selectedDuration.hours === 0 && selectedDuration.minutes === 0) {
+            setDurationErr("Duration is required");
 
             return;
           } else {
-            setDurationMaleErr("");
+            setDurationErr("");
           }
 
-          if (
-            selectedDurationFemale.hours === 0 &&
-            selectedDurationFemale.minutes === 0
-          ) {
-            setDurationFemaleErr("Duration is required");
-
-            return;
-          } else {
-            setDurationFemaleErr("");
-          }
           const data = {
-            name: values.name,
-            durationMale: selectedDurationMale,
-            durationFemale: selectedDurationFemale,
+            ...values,
+            duration: selectedDuration,
           };
 
           apicall({
-            path: "package/add",
+            path: "service/add",
             getResponse: (res) => {
               addPackageToList(data);
               resetForm();
-              setSelectedDurationMale({
+              setSelectedDuration({
                 hours: 0,
                 minutes: 0,
               });
@@ -219,10 +209,106 @@ function AddPackage({
                 value={values.name}
                 error={errors.name}
                 touched={touched.name}
+                required
               />
             </div>
 
-            {/* <div className="mt-4">
+            <div className="mt-4 w-full">
+              <p className="mb-2 font-poppins text-white">
+                Gender <span className="text-red-500">*</span>
+              </p>
+              <RadioGroup
+                onValueChange={(e) => {
+                  errors.gender = "";
+                  values.gender = e;
+                }}
+                className="flex flex-wrap "
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="male" id="male" />
+                  <Label className="text-textPrimary" htmlFor="male">
+                    Male
+                  </Label>
+                </div>
+                <div className="flex ml-4 items-center space-x-2">
+                  <RadioGroupItem value="female" id="female" />
+                  <Label className="text-textPrimary" htmlFor="female">
+                    Female
+                  </Label>
+                </div>
+                <div className="flex ml-4 items-center space-x-2">
+                  <RadioGroupItem value="other" id="other" />
+                  <Label className="text-textPrimary" htmlFor="other">
+                    Other
+                  </Label>
+                </div>
+              </RadioGroup>
+
+              {errors.gender && (
+                <p className=" font-poppins mt-1 text-[10px] mb-[-10px] text-[#f46a6a]">
+                  {errors.gender}
+                </p>
+              )}
+            </div>
+
+            <div className="mt-4 w-full">
+              <div className="flex flex-col w-full">
+                <label
+                  className={`font-sans text-md text-textPrimary font-medium  transition-all duration-200 ease-in-out left-4`}
+                >
+                  Duration of Service
+                </label>{" "}
+                <div className="flex  w-full justify-between md:justify-start mt-[5px] ">
+                  <div className="w-[47%]  md:mr-4">
+                    <div className="col-md-12">
+                      <MultiSelectComp
+                        full={true}
+                        refSelect={hoursRef}
+                        title="Hours"
+                        onChange={(e: any) => {
+                          selectedDuration.hours = e.value;
+                          setSelectedDuration({ ...selectedDuration });
+                        }}
+                        isMulti={false}
+                        required={true}
+                        placeholder="Hours"
+                        options={hoursArr !== null ? hoursArr : []}
+                        defaultValue={{
+                          label: "0",
+                          value: "0",
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="w-[47%] ">
+                    <div className="w-full ">
+                      <MultiSelectComp
+                        full={true}
+                        title="Minutes"
+                        refSelect={minutesRef}
+                        required={true}
+                        onChange={(e: any) => {
+                          selectedDuration.minutes = e.value;
+                          setSelectedDuration({ ...selectedDuration });
+                        }}
+                        isMulti={false}
+                        placeholder="Minutes"
+                        options={minutesArr !== null ? minutesArr : []}
+                        defaultValue={{
+                          label: "0",
+                          value: "0",
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm mt-[5px] text-red-500">{durationErr}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 mb-6 flex justify-between items-center">
               <CustomInput
                 type="number"
                 name="price"
@@ -233,130 +319,10 @@ function AddPackage({
                 value={values.price}
                 error={errors.price}
                 touched={touched.price}
+                required
               />
-            </div> */}
-
-            <div className="my-[20px] w-full">
-              <div className="flex flex-col w-full">
-                <label
-                  className={`font-sans text-md text-textPrimary font-medium  transition-all duration-200 ease-in-out left-4`}
-                >
-                  Duration of Package For Male
-                </label>{" "}
-                <div className="flex  w-full justify-between md:justify-start mt-[5px] ">
-                  <div className="w-[47%]  md:mr-4">
-                    <div className="col-md-12">
-                      <MultiSelectComp
-                        full={true}
-                        refSelect={hoursRef}
-                        title="Hours"
-                        onChange={(e: any) => {
-                          selectedDurationMale.hours = e.value;
-                          setSelectedDurationMale({ ...selectedDurationMale });
-                        }}
-                        isMulti={false}
-                        required={true}
-                        placeholder="Hours"
-                        options={hoursArr !== null ? hoursArr : []}
-                        defaultValue={{
-                          label: "0",
-                          value: "0",
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div className="w-[47%] ">
-                    <div className="w-full ">
-                      <MultiSelectComp
-                        full={true}
-                        title="Minutes"
-                        refSelect={minutesRef}
-                        required={true}
-                        onChange={(e: any) => {
-                          selectedDurationMale.minutes = e.value;
-                          setSelectedDurationMale({ ...selectedDurationMale });
-                        }}
-                        isMulti={false}
-                        placeholder="Minutes"
-                        options={minutesArr !== null ? minutesArr : []}
-                        defaultValue={{
-                          label: "0",
-                          value: "0",
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <p className="text-sm mt-[5px] text-red-500">
-                    {durationMaleErr}
-                  </p>
-                </div>
-              </div>
             </div>
 
-            <div className="my-[20px] w-full">
-              <div className="flex flex-col w-full">
-                <label
-                  className={`font-sans text-md text-textPrimary font-medium  transition-all duration-200 ease-in-out left-4`}
-                >
-                  Duration of Package For Female
-                </label>{" "}
-                <div className="flex  w-full justify-between md:justify-start mt-[5px] ">
-                  <div className="w-[47%]  md:mr-4">
-                    <div className="col-md-12">
-                      <MultiSelectComp
-                        full={true}
-                        refSelect={hoursRef}
-                        title="Hours"
-                        onChange={(e: any) => {
-                          selectedDurationFemale.hours = e.value;
-                          setSelectedDurationFemale({
-                            ...selectedDurationFemale,
-                          });
-                        }}
-                        isMulti={false}
-                        required={true}
-                        placeholder="Hours"
-                        options={hoursArr !== null ? hoursArr : []}
-                        defaultValue={{
-                          label: "0",
-                          value: "0",
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div className="w-[47%] ">
-                    <div className="w-full ">
-                      <MultiSelectComp
-                        full={true}
-                        title="Minutes"
-                        refSelect={minutesRef}
-                        required={true}
-                        onChange={(e: any) => {
-                          selectedDurationFemale.minutes = e.value;
-                          setSelectedDurationFemale({
-                            ...selectedDurationFemale,
-                          });
-                        }}
-                        isMulti={false}
-                        placeholder="Minutes"
-                        options={minutesArr !== null ? minutesArr : []}
-                        defaultValue={{
-                          label: "0",
-                          value: "0",
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <p className="text-sm mt-[5px] text-red-500">
-                    {durationFemaleErr}
-                  </p>
-                </div>
-              </div>
-            </div>
             <div className="mb-2">
               <Button type="submit" title="Submit" />
             </div>
@@ -367,4 +333,4 @@ function AddPackage({
   );
 }
 
-export default AddPackage;
+export default AddService;
