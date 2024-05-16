@@ -20,6 +20,7 @@ interface ticketTypes {
   date: string;
   service: {
     name: string;
+    price: string;
   };
 }
 
