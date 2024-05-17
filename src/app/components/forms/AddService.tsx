@@ -26,8 +26,8 @@ function AddService({
   const disableAdd = useSelector(getdisablememberAdd);
   const router = useRouter();
 
-  const hoursRef = useRef(null);
-  const minutesRef = useRef(null);
+  const hoursRef: any = useRef(null);
+  const minutesRef: any = useRef(null);
 
   const [durationErr, setDurationErr] = useState("");
   const [durationFemaleErr, setDurationFemaleErr] = useState("");
@@ -117,6 +117,7 @@ function AddService({
         }}
         validate={(values) => {
           const errors: any = {};
+          console.log("XXXX");
 
           if (!values.name) {
             errors.name = "Required";
@@ -166,8 +167,20 @@ function AddService({
                 theme: "light",
                 transition: Bounce,
               });
+              window.location.reload();
+
+              // console.log(hoursRef.current, minutesRef, "POPOPOP");
+
+              // if (hoursRef) {
+              //   hoursRef.current.clearValue();
+              // }
+
+              // if (minutesRef) {
+              //   minutesRef.current.clearValue();
+              // }
             },
             getError: (err) => {
+              console.log(err, "Error");
               toast("Something failed on server", {
                 position: "bottom-right",
                 autoClose: 5000,
@@ -197,7 +210,12 @@ function AddService({
           isSubmitting,
           /* and other goodies */
         }) => (
-          <form onSubmit={handleSubmit}>
+          <form
+            onSubmit={(e) => {
+              console.log("Hello");
+              handleSubmit(e);
+            }}
+          >
             <div className="mt-4">
               <CustomInput
                 type="text"

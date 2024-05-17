@@ -18,6 +18,7 @@ function PageSection({ landingpage }: { landingpage: string }) {
       path: "slug",
       getResponse: (res) => {
         setBusinessUser(res.data.data);
+        console.log(res.data.data);
       },
       getError: (err) => {},
       router,

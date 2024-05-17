@@ -229,8 +229,6 @@ const Appointment = ({
             slotsArr.push(obj);
           });
 
-          console.log(slotsArr, "XYZZZ");
-
           setSlotsArr(slotsArr);
         }
 
@@ -505,7 +503,6 @@ const Appointment = ({
                       onChange={(e: any) => {
                         if (e) {
                           setSelectedPackage(e);
-                          console.log(e, "XTTTT");
 
                           const data = {
                             startTime: businessUserData.startTime,

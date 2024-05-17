@@ -8,7 +8,7 @@ const JWTKEY: any = process.env.JWT_KEY_TOKEN;
 
 const GET = async (req: NextRequest) => {
   try {
-    const tokenJWT = req.cookies.get("token");
+    const tokenJWT = req.cookies.get("appointify");
 
     if (tokenJWT) {
       const tokenJWTVal = tokenJWT?.value;
