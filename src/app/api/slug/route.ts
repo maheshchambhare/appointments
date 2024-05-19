@@ -30,6 +30,8 @@ const POST = async (req: NextRequest) => {
     if (businessUser) {
       let jsonToken = "";
 
+      console.log(businessUser, "OOOOOO");
+
       try {
         jsonToken = await jwt.sign(
           { id: businessUser.id, fcmToken: businessUser.fcmToken },

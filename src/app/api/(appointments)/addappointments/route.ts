@@ -24,6 +24,8 @@ const POST = async (req: NextRequest) => {
         ? [businessUSER.fcmToken, body.fcmToken]
         : [businessUSER.fcmToken];
 
+    console.log(tokens, "UUU");
+
     // Send the notification
 
     const user = await prisma.user.findUnique({
@@ -61,12 +63,25 @@ const POST = async (req: NextRequest) => {
         .messaging()
         .sendMulticast(message)
         .then((response) => {
-          console.log("Successfully sent message:", response);
+          if (response.failureCount > 0) {
+            console.error("Failed to send some messages:");
+            response.responses.forEach((resp, idx) => {
+              if (!resp.success) {
+                console.error(
+                  `Failure for token ${tokens[idx]}: ${resp.error}`
+                );
+              }
+            });
+          } else {
+            console.log("Successfully sent message:", response);
+          }
         })
         .catch((error) => {
-          console.log("Error sending message:", error);
+          console.error("Error sending message:", error.message);
+          if (error.errorInfo) {
+            console.error("Error info:", error.errorInfo);
+          }
         });
-
       return NextResponse.json(
         {
           message: "Appointment added",

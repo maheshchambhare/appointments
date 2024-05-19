@@ -17,6 +17,8 @@ const POST = async (req: Request) => {
     const password = body.password;
     const mobile = body.mobile;
 
+    console.log(body.fcmToken, "YUYYYY");
+
     let businessUser;
 
     businessUser = await prisma.businessUser.findUnique({
