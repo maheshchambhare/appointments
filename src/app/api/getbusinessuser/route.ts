@@ -20,8 +20,6 @@ const GET = async (req: NextRequest) => {
         },
       });
 
-      console.log(businessData, "OOOOPPP");
-
       const response = NextResponse.json(
         {
           ...businessData,

@@ -576,6 +576,7 @@ const Appointment = ({
                         values.date = e;
                         errors.date = "";
                         setSelectedDate(e);
+
                         if (values.memberId !== null) {
                           getAllSlots({ date: e, member: values.memberId });
                         }

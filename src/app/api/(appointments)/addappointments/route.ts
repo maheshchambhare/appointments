@@ -24,7 +24,7 @@ const POST = async (req: NextRequest) => {
         ? [businessUSER.fcmToken, body.fcmToken]
         : [businessUSER.fcmToken];
 
-    console.log(tokens, "UUU");
+  
 
     // Send the notification
 
@@ -37,7 +37,6 @@ const POST = async (req: NextRequest) => {
     if (user) {
       const appointmentData = {
         userId: user.id,
-
         businessUserId: businessUSER.id,
         slot: body.slot,
         date: body.date,

@@ -3,8 +3,7 @@ import Header from "./Header";
 import HowItWorks from "./HowItWorks";
 import Navbar from "@/app/components/Layouts/Navbar";
 import { Metadata } from "next";
-import Link from "next/link";
-import { Dice1, Linkedin, Twitter } from "lucide-react";
+import Footer from "@/app/components/Layouts/Footer";
 import homeData from "@/utils/data/homepage.json";
 
 export default function Home() {
@@ -28,27 +27,9 @@ export default function Home() {
         </ScreenWrapper>
       </div>
 
-      <div className="relative h-auto   bg-bgblack w-full   ">
-        {/* How it works section */}
+      {/* How it works section */}
 
-        <ScreenWrapper>
-          <p className="text-center my-2 text-textPrimary">@2024 appointify</p>
-          <div className="flex  w-full justify-center mb-6">
-            <Link
-              href="https://twitter.com/maheshchambhare"
-              className="mr-4 cursor-pointer"
-            >
-              <Twitter className="text-textPrimary" />
-            </Link>
-            <Link
-              href="https://www.linkedin.com/in/maheshchambhare/"
-              className=" cursor-pointer"
-            >
-              <Linkedin className="cursor-pointer text-textPrimary" />
-            </Link>
-          </div>
-        </ScreenWrapper>
-      </div>
+      <Footer />
     </main>
   );
 }

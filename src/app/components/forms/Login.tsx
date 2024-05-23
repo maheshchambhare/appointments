@@ -26,6 +26,8 @@ const Login = ({
   const dispatch = useDispatch();
   const { fcmToken, notificationPermissionStatus } = useFcmToken();
 
+  const token = fcmToken;
+
   const router = useRouter();
 
   return (
@@ -97,7 +99,7 @@ const Login = ({
             data: {
               mobile: values.mobile,
               password: values.password,
-              fcmToken,
+              fcmToken: token,
             },
           });
         }}

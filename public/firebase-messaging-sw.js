@@ -23,5 +23,6 @@ messaging.onBackgroundMessage((payload) => {
     body: `A new Appointment has been added for customer ${payload.data.customer}`,
     icon: "./logo.webp",
   };
+
   self.registration.showNotification(notificationTitle, notificationOptions);
 });

@@ -117,7 +117,6 @@ function AddService({
         }}
         validate={(values) => {
           const errors: any = {};
-          console.log("XXXX");
 
           if (!values.name) {
             errors.name = "Required";
@@ -133,7 +132,6 @@ function AddService({
           return errors;
         }}
         onSubmit={(values, { setSubmitting, resetForm }) => {
-          console.log(values, "CCCC");
           if (selectedDuration.hours === 0 && selectedDuration.minutes === 0) {
             setDurationErr("Duration is required");
 
@@ -180,7 +178,6 @@ function AddService({
               // }
             },
             getError: (err) => {
-              console.log(err, "Error");
               toast("Something failed on server", {
                 position: "bottom-right",
                 autoClose: 5000,
@@ -212,7 +209,6 @@ function AddService({
         }) => (
           <form
             onSubmit={(e) => {
-              console.log("Hello");
               handleSubmit(e);
             }}
           >
