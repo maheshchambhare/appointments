@@ -41,6 +41,12 @@ function Footer() {
             <div className=" w-[90%] mt-6 md:mt-o md:w-[40%] flex flex-col justify-end md:items-end">
               <p className="text-lg">Links</p>
               <Link
+                href="/contact-us"
+                className="mb-1  underline cursor-pointer"
+              >
+                Contact Us
+              </Link>
+              <Link
                 href="/cookie-policy"
                 className="mb-1  underline  cursor-pointer"
               >
@@ -52,6 +58,7 @@ function Footer() {
               >
                 Privacy Policy
               </Link>
+
               <Link
                 href="/terms-and-conditions"
                 className="mb-1 underline  cursor-pointer"
