@@ -33,7 +33,9 @@ function MoreSection({ businessData }: { businessData: any }) {
 
   const [appointments, setAppointments] = useState<any>(null);
 
-  const tabHeaders = ["Upcoming", "In Progress", "Completed", "Cancelled"];
+  const tabHeaders = isBusinessLoggedIn
+    ? ["Upcoming", "In Progress", "Completed", "Cancelled"]
+    : ["Upcoming", "In Progress"];
 
   const dispatch = useDispatch();
 
