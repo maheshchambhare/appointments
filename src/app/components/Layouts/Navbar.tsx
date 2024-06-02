@@ -51,7 +51,7 @@ function Navbar() {
 
   const menu = [
     {
-      name: getUserType == 1 ? "My Tickets" : "All Tickets",
+      name: getUserType == 1 ? "Appointments" : "Appointments",
       route: "home",
       icon: <SquareKanban className="text-textPrimary" size={18} />,
       onClick: () => {
