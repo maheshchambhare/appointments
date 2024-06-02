@@ -39,6 +39,7 @@ function BusinessUsers() {
 
       <div className="flex  w-full mt-4 flex-wrap">
         {businessUsers.map((d: any, i: any) => {
+          console.log(d, "UUUU");
           return (
             <div
               onClick={() => {
@@ -49,6 +50,7 @@ function BusinessUsers() {
               key={d.id}
             >
               <p>{d.name}</p>
+              <p>{d.businessName}</p>
               <p className="font-sans mb-2 text-sm mt-2">
                 {d.approved ? "Approved" : "not approved"}
               </p>

@@ -36,6 +36,17 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+body::-webkit-scrollbar {
+  height: 0;
+  width: 6px;
+  background-color: black;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #f7f7f7;
+  border-radius: 2px;
+  width: 6px;
+}
 
 @layer utilities {
   .text-balance {
