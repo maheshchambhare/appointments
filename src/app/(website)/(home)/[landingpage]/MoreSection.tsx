@@ -114,26 +114,22 @@ function MoreSection({ businessData }: { businessData: any }) {
 
   return (
     <div className="relative max-h-max ">
-      {businessPageType === "1" ? (
-        <div className="relative [perspective:1000px]   flex flex-col max-w-5xl mx-auto w-full  items-start justify-start my-4">
-          <Tab
-            tabs={tabHeaders}
-            selectedTab={(e) => setActiveTab(e)}
-            activateTab={activeTab}
+      <div className="relative [perspective:1000px] min-h-[80vh]  flex flex-col  mx-auto w-full  items-start justify-start my-4">
+        <Tab
+          tabs={tabHeaders}
+          selectedTab={(e) => setActiveTab(e)}
+          activateTab={activeTab}
+        />
+        <div className="w-full h-full mt-[20px] relative  mb-[100px]  py-4 px-1 ">
+          <TicketCards
+            tickets={appointments}
+            router={router}
+            update={({ status, id }: { status: string; id: string }) =>
+              updateTicket({ status, id })
+            }
           />
-          <div className="w-full h-full mt-[20px] relative  mb-[100px]  py-4 px-1 ">
-            <TicketCards
-              tickets={appointments}
-              router={router}
-              update={({ status, id }: { status: string; id: string }) =>
-                updateTicket({ status, id })
-              }
-            />
-          </div>
         </div>
-      ) : (
-        <Slots />
-      )}
+      </div>
 
       {businessPageType === "1" && (
         <div className="fixed bottom-0 bg-background py-4 left-0 right-0 self-center mx-auto flex justify-center">

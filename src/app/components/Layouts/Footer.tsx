@@ -16,7 +16,7 @@ function Footer() {
     <div className="relative h-auto bg-background   w-full   ">
       <div className="border-t-2 bg-black text-textPrimary border-l-2 border-r-2 rounded-t-lg shadow-md border-white/10 py-4 mx-4">
         <ScreenWrapper>
-          <div className="mb-10 flex flex-col md:flex-row items-center justify-between">
+          <div className="mb-10 flex flex-col md:flex-row md:items-center justify-between">
             <div className="flex flex-col w-[90%] md:w-[50%] ">
               <h1
                 onClick={() => {
@@ -38,37 +38,28 @@ function Footer() {
               </p>
             </div>
 
-            <div className=" w-[90%] mt-6 md:mt-o md:w-[40%] flex flex-col justify-end md:items-end">
-              <p className="text-lg">Links</p>
-              <Link
-                href="/contact-us"
-                className="mb-1  underline cursor-pointer"
-              >
+            <div className=" w-[200px]  mt-6 md:mt-o flex  flex-col ">
+              <p className="text-lg underline">Links</p>
+              <Link href="/contact-us" className="mb-1   cursor-pointer">
                 Contact Us
               </Link>
-              <Link
-                href="/cookie-policy"
-                className="mb-1  underline  cursor-pointer"
-              >
+              <Link href="/cookie-policy" className="mb-1    cursor-pointer">
                 Cookie Policy
               </Link>
-              <Link
-                href="/privacy-policy"
-                className="mb-1  underline cursor-pointer"
-              >
+              <Link href="/privacy-policy" className="mb-1   cursor-pointer">
                 Privacy Policy
               </Link>
 
               <Link
                 href="/terms-and-conditions"
-                className="mb-1 underline  cursor-pointer"
+                className="mb-1   cursor-pointer"
               >
                 Terms And Condition
               </Link>
 
               <Link
                 href="/refund-and-cancellation"
-                className="mb-1 underline  cursor-pointer"
+                className="mb-1   cursor-pointer"
               >
                 Refund and Cancellation
               </Link>

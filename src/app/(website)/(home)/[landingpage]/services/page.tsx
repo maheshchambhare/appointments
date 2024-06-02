@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Packages from "./packages";
 import { getUserData } from "@/store/slices/authSlice";
 import AddService from "@/app/components/forms/AddService";
+import Footer from "@/app/components/Layouts/Footer";
 
 function Package() {
   const router = useRouter();
@@ -33,7 +34,7 @@ function Package() {
 
   return (
     <main className="flex bg-background flex-col w-[100vw] min-h-[100vh] ">
-      <div className="relative h-auto w-full  ">
+      <div className="relative h-auto w-full mb-10  ">
         <ScreenWrapper>
           <Navbar />
           <div className="flex xsm:flex-col md:flex-row relative mx-auto   w-full mt-10 justify-between ">
@@ -65,6 +66,7 @@ function Package() {
           </div>
         </ScreenWrapper>
       </div>
+      <Footer />
     </main>
   );
 }

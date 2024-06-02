@@ -3,6 +3,7 @@ import React from "react";
 
 import PageSection from "./PageSection";
 import homeData from "@/utils/data/homepage.json";
+import Footer from "@/app/components/Layouts/Footer";
 
 interface ParamsType {
   // Define the structure of params object
@@ -23,6 +24,7 @@ async function page({
   return (
     <main className="flex bg-background flex-col w-[100vw] min-h-[120vh]">
       <PageSection landingpage={params.landingpage} />
+      <Footer />
     </main>
   );
 }

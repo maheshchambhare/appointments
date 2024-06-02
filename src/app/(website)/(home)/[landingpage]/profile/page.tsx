@@ -1,4 +1,5 @@
 "use client";
+import Footer from "@/app/components/Layouts/Footer";
 import Navbar from "@/app/components/Layouts/Navbar";
 import ScreenWrapper from "@/app/components/Layouts/ScreenWrapper";
 import Profile from "@/app/components/forms/Profile";
@@ -14,7 +15,7 @@ function ProfilePage() {
 
   return (
     <main className="flex bg-background flex-col w-[100vw] min-h-[100vh] ">
-      <div className="relative h-auto w-full  ">
+      <div className="relative h-auto w-full mb-10  ">
         <ScreenWrapper>
           <Navbar />
           <div className="flex xsm:flex-col md:flex-row relative mx-auto   w-full mt-10 justify-between ">
@@ -37,6 +38,7 @@ function ProfilePage() {
           </div>
         </ScreenWrapper>
       </div>
+      <Footer />
     </main>
   );
 }
