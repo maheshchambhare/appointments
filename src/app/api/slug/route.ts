@@ -3,11 +3,17 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
 const JWTKEY: any = process.env.JWT_KEY_TOKEN;
+const JWTKEYOTP: any = process.env.JWT_KEY_OTP;
 
 const POST = async (req: NextRequest) => {
   try {
+    const cookie = req.cookies.get("userauth");
+    const userToken: any = cookie?.value;
+
+    const userTokenDecrypted: any = await jwt.verify(userToken, JWTKEYOTP);
+
     const body = await req.json();
-    const slug = body?.slug;
+    const slug = body?.slug || userTokenDecrypted.businessUser.slug;
     const page = body?.page;
 
     const businessUser = await prisma.businessUser.findUnique({
@@ -17,7 +23,7 @@ const POST = async (req: NextRequest) => {
       },
 
       include: {
-        members: {
+        employees: {
           select: {
             id: true,
             name: true,
@@ -48,26 +54,14 @@ const POST = async (req: NextRequest) => {
             page == "0"
               ? {
                   name: businessUser.businessName,
-                  about: businessUser.about,
                   address: businessUser.address,
                   slug: businessUser.slug,
                   id: businessUser.id,
-                  startTime: businessUser.startTime,
-                  endTime: businessUser.endTime,
-                  breakTimeStart: businessUser.breakTimeStart,
-                  breakTimeEnd: businessUser.breakTimeEnd,
                 }
               : {
                   name: businessUser.businessName,
-                  about: businessUser.about,
                   address: businessUser.address,
                   members: businessUser.members,
-                  weekdays: businessUser.weekdays,
-                  startTime: businessUser.startTime,
-                  endTime: businessUser.endTime,
-                  breakTimeStart: businessUser.breakTimeStart,
-                  breakTimeEnd: businessUser.breakTimeEnd,
-                  slots: businessUser.slots,
                   slug: businessUser.slug,
                   id: businessUser.id,
                 },

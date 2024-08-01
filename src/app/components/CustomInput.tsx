@@ -59,7 +59,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
   return (
     <div className="relative">
       <label
-        className={`font-sans text-md  font-medium  transition-all duration-200 ease-in-out left-4 text-textPrimary`}
+        className={`font-sans text-md  font-medium  transition-all duration-200 ease-in-out left-4 text-foreground`}
       >
         {label}{" "}
         {label && required && <label className="text-red-500"> *</label>}{" "}
@@ -77,7 +77,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
               inputHeight
                 ? `h-[${inputHeight}px] xsm:h-[37px] sm:h-[37px] md:h-[37px]`
                 : "h-[40px] xsm:h-[37px] sm:h-[37px] md:h-[37px]"
-            }  ${isDisabled ? "bg-[#eeeeee80]" : "bg-white"}
+            }  ${isDisabled ? "bg-[#eeeeee80]" : "bg-foreground"}
             
             border-y-[1px] ${
               focusedInput ? "border-black" : "border-gray-300"
@@ -105,7 +105,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
               ? "black"
               : (touched && error && "#f46a6a") || "none",
           }}
-          className={`bg-transparent text-md  pr-4 ${
+          className={` text-md  pr-4 ${
             inputHeight
               ? `h-[${inputHeight}px] xsm:h-[37px] sm:h-[37px] md:h-[37px]`
               : "h-[40px] xsm:h-[37px] sm:h-[37px] md:h-[37px]"
@@ -114,10 +114,10 @@ const CustomInput: React.FC<CustomInputProps> = ({
               ? "border-r-[1px] border-y-[1px] rounded-l-none rounded-r-[7px]"
               : "border-[1px] rounded-md px-2"
           } ${
-            isDisabled ? "bg-[#eeeeee80]" : "bg-zinc-800"
+            isDisabled ? "bg-[#eeeeee80]" : "bg-input"
           }   border-gray-300  leading-tight focus:outline-none
-         flex h-12 w-full border-none bg-zinc-800  text-white  rounded-md px-3 py-2 text-sm  file:border-0 file:bg-transparent 
-          file:text-sm file:font-medium placeholder:text-neutral-400 dark:placeholder-text-neutral-600 
+         flex h-12 w-full border-none   text-foreground  rounded-md px-3 py-2 text-sm  file:border-0 file:bg-transparent 
+          file:text-sm file:font-medium placeholder:text-foreground/60 
           focus-visible:outline-none focus-visible:ring-[2px]  focus-visible:ring-neutral-600
            disabled:cursor-not-allowed disabled:opacity-50
            shadow-[0px_0px_1px_1px_var(--neutral-700)]
@@ -165,9 +165,15 @@ const CustomInput: React.FC<CustomInputProps> = ({
           }}
         >
           {showPassword ? (
-            <EyeOff color={touched && error ? "#f46a6a" : "white"} size={18} />
+            <EyeOff
+              color={touched && error ? "#f46a6a" : "hsl(var(--foreground))"}
+              size={18}
+            />
           ) : (
-            <Eye color={touched && error ? "#f46a6a" : "white"} size={18} />
+            <Eye
+              color={touched && error ? "#f46a6a" : "hsl(var(--foreground))"}
+              size={18}
+            />
           )}
         </span>
       )}

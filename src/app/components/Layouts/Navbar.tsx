@@ -12,6 +12,10 @@ import {
   Users2Icon,
   LogOut,
   Blocks,
+  SunIcon,
+  MoonIcon,
+  Globe,
+  ListPlus,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { setBusinessSectionType } from "@/store/slices/commonSlices";
@@ -28,6 +32,14 @@ import { AlignJustify, SquareKanban } from "lucide-react";
 import Cookies from "js-cookie";
 import { apicall } from "@/utils/getdata";
 import { Bounce, toast } from "react-toastify";
+import { useTheme } from "next-themes";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ButtonShad } from "../ui/Buttons";
 
 interface menuItem {
   name: string;
@@ -46,6 +58,7 @@ function Navbar() {
   const getUserType = useSelector(getUserTypeData);
   const dispatch = useDispatch();
   const router = useRouter();
+  const { setTheme } = useTheme();
 
   const login = false;
 
@@ -64,7 +77,15 @@ function Navbar() {
       route: "profile",
       icon: <User className="text-textPrimary" size={18} />,
       onClick: () => {
-        router.push("/" + businessUserData.slug + "/profile");
+        router.push("/dashboard/profile");
+      },
+    },
+    getUserType == 0 && {
+      name: "Website",
+      route: "website",
+      icon: <Globe className="text-textPrimary" size={18} />,
+      onClick: () => {
+        router.push("/dashboard/website");
       },
     },
     // getUserType == 0 && {
@@ -86,7 +107,20 @@ function Navbar() {
       icon: <Users2Icon className="text-textPrimary" size={18} />,
       onClick: () => {
         setOpenMenu(false);
-        router.push("/" + businessUserData.slug + "/employee");
+        router.push("/dashboard/employee");
+
+        // setTimeout(() => {
+        //    dispatch(setUserData("2"));
+        // }, 200);
+      },
+    },
+    getUserType == 0 && {
+      name: "Categories",
+      route: "categories",
+      icon: <ListPlus className="text-textPrimary" size={18} />,
+      onClick: () => {
+        setOpenMenu(false);
+        router.push("/dashboard/category");
 
         // setTimeout(() => {
         //    dispatch(setUserData("2"));
@@ -99,7 +133,7 @@ function Navbar() {
       icon: <Blocks className="text-textPrimary" size={18} />,
       onClick: () => {
         setOpenMenu(false);
-        router.push("/" + businessUserData.slug + "/services");
+        router.push("/dashboard/services");
 
         // setTimeout(() => {
         //    dispatch(setUserData("2"));
@@ -143,41 +177,89 @@ function Navbar() {
 
   return (
     <div className="w-[100%]  z-10  mMax:w-[80%] lMax:w-[70%] mt-4 mx-auto  flex xsm:flex-row md:flex-row justify-between items-center  ">
-      <div
-        onClick={() => {
-          if (isBusinessLoggedIn) {
-            router.push("/" + businessUserData.slug);
-          } else {
-            router.push("/");
-          }
-        }}
-        className="xsm:w-[40%] md:w-[50%] h-full  "
-      >
-        <h1 className=" w-full font-mont  cursor-pointer xsm:text-[20px] md:text-[30px] text-[30px] text-textPrimary font-bold ">
-          APPOINTIFY
-        </h1>
-      </div>
-      {isBusinessLoggedIn ? (
+      <div className=" xsm:w-[40%] md:w-[50%] h-full  flex items-center">
         <div
           onClick={() => {
-            setOpenMenu(true);
+            if (isBusinessLoggedIn) {
+              router.push("/" + businessUserData.slug);
+            } else {
+              router.push("/");
+            }
           }}
-          className="flex  xsm:w-[50%] md:w-[30%] h-full justify-end"
+          className="mr-10 "
         >
-          <p className="cursor-pointer font-mono font-semibold">
-            <AlignJustify className="text-textPrimary" />
-          </p>
+          <h1 className=" w-full font-bave  cursor-pointer xsm:text-[20px] md:text-[25px] text-[25px] text-foreround font-medium  ">
+            APPOINTIFY
+          </h1>
+        </div>
+      </div>
+
+      {isBusinessLoggedIn ? (
+        <div className="flex items-center   ">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <ButtonShad variant="outline" size="icon">
+                <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                <span className="sr-only">Toggle theme</span>
+              </ButtonShad>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setTheme("light")}>
+                Light
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("dark")}>
+                Dark
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("system")}>
+                System
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <div
+            onClick={() => {
+              setOpenMenu(true);
+            }}
+            className="flex ml-4 xsm:w-[50%] md:w-[30%] h-full justify-end"
+          >
+            <p className="cursor-pointer font-mono font-semibold">
+              <AlignJustify className="text-textPrimary" />
+            </p>
+          </div>
         </div>
       ) : (
-        <div
-          onClick={() => {
-            setLoginModal(true);
-          }}
-          className="flex  xsm:w-[50%] md:w-[30%] h-full justify-end"
-        >
-          <p className="cursor-pointer font-mono font-semibold text-textPrimary">
-            Login
-          </p>
+        <div className="flex items-center  ">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <ButtonShad variant="outline" size="icon">
+                <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                <span className="sr-only">Toggle theme</span>
+              </ButtonShad>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setTheme("light")}>
+                Light
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("dark")}>
+                Dark
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("system")}>
+                System
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <div
+            onClick={() => {
+              setLoginModal(true);
+            }}
+            className="flex   h-full justify-end ml-4"
+          >
+            <p className="cursor-pointer font-mono font-semibold text-textPrimary">
+              Login
+            </p>
+          </div>
         </div>
       )}
 
@@ -231,7 +313,7 @@ function Navbar() {
           setOpenMenu(e);
         }}
       >
-        <div className="px-2 sm:px-4 py-10">
+        <div className="px-2 sm:px-4 py-4">
           {menu.map((item, ind) => {
             return (
               item && (
