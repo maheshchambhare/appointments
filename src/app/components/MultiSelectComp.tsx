@@ -54,7 +54,7 @@ function MultiSelectComp({
       w-full justify-between xsm:flex-col sm:flex-col md:flex-col"
     >
       <label
-        className={`font-sans text-textPrimary text-md font-medium  transition-all duration-200 ease-in-out left-4`}
+        className={`font-sans text-foreground text-md font-medium  transition-all duration-200 ease-in-out left-4`}
       >
         {title} {required && <span className="text-[red]">*</span>}
         {addExpBtn}
@@ -62,7 +62,7 @@ function MultiSelectComp({
       <div
         className={`mt-[5px] h-auto border-[1px] ${
           !isMulti ? "h-[40px]" : "min-h-[40px]"
-        }   border-gray-200 rounded-lg ${
+        }   border-border rounded-lg ${
           full ? "w-full" : "w-[49%]"
         }  xsm:w-full sm:w-full md:w-full`}
       >
@@ -88,7 +88,7 @@ function MultiSelectComp({
           styles={{
             control: (baseStyles, state) => ({
               ...baseStyles,
-              borderColor: error ? "#f46a6a" : "#e5e7eb",
+              borderColor: error ? "#f46a6a" : "hsl(var(--border))",
               accentColor: "transparent",
               minHeight: 20,
               height: !isMulti ? 38 : "auto",
@@ -96,13 +96,13 @@ function MultiSelectComp({
               borderWidth: 0,
 
               fontSize: "14px",
-              backgroundColor: "#131313",
-              color: "#fff",
+              backgroundColor: "hsl(var(--input))",
+              color: "hsl(var(--foreground))",
             }),
             option: (provided, state) => ({
               ...provided,
               fontSize: "16px", // Adjust the font size for the options in the list
-              color: "#fff",
+              color: "hsl(var(--foreground))",
               ":hover": {
                 color: "rgba(62,147,252)",
               },
@@ -110,14 +110,14 @@ function MultiSelectComp({
             placeholder: (provided, state) => ({
               ...provided,
               fontSize: "14px", // Adjust the font size for the placeholder
-              color: "#fff",
-              backgroundColor: "#131313",
+              color: "hsl(var(--foreground))",
+              backgroundColor: "hsl(var(--input))",
             }),
             menu: (provided, state) => ({
               ...provided,
-              background: "#131313",
-              color: "#fff",
-              borderColor: "#ccc",
+              background: "hsl(var(--input))",
+              color: "hsl(var(--foreground))",
+              borderColor: "hsl(var(--border))",
               borderWidth: 1,
             }),
           }}

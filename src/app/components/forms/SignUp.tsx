@@ -5,19 +5,29 @@ import Button from "../ui/Button";
 import { apicall } from "@/utils/getdata";
 import { useRouter } from "next/navigation";
 
-const SignUp = ({ setotpform }: { setotpform: (val: boolean) => void }) => {
+const SignUp = ({
+  setotpform,
+  formRef,
+  setRes,
+}: {
+  setotpform?: (val: boolean) => void;
+  formRef?: any;
+  setRes?: any;
+}) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showCnfPassword, setShowCnfPassword] = useState(false);
   const router = useRouter();
   return (
     <div>
       <Formik
+        // innerRef={(f) => (formRef.current = f)}
         initialValues={{
           name: "",
           businessName: "",
           mobile: "",
           password: "",
           cnfPassword: "",
+          email: "",
         }}
         validate={(values) => {
           const errors: any = {};
@@ -28,6 +38,8 @@ const SignUp = ({ setotpform }: { setotpform: (val: boolean) => void }) => {
 
           if (!values.businessName) {
             errors.businessName = "Required";
+          } else if (values.businessName.length > 20) {
+            errors.businessName = "Business name is too long";
           }
 
           if (!values.mobile) {
@@ -62,7 +74,10 @@ const SignUp = ({ setotpform }: { setotpform: (val: boolean) => void }) => {
           return errors;
         }}
         onSubmit={(values, { setSubmitting }) => {
-          setotpform(true);
+          // setRes({
+          //   loader: true,
+          //   success: false,
+          // });
 
           const data = {
             name: values.name,
@@ -71,12 +86,25 @@ const SignUp = ({ setotpform }: { setotpform: (val: boolean) => void }) => {
             approved: false,
             mobile: JSON.stringify(values.mobile),
             password: values.password,
+            email: values.email,
           };
+
+          console.log("hello");
 
           apicall({
             path: "signup",
-            getResponse: (res) => {},
-            getError: (err) => {},
+            getResponse: (res) => {
+              setRes({
+                loader: false,
+                success: true,
+              });
+            },
+            getError: (err) => {
+              setRes({
+                loader: false,
+                success: false,
+              });
+            },
             router,
             method: "post",
             data,
@@ -105,6 +133,7 @@ const SignUp = ({ setotpform }: { setotpform: (val: boolean) => void }) => {
                 value={values.name}
                 error={errors.name}
                 touched={touched.name}
+                required
               />
             </div>
             <div className="my-4">
@@ -118,6 +147,7 @@ const SignUp = ({ setotpform }: { setotpform: (val: boolean) => void }) => {
                 value={values.businessName}
                 error={errors.businessName}
                 touched={touched.businessName}
+                required
               />
             </div>
             <div className="my-4">
@@ -131,10 +161,11 @@ const SignUp = ({ setotpform }: { setotpform: (val: boolean) => void }) => {
                 value={values.mobile}
                 error={errors.mobile}
                 touched={touched.mobile}
+                required
               />
             </div>
 
-            {/* <div className="my-4">
+            <div className="my-4">
               <CustomInput
                 type="email"
                 name="email"
@@ -145,8 +176,9 @@ const SignUp = ({ setotpform }: { setotpform: (val: boolean) => void }) => {
                 value={values.email}
                 error={errors.email}
                 touched={touched.email}
+                required
               />
-            </div> */}
+            </div>
             <div className="my-4">
               <CustomInput
                 type={showPassword ? "text" : "password"}
@@ -161,9 +193,10 @@ const SignUp = ({ setotpform }: { setotpform: (val: boolean) => void }) => {
                 passwordEye={(e) => {
                   setShowPassword(e);
                 }}
+                required
               />
             </div>
-            <div className="mt-4 mb-6">
+            <div className="mt-4 mb-8">
               <CustomInput
                 type={showCnfPassword ? "text" : "password"}
                 name="cnfPassword"
@@ -177,11 +210,10 @@ const SignUp = ({ setotpform }: { setotpform: (val: boolean) => void }) => {
                 passwordEye={(e) => {
                   setShowCnfPassword(e);
                 }}
+                required
               />
             </div>
-            <div className="mb-2">
-              <Button type="submit" onClick={handleSubmit} title="Submit" />
-            </div>
+            <Button type="submit" title={"Business Signup"} />
           </form>
         )}
       </Formik>

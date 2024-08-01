@@ -18,15 +18,7 @@ const POST = async (req: NextRequest) => {
         where: {
           id: businessVal.id,
         },
-        data: {
-          about: body.about,
-          address: body.address,
-          weekdays: body.weekdays,
-          startTime: body.duration.startTime,
-          endTime: body.duration.endTime,
-          breakTimeStart: body.duration.breakTimeStart,
-          breakTimeEnd: body.duration.breakTimeEnd,
-        },
+        data: body,
       });
 
       const response = NextResponse.json(
@@ -35,24 +27,12 @@ const POST = async (req: NextRequest) => {
       );
       const sixMonthsFromNow = new Date();
       sixMonthsFromNow.setMonth(sixMonthsFromNow.getMonth() + 6);
-      response.cookies.set(
-        "businessUser",
-        JSON.stringify({
-          name: editBusiness.name,
-          slug: editBusiness.slug,
-          about: editBusiness.about,
-          businessName: editBusiness.businessName,
-          address: editBusiness.address,
-          mobile: editBusiness.mobile,
-          userType: 0,
-        }),
-        {
-          httpOnly: false,
-          secure: false,
-          sameSite: false,
-          expires: sixMonthsFromNow,
-        }
-      );
+      response.cookies.set("businessUser", JSON.stringify({ ...body }), {
+        httpOnly: false,
+        secure: false,
+        sameSite: false,
+        expires: sixMonthsFromNow,
+      });
 
       return response;
     }

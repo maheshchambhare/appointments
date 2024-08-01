@@ -4,6 +4,12 @@ import Otp from "@/app/components/forms/Otp";
 import SignUp from "@/app/components/forms/SignUp";
 import Button from "@/app/components/ui/Button";
 import { Spotlight } from "@/app/components/ui/Spotlight";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalTrigger,
+} from "@/app/components/ui/animated-modal";
 import { getBusinessLoggedIn, getUserData } from "@/store/slices/authSlice";
 import { BASE_URL } from "@/utils/constants";
 import homeData from "@/utils/data/homepage.json";
@@ -19,15 +25,15 @@ const Header = () => {
   const businessUserData = useSelector(getUserData);
 
   return (
-    <div className="h-[80vh] w-full    relative flex  items-center justify-between dark">
+    <div className="h-[80vh] w-full    relative flex  items-center justify-between ">
       <div className="w-full sm:w-[80%] md:w-[60%] lg:w-[80%] xl:w-[80%] 2xl:w-[60%] mx-auto ">
         <Spotlight
           className="-top-20 -left-20 md:left-60 md:-top-10"
-          fill="white"
+          fill="hsl(var(--foreground))"
         />
 
         <h1
-          className="text-textPrimary text-center dark:text-white  font-mont font-bold 
+          className=" text-center text-foreground   font-mont font-bold 
           xsm:text-[25px] xsm:leading-[30px]
         md:text-[35px] md:leading-[40px]
         lg:text-[45px] lg:leading-[50px]
@@ -39,7 +45,7 @@ const Header = () => {
         </h1>
 
         <p
-          className="text-textSecondary font-poppins font-normal  mt-2 dark:text-textSecondary
+          className="text-textSecondary font-poppins font-normal  mt-2 
           text-center
           xsm:text-[10px] xsm:leading-[15px]
         sm:text-[12px] sm:leading-[20px]
@@ -53,7 +59,7 @@ const Header = () => {
           {homeData.description}
         </p>
         {!isBusinessLoggedIn && (
-          <div className="relative w-full xsm:flex-col lg:flex-row   flex justify-center items-center mt-4 mx-auto mMax:ml-0 dark:text-white">
+          <div className="relative w-full xsm:flex-col lg:flex-row   flex justify-center items-center mt-4 mx-auto mMax:ml-0 ">
             <Button
               onClick={async () => {
                 if (isBusinessLoggedIn) {
@@ -65,8 +71,8 @@ const Header = () => {
               }}
               title={"Business Signup"}
             />
-            {/* <p className="mx-4">Or</p>
-          <Button
+            {/* <p className="mx-4">Or</p> */}
+            {/* <Button
             onClick={async () => {
               setSignupModal(true);
             }}
@@ -100,7 +106,7 @@ const Header = () => {
             setOtpForm(false);
           }}
         >
-          {otpForm ? (
+          {/* {otpForm ? (
             <Otp
               formType="1"
               setIsOpen={(e) => {
@@ -108,13 +114,13 @@ const Header = () => {
                 setOtpForm(false);
               }}
             />
-          ) : (
-            <SignUp
-              setotpform={(e) => {
-                setOtpForm(e);
-              }}
-            />
-          )}
+          ) : ( */}
+          <SignUp
+            setotpform={(e) => {
+              setOtpForm(e);
+            }}
+          />
+          {/* )} */}
         </ModalLayout>
       )}
     </div>

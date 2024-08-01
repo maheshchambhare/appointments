@@ -1,7 +1,7 @@
 import { apicall } from "@/utils/getdata";
 import { Formik } from "formik";
 import { useRouter } from "next/navigation";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import CustomInput from "../CustomInput";
 import Button from "../ui/Button";
 import { useSelector } from "react-redux";
@@ -18,8 +18,12 @@ interface selecteddur {
 
 function AddService({
   addPackageToList,
+  getService,
+  serviceEdit,
 }: {
   addPackageToList: (e: any) => void;
+  serviceEdit: (e: any) => void;
+  getService: any;
 }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showCnfPassword, setShowCnfPassword] = useState(false);
@@ -28,9 +32,16 @@ function AddService({
 
   const hoursRef: any = useRef(null);
   const minutesRef: any = useRef(null);
+  const genderRef: any = useRef(null);
 
   const [durationErr, setDurationErr] = useState("");
   const [durationFemaleErr, setDurationFemaleErr] = useState("");
+  const [categoryList, setCategoryList] = useState<any>(null);
+  const [selectedCategory, setSelectedcategory] = useState<any>(null);
+
+  const [selGender, setSelGender] = useState<any>("");
+
+  const [loader, setLoader] = useState<boolean>(false);
 
   const [selectedDuration, setSelectedDuration] = useState<selecteddur>({
     hours: 0,
@@ -107,13 +118,66 @@ function AddService({
     },
   ];
 
+  useEffect(() => {
+    apicall({
+      path: "category/list",
+      getResponse: (res) => {
+        // dispatch(setdisablememberAdd(res.data.disableAdd));
+        let cats: any[] = [];
+        res.data.categories.map((d: any, i: any) => {
+          let obj = {
+            label: d.name,
+            value: d.id,
+          };
+          cats.push(obj);
+        });
+
+        setCategoryList(cats);
+      },
+      getError: (err) => {},
+      router,
+      method: "get",
+    });
+  }, []);
+
+  useEffect(() => {
+    setLoader(true);
+    if (getService) {
+      setSelectedDuration({
+        ...getService.duration,
+      });
+
+      setSelGender(getService.gender);
+
+      setSelectedcategory({
+        label: getService.Category.name,
+        value: getService.Category.id,
+      });
+    }
+    setTimeout(() => {
+      setLoader(false);
+    }, 300);
+  }, [getService]);
+
+  if (loader) {
+    return (
+      <div className="flex h-full w-full justify-center items-center">
+        <div className="flex flex-row gap-2">
+          <div className="w-4 h-4 rounded-full bg-white animate-bounce"></div>
+          <div className="w-4 h-4 rounded-full bg-white animate-bounce [animation-delay:-.3s]"></div>
+          <div className="w-4 h-4 rounded-full bg-white animate-bounce [animation-delay:-.5s]"></div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-[400px]">
       <Formik
         initialValues={{
-          name: "",
-          price: "",
-          gender: "",
+          name: getService ? getService.name : "",
+          price: getService ? getService.price : "",
+          gender: getService ? getService.gender : "",
         }}
         validate={(values) => {
           const errors: any = {};
@@ -140,42 +204,49 @@ function AddService({
             setDurationErr("");
           }
 
-          const data = {
+          let data: any = {
             ...values,
             duration: selectedDuration,
+            categoryId: selectedCategory.value,
           };
 
+          if (getService) {
+            data.id = getService.id;
+          }
           apicall({
-            path: "service/add",
+            path: getService ? "service/edit" : "service/add",
             getResponse: (res) => {
-              addPackageToList(data);
+              toast(
+                `Service ${getService ? "update" : "added"}  successfully`,
+                {
+                  position: "bottom-right",
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: false,
+                  draggable: true,
+                  theme: "light",
+                  transition: Bounce,
+                }
+              );
+
+              addPackageToList({
+                ...res.data.service,
+                Category: {
+                  name: selectedCategory.label,
+                  id: res.data.categoryId,
+                },
+              });
+
+              serviceEdit(null);
+              setSelGender("");
+              setSelectedcategory(null);
+
               resetForm();
               setSelectedDuration({
                 hours: 0,
                 minutes: 0,
               });
-              toast("Package added successfully", {
-                position: "bottom-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-                transition: Bounce,
-              });
-              window.location.reload();
-
-              // console.log(hoursRef.current, minutesRef, "POPOPOP");
-
-              // if (hoursRef) {
-              //   hoursRef.current.clearValue();
-              // }
-
-              // if (minutesRef) {
-              //   minutesRef.current.clearValue();
-              // }
             },
             getError: (err) => {
               toast("Something failed on server", {
@@ -192,7 +263,7 @@ function AddService({
               });
             },
             router,
-            method: "post",
+            method: getService ? "put" : "post",
             data,
           });
         }}
@@ -228,14 +299,55 @@ function AddService({
             </div>
 
             <div className="mt-4 w-full">
-              <p className="mb-2 font-poppins text-white">
+              <div className="w-full ">
+                <MultiSelectComp
+                  full={true}
+                  title="Select Category"
+                  refSelect={categoryList}
+                  required={true}
+                  menuPlacement="top"
+                  onChange={(e: any) => {
+                    setSelectedcategory(e);
+
+                    // if (e) {
+                    //   setSelectedPackage(e);
+                    //   const data = {
+                    //     startTime: businessUserData.startTime,
+                    //     endTime: businessUserData.endTime,
+                    //     breakTimeStart: businessUserData.breakTimeStart,
+                    //     breakTimeEnd: businessUserData.breakTimeEnd,
+                    //     hours: e.duration.hours,
+                    //     minutes: e.duration.minutes,
+                    //   };
+                    //   values.serviceId = e.value;
+                    //   const timeSlots = generateTimeSlots(data);
+                    //   setSlots(timeSlots);
+                    // }
+                  }}
+                  isMulti={false}
+                  placeholder="Categories"
+                  options={
+                    categoryList && categoryList.length > 0 ? categoryList : []
+                  }
+                  defaultValue={selectedCategory}
+
+                  // error={submitCount > 0 && membersArrErr}
+                />
+              </div>
+            </div>
+
+            <div className="mt-4 w-full">
+              <p className="mb-2 font-poppins text-foreground">
                 Gender <span className="text-red-500">*</span>
               </p>
               <RadioGroup
+                ref={genderRef}
                 onValueChange={(e) => {
                   errors.gender = "";
                   values.gender = e;
+                  setSelGender(e);
                 }}
+                value={selGender}
                 className="flex flex-wrap "
               >
                 <div className="flex items-center space-x-2">
@@ -258,11 +370,11 @@ function AddService({
                 </div>
               </RadioGroup>
 
-              {errors.gender && (
+              {/* {errors.gender && (
                 <p className=" font-poppins mt-1 text-[10px] mb-[-10px] text-[#f46a6a]">
-                  {errors.gender}
+                  {errors?.gender}
                 </p>
-              )}
+              )} */}
             </div>
 
             <div className="mt-4 w-full">
@@ -288,8 +400,12 @@ function AddService({
                         placeholder="Hours"
                         options={hoursArr !== null ? hoursArr : []}
                         defaultValue={{
-                          label: "0",
-                          value: "0",
+                          label: selectedDuration
+                            ? JSON.stringify(selectedDuration.hours)
+                            : "0",
+                          value: selectedDuration
+                            ? JSON.stringify(selectedDuration.hours)
+                            : "0",
                         }}
                       />
                     </div>
@@ -309,8 +425,12 @@ function AddService({
                         placeholder="Minutes"
                         options={minutesArr !== null ? minutesArr : []}
                         defaultValue={{
-                          label: "0",
-                          value: "0",
+                          label: selectedDuration
+                            ? JSON.stringify(selectedDuration.minutes)
+                            : "0",
+                          value: selectedDuration
+                            ? JSON.stringify(selectedDuration.minutes)
+                            : "0",
                         }}
                       />
                     </div>
@@ -338,7 +458,7 @@ function AddService({
             </div>
 
             <div className="mb-2">
-              <Button type="submit" title="Submit" />
+              <Button type="submit" title={getService ? "Update" : "Submit"} />
             </div>
           </form>
         )}

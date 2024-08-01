@@ -80,9 +80,9 @@ const CustomTextArea: React.FC<Props> = ({
               : (inputTouched && inputError && "#f46a6a") || "none",
           }}
           className={`text-md  pr-4 h-[80px] xsm:h-[80px] sm:h-[80px] md:h-[80px] appearance-none mt-[5px] border-[1px] rounded-md px-2 ${
-            isDisabled ? "bg-[#eeeeee80]" : "bg-zinc-800 dark:bg-zinc-800"
-          }   border-gray-300  text-white leading-tight focus:outline-none
-         flex h-12 w-full border-none   dark:text-white shadow-input rounded-md px-3 py-2 text-sm  file:border-0 file:bg-transparent 
+            isDisabled ? "bg-[#eeeeee80]" : "bg-input"
+          }   border-gray-300  text-foreground leading-tight focus:outline-none
+         flex h-12 w-full border-none    shadow-input rounded-md px-3 py-2 text-sm  file:border-0 file:bg-transparent 
           file:text-sm file:font-medium placeholder:text-neutral-400 dark:placeholder-text-neutral-600 
           focus-visible:outline-none focus-visible:ring-[2px]  focus-visible:ring-neutral-400 dark:focus-visible:ring-neutral-600
            disabled:cursor-not-allowed disabled:opacity-50

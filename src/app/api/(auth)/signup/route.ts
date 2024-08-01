@@ -1,8 +1,8 @@
-import prisma from "@/utils/prisma";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import sendOtp from "../sendOtp";
+import prisma from "@/utils/prisma";
 
 const saltRounds = 10;
 const JWTKEY: any = process.env.JWT_KEY_OTP;
@@ -45,40 +45,44 @@ const POST = async (req: Request) => {
     let jsonToken = "";
 
     try {
+      const prismaRes = await prisma.businessUser.create({
+        data: { ...updatedUser },
+      });
+
       jsonToken = await jwt.sign(
-        { otp: verificationCode, businessUser: updatedUser },
+        { otp: verificationCode, businessUser: prismaRes },
         JWTKEY,
         {
           expiresIn: 31556926, // 1 year in seconds
         }
       );
+
+      const response = NextResponse.json({ user: prismaRes }, { status: 200 });
+
+      const sixMonthsFromNow = new Date();
+      sixMonthsFromNow.setMonth(sixMonthsFromNow.getMonth() + 6);
+
+      response.cookies.set("userauth", jsonToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        expires: sixMonthsFromNow,
+      });
+
+      return response;
     } catch (error) {
       console.error("Error generating token:", error);
     }
 
-    try {
-      sendOtp({ verificationCode, mobileNumber: body.mobile });
-    } catch (e) {
-      const response = NextResponse.json(
-        { message: "send otp failed" },
-        { status: 400 }
-      );
-      return response;
-    }
-
-    const response = NextResponse.json({ user: updatedUser }, { status: 200 });
-
-    const sixMonthsFromNow = new Date();
-    sixMonthsFromNow.setMonth(sixMonthsFromNow.getMonth() + 6);
-
-    response.cookies.set("userauth", jsonToken, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-      expires: sixMonthsFromNow,
-    });
-
-    return response;
+    // try {
+    //   sendOtp({ verificationCode, mobileNumber: body.mobile });
+    // } catch (e) {
+    //   const response = NextResponse.json(
+    //     { message: "send otp failed" },
+    //     { status: 400 }
+    //   );
+    //   return response;
+    // }
   } catch (error) {
     console.error(error);
     return NextResponse.json(

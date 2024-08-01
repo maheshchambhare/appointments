@@ -4,7 +4,7 @@ import ScreenWrapper from "@/app/components/Layouts/ScreenWrapper";
 import { apicall } from "@/utils/getdata";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import Header from "../Header";
+// import Header from "../Header";
 import Appointment from "@/app/components/forms/Appointment";
 import Loader from "@/app/components/ui/Loader";
 

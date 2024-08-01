@@ -8,7 +8,7 @@ import Header from "./Header";
 import MoreSection from "./MoreSection";
 import Loader from "@/app/components/ui/Loader";
 
-function PageSection({ landingpage }: { landingpage: string }) {
+function PageSection() {
   const [businessUser, setBusinessUser] = useState<any>(null);
 
   const router = useRouter();
@@ -23,7 +23,6 @@ function PageSection({ landingpage }: { landingpage: string }) {
       router,
       method: "post",
       data: {
-        slug: landingpage,
         page: "0",
       },
     });
@@ -43,7 +42,7 @@ function PageSection({ landingpage }: { landingpage: string }) {
           address={businessUser.address}
         />
 
-        <MoreSection businessData={businessUser} />
+        {/* <MoreSection businessData={businessUser} /> */}
       </ScreenWrapper>
     </div>
   );

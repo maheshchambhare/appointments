@@ -16,7 +16,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "../ui/RadioGrp";
 import { Label } from "../ui/Label";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { Buttons } from "../ui/Buttons";
+import { ButtonShad } from "../ui/Buttons";
 import { cn } from "@/utils/cn";
 
 import moment from "moment";
@@ -267,7 +267,7 @@ const Appointment = ({
   }
 
   return (
-    <div className="max-w-[300px] mt-[50px] mx-auto">
+    <div className="w-full ">
       <p className="font-sans text-textPrimary text-2xl font-semibold">
         Welcome to {title}
       </p>
@@ -413,7 +413,7 @@ const Appointment = ({
                   />
                 </div>
                 <div className="mt-4 w-full">
-                  <p className="mb-2 font-poppins text-white">
+                  <p className="mb-2 font-poppins text-foreground">
                     Gender <span className="text-red-500">*</span>
                   </p>
                   <RadioGroup
@@ -447,19 +447,19 @@ const Appointment = ({
                   >
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="male" id="male" />
-                      <Label className="text-textPrimary" htmlFor="male">
+                      <Label className="text-foreground" htmlFor="male">
                         Male
                       </Label>
                     </div>
                     <div className="flex ml-4 items-center space-x-2">
                       <RadioGroupItem value="female" id="female" />
-                      <Label className="text-textPrimary" htmlFor="female">
+                      <Label className="text-foreground" htmlFor="female">
                         Female
                       </Label>
                     </div>
                     <div className="flex ml-4 items-center space-x-2">
                       <RadioGroupItem value="other" id="other" />
-                      <Label className="text-textPrimary" htmlFor="other">
+                      <Label className="text-foreground" htmlFor="other">
                         Other
                       </Label>
                     </div>
@@ -500,6 +500,7 @@ const Appointment = ({
                       title="Select Service"
                       refSelect={packageRef}
                       required={true}
+                      menuPlacement="top"
                       onChange={(e: any) => {
                         if (e) {
                           setSelectedPackage(e);
@@ -527,13 +528,13 @@ const Appointment = ({
                     />
                   </div>
                 </div>
-                <div className="mt-4 w-full ">
-                  <p className="mb-1 font-poppins text-white">
+                <div className="mt-4 w-full relative">
+                  <p className="mb-1 font-poppins text-foreground">
                     Pick a Appointment Date{" "}
                     <span className="text-red-500">*</span>
                   </p>
 
-                  <Buttons
+                  <ButtonShad
                     type="button"
                     onClick={() => {
                       if (values.memberId == null) {
@@ -545,7 +546,7 @@ const Appointment = ({
                     }}
                     variant={"outline"}
                     className={cn(
-                      "w-full justify-start text-left font-normal",
+                      "w-full justify-start text-left bg-input font-normal",
                       !values.date && "text-muted-foreground"
                     )}
                   >
@@ -555,47 +556,47 @@ const Appointment = ({
                     ) : (
                       <span className="text-textPrimary">Pick a date</span>
                     )}
-                  </Buttons>
+                  </ButtonShad>
                   {submitCount > 0 && errors.date && (
                     <p className="font-poppins mt-1 text-[10px]  mb-[-10px] text-[#f46a6a]">
                       {errors.date}
                     </p>
                   )}
-                </div>
-                {showCalenar && (
-                  <div
-                    id="calendar"
-                    className="w-[300px] z-10  bg-white p-2 absolute rounded-lg mt-1"
-                  >
-                    <Calender
-                      daysOfWeek={daysOfWeek}
-                      showCalendar={(e: any) => {
-                        setShowCalenar(e);
-                      }}
-                      setSelDays={(e: any) => {
-                        values.date = e;
-                        errors.date = "";
-                        setSelectedDate(e);
+                  {showCalenar && (
+                    <div
+                      id="calendar"
+                      className="w-[300px] z-10 bottom-0 right-0  bg-background p-2 absolute rounded-lg mt-1"
+                    >
+                      <Calender
+                        daysOfWeek={daysOfWeek}
+                        showCalendar={(e: any) => {
+                          setShowCalenar(e);
+                        }}
+                        setSelDays={(e: any) => {
+                          values.date = e;
+                          errors.date = "";
+                          setSelectedDate(e);
 
-                        if (values.memberId !== null) {
-                          getAllSlots({ date: e, member: values.memberId });
-                        }
-                        setShowCalenar(false);
-                      }}
-                      startDate={new Date()}
-                      endDate={moment(new Date(), "YYYY-MM-DD")
-                        .add(2, "month")
-                        .endOf("month")
-                        .format("YYYY-MM-DD")}
-                      colors={{
-                        text: "#131313",
-                        background: "#ffff",
-                        activeTextColor: "black",
-                        disabledTextColor: "gray",
-                      }}
-                    />
-                  </div>
-                )}
+                          if (values.memberId !== null) {
+                            getAllSlots({ date: e, member: values.memberId });
+                          }
+                          setShowCalenar(false);
+                        }}
+                        startDate={new Date()}
+                        endDate={moment(new Date(), "YYYY-MM-DD")
+                          .add(2, "month")
+                          .endOf("month")
+                          .format("YYYY-MM-DD")}
+                        colors={{
+                          text: "hsl(var(--foreground))",
+                          background: "hsl(var(--background))",
+                          activeTextColor: "black",
+                          disabledTextColor: "gray",
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
 
                 <div className="mt-4 w-full">
                   {slotsLoader ? (
@@ -616,6 +617,7 @@ const Appointment = ({
                         title="Pick a Appointment Slot"
                         required={true}
                         refSelect={slotRef}
+                        menuPlacement="top"
                         onChange={(e: any) => {
                           if (e) {
                             errors.slot = "";
@@ -722,11 +724,13 @@ const Appointment = ({
                   )}
                 </div>
               )}
-              <div className="mb-10 mt-8">
-                <Button
-                  type="submit"
-                  title={showOtpField ? "Verify" : "Add Appointment"}
-                />
+              <div className=" mt-8">
+                <div className={"flex justify-end "}>
+                  <Button
+                    type="submit"
+                    title={showOtpField ? "Verify" : "Add Appointment"}
+                  />
+                </div>
               </div>
             </form>
             <ModalLayout

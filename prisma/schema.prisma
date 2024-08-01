@@ -14,7 +14,81 @@ model SuperAdmin {
   password String
 }
 
-model User {
+model BusinessUser {
+  id             String        @id @unique @default(uuid())
+  name           String
+  businessName   String
+  mobile         String        @unique
+  email          String?       @unique
+  password       String
+  slug           String        @unique
+  address        String?
+  verified       Boolean
+  approved       Boolean
+  employeeLength Int           @default(20)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  type           String?
+  tickets        Appointment[]
+  employees      Employee[]
+  services       Service[]
+  customers      Customer[]    @relation("BusinessUserToUser")
+  fcmToken       String?
+  Category       Category[]
+  Transaction    Transaction[]
+  Website        Website[]
+
+  @@index([mobile, name])
+}
+
+model Website {
+  id             String       @id @default(uuid())
+  live           Boolean
+  logo           String
+  heroImage      String
+  title          String
+  subtitle       String
+  slug           String
+  mobile         String
+  whatsapp       String
+  facebook       String?
+  instagram      String?
+  youtube        String?
+  maps           String?
+  weekdays       Json?
+  breakTimeEnd   String?
+  breakTimeStart String?
+  endTime        String?
+  startTime      String?
+  address        String?
+  email          String?      @unique
+  slots          Json?
+  businessUserId String
+  businessName   String?
+  businessUser   BusinessUser @relation(fields: [businessUserId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model Employee {
+  id             String        @id @default(uuid())
+  name           String
+  avatar         String
+  mobile         Int           @unique
+  designation    String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  businessUserId String?
+  password       String?
+  appointments   Appointment[]
+  businessUser   BusinessUser? @relation(fields: [businessUserId], references: [id])
+  customers      Customer[]
+  fcmToken       String?
+
+  @@index([mobile, name])
+}
+
+model Customer {
   id            String         @id @default(uuid())
   name          String
   mobile        String         @unique
@@ -23,87 +97,71 @@ model User {
   verified      Boolean
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
-  memberId      String?
-  tickets       Appointments[]
-  Member        Member?        @relation(fields: [memberId], references: [id])
+  employeeId    String?
+  appointments  Appointment[]
+  employess     Employee?      @relation(fields: [employeeId], references: [id])
   BusinessUsers BusinessUser[] @relation("BusinessUserToUser")
   fcmToken      String?
 
   @@index([mobile, name])
 }
 
-model Services {
-  id             String         @id @unique @default(uuid())
+model Category {
+  id             String       @id @unique @default(uuid())
+  name           String
+  businessUserId String
+  BusinessUser   BusinessUser @relation(fields: [businessUserId], references: [id])
+  services       Service[]
+}
+
+model Service {
+  id             String        @id @unique @default(uuid())
   name           String
   businessUserId String
   price          Int
   gender         String
   duration       Json
-  BusinessUser   BusinessUser   @relation(fields: [businessUserId], references: [id])
-  Appointments   Appointments[]
+  BusinessUser   BusinessUser  @relation(fields: [businessUserId], references: [id])
+  Appointments   Appointment[]
+  Category       Category      @relation(fields: [categoryId], references: [id])
+  categoryId     String
 }
 
-model Appointments {
+model Appointment {
+  id                  String       @id @default(uuid())
+  customerDisplayName String
+  customerId          String
+  businessUserId      String
+  status              String
+  date                String
+  ticketId            Int          @unique @default(autoincrement())
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+  slot                Json
+  employeeId          String
+  serviceId           String
+  service             Service      @relation(fields: [serviceId], references: [id])
+  BusinessUser        BusinessUser @relation(fields: [businessUserId], references: [id])
+  employee            Employee     @relation(fields: [employeeId], references: [id])
+  User                Customer     @relation(fields: [customerId], references: [id])
+}
+
+model Transaction {
   id             String       @id @default(uuid())
-  userId         String
-  businessUserId String
-  status         String
-  date           String
-  ticketId       Int          @unique @default(autoincrement())
+  price          String
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
-  slot           Json
-  memberId       String
-  serviceId      String
-  service        Services     @relation(fields: [serviceId], references: [id])
-  BusinessUser   BusinessUser @relation(fields: [businessUserId], references: [id])
-  Member         Member       @relation(fields: [memberId], references: [id])
-  User           User         @relation(fields: [userId], references: [id])
+  businessUserId String
+  businessUser   BusinessUser @relation(fields: [businessUserId], references: [id])
+  planId         String
+  plan           Plan         @relation(fields: [planId], references: [id])
 }
 
-model BusinessUser {
-  id             String         @id @unique @default(uuid())
-  name           String
-  businessName   String
-  mobile         String         @unique
-  email          String?        @unique
-  password       String
-  slug           String         @unique
-  about          String?
-  address        String?
-  verified       Boolean
-  approved       Boolean
-  membersLength  Int            @default(2)
-  slots          Json?
-  breakTimeEnd   String?
-  breakTimeStart String?
-  endTime        String?
-  startTime      String?
-  weekdays       Json?
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  type           String?
-  tickets        Appointments[]
-  members        Member[]
-  services       Services[]
-  customers      User[]         @relation("BusinessUserToUser")
-  fcmToken       String?
-
-  @@index([mobile, name])
-}
-
-model Member {
-  id             String         @id @default(uuid())
-  name           String
-  mobile         String         @unique
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  businessUserId String?
-  password       String
-  tickets        Appointments[]
-  BusinessUser   BusinessUser?  @relation(fields: [businessUserId], references: [id])
-  customers      User[]
-  fcmToken       String?
-
-  @@index([mobile, name])
+model Plan {
+  id          String        @id @default(uuid())
+  name        String
+  price       String
+  days        String
+  features    Json
+  Transaction Transaction[]
 }

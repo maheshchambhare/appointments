@@ -1,9 +1,7 @@
 import prisma from "@/utils/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const saltRounds = 10;
 const JWTKEY: any = process.env.JWT_KEY_TOKEN;
 
 const POST = async (req: NextRequest) => {
@@ -21,12 +19,12 @@ const POST = async (req: NextRequest) => {
         businessUserId: businessVal.id,
       };
 
-      const addPackage = await prisma.services.create({
+      const addPackage = await prisma.service.create({
         data: packageVal,
       });
 
       const response = NextResponse.json(
-        { message: "Package added successfully", data: addPackage },
+        { message: "service added successfully", service: addPackage },
         { status: 200 }
       );
 

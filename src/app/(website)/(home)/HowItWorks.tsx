@@ -9,7 +9,7 @@ function HowItWorks() {
   return (
     <div className="h-full w-full  ">
       <h4
-        className="xl:w-[70%]  mx-auto mb-10 text-textPrimary text-center  font-mont font-bold 
+        className="xl:w-[70%] text-foreground  mx-auto mb-10  text-center  font-mont font-bold 
           xsm:text-[25px] xsm:leading-[30px]
         md:text-[35px] md:leading-[40px]
         lg:text-[45px] lg:leading-[50px]
@@ -25,17 +25,20 @@ function HowItWorks() {
           return (
             <div key={ind}>
               <CardContainer className="w-full h-full inter-var cursor-pointer ">
-                <CardBody className=" min-h-[200px] h-full group/card  hover:shadow-2xl hover:shadow-emerald-500/[0.1] bg-black border-white/[0.2] w-auto sm:w-[30rem]  rounded-xl p-6 border  ">
+                <CardBody className=" min-h-[200px] h-full group/card  hover:shadow-2xl hover:shadow-emerald-500/[0.1] bg-background border-border w-auto sm:w-[30rem]  rounded-xl p-6 border  ">
                   <CardItem
                     translateZ="20"
-                    className="text-xl font-bold text-white"
+                    className="text-xl font-bold text-foreground"
                   >
-                    <h3 className="mb-2 xsm:text-base md:text-lg lg:text-xl text-textprimary font-semibold font-poppins">
+                    <h3 className="mb-2 xsm:text-base md:text-lg lg:text-xl text-foreground font-bold font-poppins">
                       {fetaure.name}
                     </h3>
                   </CardItem>
-                  <CardItem translateZ="30" className="text-xl font-bold ">
-                    <p className="xsm:text-sm md:text-base lg:text-md font-mont text-gray-400">
+                  <CardItem
+                    translateZ="30"
+                    className="text-xl font-poppins font-medium "
+                  >
+                    <p className="xsm:text-sm md:text-base lg:text-md font-mont text-textsecondary">
                       {/* {fetaure.description.length > 150
                         ? fetaure.description.substring(0, 150) + "...Read More"
                         :                         */}

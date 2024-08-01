@@ -26,12 +26,12 @@ const POST = async (req: Request) => {
     });
 
     if (businessUser == null) {
-      const member: any = await prisma.member.findUnique({
+      const member: any = await prisma.employee.findUnique({
         where: {
           mobile: mobile,
         },
         include: {
-          BusinessUser: {
+          businessUser: {
             select: {
               slug: true,
               id: true,
@@ -40,7 +40,7 @@ const POST = async (req: Request) => {
         },
       });
 
-      const updatedMember = await prisma.member.update({
+      const updatedMember = await prisma.employee.update({
         where: {
           mobile: mobile,
         },

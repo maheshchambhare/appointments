@@ -1,0 +1,22 @@
+[
+  {
+    "id": "1",
+    "label": "Hair Cut"
+  },
+  {
+    "id": "2",
+    "label": "Hair Styling"
+  },
+  {
+    "id": "3",
+    "label": "Hair Color"
+  },
+  {
+    "id": "4",
+    "label": "Hair Treatment"
+  },
+  {
+    "id": "5",
+    "label": "Facial"
+  }
+]
