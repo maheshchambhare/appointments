@@ -35,6 +35,7 @@ function AddService({
   const genderRef: any = useRef(null);
 
   const [durationErr, setDurationErr] = useState("");
+  const [categoryError, seCategoryError] = useState("");
   const [durationFemaleErr, setDurationFemaleErr] = useState("");
   const [categoryList, setCategoryList] = useState<any>(null);
   const [selectedCategory, setSelectedcategory] = useState<any>(null);
@@ -196,6 +197,13 @@ function AddService({
           return errors;
         }}
         onSubmit={(values, { setSubmitting, resetForm }) => {
+          if (selectedCategory == null) {
+            seCategoryError("Category is required");
+            return;
+          } else {
+            seCategoryError("");
+          }
+
           if (selectedDuration.hours === 0 && selectedDuration.minutes === 0) {
             setDurationErr("Duration is required");
 
@@ -276,8 +284,8 @@ function AddService({
           handleBlur,
           handleSubmit,
           isSubmitting,
-          /* and other goodies */
-        }) => (
+        }: /* and other goodies */
+        any) => (
           <form
             onSubmit={(e) => {
               handleSubmit(e);
@@ -326,6 +334,7 @@ function AddService({
                   }}
                   isMulti={false}
                   placeholder="Categories"
+                  error={categoryError}
                   options={
                     categoryList && categoryList.length > 0 ? categoryList : []
                   }
@@ -338,7 +347,7 @@ function AddService({
 
             <div className="mt-4 w-full">
               <p className="mb-2 font-poppins text-foreground">
-                Gender <span className="text-red-500">*</span>
+                Gender <span className="text-[red] text-[20px]">*</span>
               </p>
               <RadioGroup
                 ref={genderRef}
@@ -370,11 +379,11 @@ function AddService({
                 </div>
               </RadioGroup>
 
-              {/* {errors.gender && (
+              {errors.gender && (
                 <p className=" font-poppins mt-1 text-[10px] mb-[-10px] text-[#f46a6a]">
                   {errors?.gender}
                 </p>
-              )} */}
+              )}
             </div>
 
             <div className="mt-4 w-full">
@@ -437,7 +446,9 @@ function AddService({
                   </div>
                 </div>
                 <div>
-                  <p className="text-sm mt-[5px] text-red-500">{durationErr}</p>
+                  <span className="text-[#f46a6a]  font-sans text-[10px] ">
+                    {durationErr}
+                  </span>
                 </div>
               </div>
             </div>

@@ -34,10 +34,12 @@ const POST = async (req: NextRequest) => {
       );
       return response;
     } catch (e) {
-      console.error(e, "Uploading failed");
+      return NextResponse.json(
+        { message: "Something failed", error: e },
+        { status: 500 }
+      );
     }
   } catch (error) {
-    console.error(error);
     return NextResponse.json(
       { message: "Something failed", error },
       { status: 500 }

@@ -1,4 +1,3 @@
-import { Metadata } from "next";
 import React from "react";
 import Landingpage from "./customerview/Landingpage";
 import axios from "axios";
@@ -11,6 +10,61 @@ interface ParamsType {
 interface SearchParamsType {
   // Define the structure of searchParams object
 }
+
+export const generateMetadata = async (props: any) => {
+  const { params } = props;
+
+  const slug = params.landingpage;
+
+  const config = {
+    method: "post",
+    url: `${process.env.NEXT_PUBLIC_API_URL}website/getdata`,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: { slug },
+  };
+
+  try {
+    const response = await axios(config);
+
+    const websiteOwner = response.data.website;
+
+    if (websiteOwner == null) {
+      return redirect(`/404`);
+    }
+
+    return {
+      metadataBase: process.env.NEXT_PUBLIC_BASE_URL,
+      title: websiteOwner?.businessName + " - " + websiteOwner?.title,
+      description: websiteOwner?.subtitle,
+      openGraph: {
+        title: websiteOwner?.title,
+        description: websiteOwner?.subtitle,
+        type: "website",
+        url: process.env.NEXT_PUBLIC_BASE_URL + websiteOwner?.slug,
+        images: [
+          {
+            url: websiteOwner?.heroImage,
+          },
+        ],
+      },
+      alternates: {
+        canonical: process.env.NEXT_PUBLIC_BASE_URL + websiteOwner?.slug,
+      },
+      icons: {
+        icon: [
+          {
+            url: websiteOwner?.logo,
+            href: websiteOwner?.logo,
+          },
+        ],
+      },
+    };
+  } catch (error) {
+    console.error("Error fetching data========:-------------------", error);
+  }
+};
 
 async function page({
   params,
@@ -46,28 +100,17 @@ async function page({
     return redirect(`/404`);
   }
 
+  const days = website.weekdays.filter((d: any, i: any) => d.isActive);
+  const daysString = days.map((day: any) => day.name.substring(0, 3)).join(",");
+
   return (
     <main className="flex bg-background flex-col w-[100vw] min-h-[100vh] ">
       {/* <Dashboard /> */}
       {/* <PageSection landingpage={params.landingpage} />
       <Footer /> */}
-      <Landingpage website={website} />
+      <Landingpage website={website} daysString={daysString} />
     </main>
   );
 }
 
 export default page;
-
-// export const metadata: Metadata = {
-//   title: `Appointify - ${homeData.title}`,
-//   description: homeData.description,
-//   icons: {
-//     icon: "/logo.webp",
-//   },
-//   openGraph: {
-//     title: `Appointify - ${homeData.title}`,
-//     description: homeData.description,
-//     images: [{ url: "https://appointify.in/banner.webp" }],
-//     url: "https://appointify.in",
-//   },
-// };

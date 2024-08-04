@@ -128,6 +128,7 @@ function AddCategory({
                 value={values.name}
                 error={errors.name}
                 touched={touched.name}
+                required
               />
             </div>
 

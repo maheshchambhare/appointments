@@ -3,20 +3,10 @@
 import React from "react";
 import ScreenWrapper from "./ScreenWrapper";
 import Link from "next/link";
-import {
-  Dice1,
-  FacebookIcon,
-  Instagram,
-  Linkedin,
-  MapPin,
-  MessageCircle,
-  Phone,
-  Twitter,
-} from "lucide-react";
+import { Linkedin, Twitter } from "lucide-react";
 import { useSelector } from "react-redux";
 import { getBusinessLoggedIn, getUserData } from "@/store/slices/authSlice";
 import { useRouter } from "next/navigation";
-import { Meteors } from "../ui/meteors";
 import Horizontallinks from "./Horizontallinks";
 
 function Footer({ website }: any) {
@@ -40,18 +30,18 @@ function Footer({ website }: any) {
                 }}
                 className=" w-full font-tank  cursor-pointer xsm:text-[20px] md:text-[30px] text-[30px] text-foreground font-bold "
               >
-                {website ? website.businessName : "Appointify"}
+                {"Appointify"}
               </h1>
               <p className="text-sm text-foreground max-w-[300px]">
-                {website
-                  ? website.subtitle
-                  : "Appointify is the ultimate solution for businesses to seamlessly manage appointments and tickets online. Say goodbye to scheduling headaches and hello to a more organized and efficient way of running your business."}
+                {
+                  "Appointify is the ultimate solution for businesses to seamlessly manage appointments and tickets online. Say goodbye to scheduling headaches and hello to a more organized and efficient way of running your business."
+                }
               </p>
 
-              <Horizontallinks website={website} />
+              {/* <Horizontallinks website={website} /> */}
             </div>
 
-            <div className=" w-[200px]   md:mt-o flex  flex-col text-foreground ">
+            <div className=" w-[200px] mt-6   md:mt-o flex  flex-col text-foreground ">
               <p className="text-lg underline">Links</p>
               <Link href="/contact-us" className="mb-1 text-sm  cursor-pointer">
                 Contact Us
@@ -102,7 +92,6 @@ function Footer({ website }: any) {
           </div>
         </div>
       </ScreenWrapper>
-      <Meteors number={10} />
     </div>
   );
 }

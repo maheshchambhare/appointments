@@ -155,7 +155,7 @@ function AddEmployee({
         <label
           className={`font-sans  text-md  font-medium  transition-all duration-200 ease-in-out left-4 text-foreground`}
         >
-          Upload Logo
+          Employee Avatar
         </label>
 
         <Modal>
@@ -316,13 +316,33 @@ function AddEmployee({
 
           return errors;
         }}
-        onSubmit={(values, { setSubmitting, resetForm }) => {
+        onSubmit={(values: any, { setSubmitting, resetForm }) => {
           const data = new FormData();
 
           data.append("name", values.name);
           data.append("mobile", values.mobile);
           data.append("designation", values.designation);
-          data.append("avatar", cropedAvatarImage, cropedAvatarImage.name);
+
+          if (!isValidURL(cropedAvatarImage) && cropedAvatarImage != null) {
+            data.append("avatar", cropedAvatarImage, cropedAvatarImage.name);
+          } else if (cropedAvatarImage == null) {
+            toast("employee avatar is required, Please upload avatar", {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              type: "error",
+              transition: Bounce,
+            });
+            window.scroll({ top: 0, behavior: "smooth" });
+            return;
+          } else {
+            data.append("avatar", cropedAvatarImage);
+          }
 
           if (empData) {
             data.append("id", empData.id);

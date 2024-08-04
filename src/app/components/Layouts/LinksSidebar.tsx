@@ -8,6 +8,7 @@ import {
   MapPin,
   MessageCircle,
   Phone,
+  Youtube,
 } from "lucide-react";
 
 function LinksSidebar({ website }: any) {
@@ -28,14 +29,20 @@ function LinksSidebar({ website }: any) {
       Icon: <MapPin size={25} className="text-foreground text-sm" />,
     },
     {
+      name: "facebook",
+      link: website.facebook,
+      Icon: <FacebookIcon size={25} className="text-foreground text-sm" />,
+    },
+    {
       name: "instagram",
       link: website.instagram,
       Icon: <Instagram size={25} className="text-foreground text-sm" />,
     },
+
     {
       name: "facebook",
-      link: website.facebook,
-      Icon: <FacebookIcon size={25} className="text-foreground text-sm" />,
+      link: website.youtube,
+      Icon: <Youtube size={25} className="text-foreground text-sm" />,
     },
   ];
 

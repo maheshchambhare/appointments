@@ -24,7 +24,6 @@ function page() {
           <section className="mb-6">
             <h2 className="text-2xl font-semibold mb-2">Support Contact</h2>
             <p>Email : chambharem1@gmail.com</p>
-            <p>Phone : +91 8767431997</p>
           </section>
 
           <section className="mb-6">

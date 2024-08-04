@@ -51,6 +51,11 @@ model Website {
   slug           String
   mobile         String
   whatsapp       String
+  city           String?
+  state          String?
+  country        Json?
+  address        String?
+  pincode        String?
   facebook       String?
   instagram      String?
   youtube        String?
@@ -60,10 +65,9 @@ model Website {
   breakTimeStart String?
   endTime        String?
   startTime      String?
-  address        String?
-  email          String?      @unique
+  email          String       @unique
   slots          Json?
-  businessUserId String
+  businessUserId String       @unique
   businessName   String?
   businessUser   BusinessUser @relation(fields: [businessUserId], references: [id])
   createdAt      DateTime     @default(now())
@@ -74,7 +78,7 @@ model Employee {
   id             String        @id @default(uuid())
   name           String
   avatar         String
-  mobile         Int           @unique
+  mobile         String        @unique
   designation    String?
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt

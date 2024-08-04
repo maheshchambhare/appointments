@@ -7,9 +7,12 @@ import React, { useEffect, useState } from "react";
 import Header from "./Header";
 import MoreSection from "./MoreSection";
 import Loader from "@/app/components/ui/Loader";
+import { useDispatch } from "react-redux";
+import { setUserData } from "@/store/slices/authSlice";
 
 function PageSection() {
   const [businessUser, setBusinessUser] = useState<any>(null);
+  const dispatch = useDispatch();
 
   const router = useRouter();
 
@@ -18,6 +21,7 @@ function PageSection() {
       path: "slug",
       getResponse: (res) => {
         setBusinessUser(res.data.data);
+        dispatch(setUserData(res.data.data));
       },
       getError: (err) => {},
       router,
@@ -33,14 +37,10 @@ function PageSection() {
   }
 
   return (
-    <div className="relative h-auto w-full  ">
+    <div className="relative h-[70vh] w-full  ">
       <ScreenWrapper>
         <Navbar />
-        <Header
-          title={businessUser.name}
-          about={businessUser.about}
-          address={businessUser.address}
-        />
+        <Header title={businessUser.name} slug={businessUser.slug} />
 
         {/* <MoreSection businessData={businessUser} /> */}
       </ScreenWrapper>
