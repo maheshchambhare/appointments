@@ -282,7 +282,7 @@ function Navbar() {
         >
           {resetForm ? (
             otpForm ? (
-              <Otp formType="2" />
+              <Otp />
             ) : (
               <ResetPassword
                 resetForm={(e) => {

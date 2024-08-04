@@ -18,14 +18,14 @@ const POST = async (req: NextRequest) => {
     const status = body.status;
     const id = typeof cookie != "undefined" ? businessUSER.id : body.id;
 
-    const allAppointments = await prisma.appointments.findMany({
+    const allAppointments = await prisma.appointment.findMany({
       where: {
         OR: [
           {
             businessUserId: id,
           },
           {
-            memberId: id,
+            customerId: id,
           },
         ],
         status,
@@ -43,7 +43,7 @@ const POST = async (req: NextRequest) => {
             price: true,
           },
         },
-        Member: {
+        employee: {
           select: {
             name: true,
           },

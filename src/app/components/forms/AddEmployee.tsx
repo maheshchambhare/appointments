@@ -46,7 +46,7 @@ function AddEmployee({
   getEmployee: (e: any) => void;
   empData: any;
 }) {
-  const avatarRef = useRef<HTMLImageElement>(null);
+  const avatarRef = useRef<any>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showCnfPassword, setShowCnfPassword] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState<any>(null);

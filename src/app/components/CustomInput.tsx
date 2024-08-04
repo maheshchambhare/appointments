@@ -3,7 +3,7 @@ import { Eye, EyeOff } from "lucide-react";
 
 interface CustomInputProps {
   error?: any;
-  value?: string;
+  value?: string | any;
   label: string;
   ref?: React.Ref<HTMLInputElement>;
   id: string;

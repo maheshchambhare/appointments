@@ -27,7 +27,7 @@ const POST = async (req: NextRequest) => {
           where: { id: id },
           data: {
             approved: isApproved,
-            membersLength: memberLength,
+            employeeLength: memberLength,
           },
         });
         const response = NextResponse.json(

@@ -46,7 +46,7 @@ export const ModalTrigger = ({
 }: {
   children: ReactNode;
   className?: string;
-  closeModal?: boolean;
+  closeModal?: boolean | any;
 }) => {
   const { setOpen } = useModal();
 

@@ -13,15 +13,14 @@ const POST = async (req: NextRequest) => {
 
       const businessVal: any = await jwt.verify(tokenJWTVal, JWTKEY);
 
-      const businessUser = await prisma.businessUser.update({
-        where: {
-          id: businessVal.id,
-        },
-        data: {
-          slots: body.slots,
-          weekdays: body.weekDays,
-        },
-      });
+      // const businessUser = await prisma.businessUser.update({
+      //   where: {
+      //     id: businessVal.id,
+      //   },
+      //   data: {
+      //     weekdays: body.weekDays,
+      //   },
+      // });
 
       const response = NextResponse.json(
         { message: "Successfully generated slots" },

@@ -61,7 +61,7 @@ const POST = async (req: NextRequest) => {
               : {
                   name: businessUser.businessName,
                   address: businessUser.address,
-                  members: businessUser.members,
+                  employee: businessUser.employees,
                   slug: businessUser.slug,
                   id: businessUser.id,
                 },
