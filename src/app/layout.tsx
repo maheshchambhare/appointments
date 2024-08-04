@@ -6,6 +6,7 @@ import homeData from "@/utils/data/homepage.json";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -47,6 +48,12 @@ export default function RootLayout({
           </ThemeProvider>
         </StoreProvider>
       </body>
+      {process.env.NEXT_PUBLIC_ENV == "production" && (
+        <>
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GID || ""} />
+          <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GID || ""} />
+        </>
+      )}
     </html>
   );
 }
