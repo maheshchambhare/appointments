@@ -81,15 +81,13 @@ const SignUp = ({
 
           const data = {
             name: values.name,
-            businessName: values.businessName,
+            businessName: values.businessName.trim(),
             verified: false,
             approved: false,
             mobile: JSON.stringify(values.mobile),
             password: values.password,
             email: values.email,
           };
-
-          console.log("hello");
 
           apicall({
             path: "signup",

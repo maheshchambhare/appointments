@@ -3,32 +3,32 @@
 import React from "react";
 import { MapPin } from "lucide-react";
 import { cn } from "@/utils/cn";
+import { ButtonShad } from "@/app/components/ui/Buttons";
 
-function Header({
-  title,
-  about,
-  address,
-}: {
-  title: string;
-  about: string;
-  address: string;
-}) {
+function Header({ title, slug }: { title: string; slug: string }) {
   return (
-    <div className="h-auto  mt-6 mb-6 md:mb-10 pb-4  border-b-2 border-white/10  shadow-md  ">
+    <div className="h-auto  mt-6 mb-6 md:mb-10 pb-4  flex flex-col   shadow-md justify-center items-center ">
       <h1 className="font-mont text-center text-[40px] text-textPrimary capitalize md:text-[70px]">
         {title}
       </h1>
-      <p className="font-poppins max-w-[500px] mx-auto text-center mt-[-10px] mb-2 text-md text-textSecondary md:text-base">
-        {about}
+
+      <p className="mt-10 text-center text-foreground text-sm md:text-base">
+        {`We're continually working to enhance and improve our site, bringing you
+        the best possible experience. While we're still perfecting everything,
+        you can get started right away by generating your own free site. Simply
+        complete a few forms, and you'll be on your way to creating something
+        amazing. Thank you for your patience as we make things even better for
+        you!`}
       </p>
-      {address && (
-        <div className="flex justify-center text-textPrimary items-center">
-          <MapPin size={16} />
-          <p className="font-poppins ml-2 text-sm text-textTextprimary md:text-base">
-            {address}
-          </p>
-        </div>
-      )}
+
+      <ButtonShad
+        onClick={() => {
+          window.open(process.env.NEXT_PUBLIC_BASE_URL + slug, "_blank");
+        }}
+        className="mx-auto mt-6"
+      >
+        Preview Website
+      </ButtonShad>
     </div>
   );
 }

@@ -1,19 +1,13 @@
 "use client";
-import Button from "@/app/components/ui/Button";
-import { ButtonShad } from "@/app/components/ui/Buttons";
-import { Phone } from "lucide-react";
 
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import cats from "@/utils/data/categories.json";
-import Tab from "@/app/components/ui/Tab";
+
 import AnimatedTabs from "@/app/components/ui/AnimatedTabs";
 import { apicall } from "@/utils/getdata";
 import { useRouter } from "next/navigation";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -25,6 +19,7 @@ function ServicesPage({ website }: any) {
 
   const [services, setServices] = useState<any>(null);
   const [categories, setCategories] = useState<any>(null);
+  const [loader, setLoader] = useState<boolean>(false);
   useEffect(() => {
     apicall({
       path: "category/website",
@@ -49,10 +44,12 @@ function ServicesPage({ website }: any) {
   }, []);
 
   useEffect(() => {
+    setLoader(true);
     apicall({
       path: "service/filter",
       getResponse: (res) => {
         setServices(res.data.services);
+        setLoader(false);
       },
       getError: (err) => {},
       router,
@@ -75,16 +72,22 @@ function ServicesPage({ website }: any) {
       </div>
     );
   }
+
   return (
     <div
       id="services"
       className="h-auto w-full mx-auto  mt-[100px] overflow-hidden min-h-[50vh]  "
     >
-      <h2 className="text-foreground font-poppins font-bold text-4xl ">
+      <h2 className="text-foreground font-poppins font-bold text-4xl text-center ">
         Our Services
       </h2>
+      <p className="max-w-[600px] text-sm  md:text-base text-center text-muted-foreground mx-auto">
+        Discover the exceptional services we offer at {website.businessName},
+        meticulously crafted by our team of experts to meet your every need.
+        Explore now and see how we can make a difference for you!
+      </p>
 
-      <div className="relative  overflow-x-scroll scrollbar-hide    flex flex-col  mx-auto w-full  items-start justify-start mt-6">
+      <div className="relative  overflow-x-scroll scrollbar-hide    flex flex-col  mx-auto w-full  items-start justify-start mt-10">
         <AnimatedTabs
           activeTab={activeTab}
           setActTab={(e: any) => {
@@ -93,44 +96,55 @@ function ServicesPage({ website }: any) {
           tabs={categories}
         />
       </div>
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6 ">
-        {services && services.length == 0 ? (
-          <p className="text-center mt-10 font-poppins ">
-            No services found for this category
-          </p>
-        ) : (
-          services.map((pkg: any, ind: any) => {
-            return (
-              <Card
-                key={ind}
-                className="col-span-1 overflow-hidden"
-                x-chunk="dashboard-05-chunk-0"
-              >
-                <CardHeader className="pb-3">
-                  <CardTitle className="font-poppins font-semibold leading-8 ">
-                    {pkg.name}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="font-poppins text-sm text-foreground/50">
-                    Gender - {pkg.gender}
-                  </p>
-                  <p className="font-poppins text-sm text-foreground/50">
-                    Duration -{" "}
-                    {pkg.duration.hours > 0 && pkg.duration.hours + " hour "}
-                    {pkg.duration.minutes > 0 && pkg.duration.minutes + " min"}
-                  </p>
-                </CardContent>
-                <CardFooter>
-                  <p className="font-poppins text-xl text-foreground ">
-                    ₹{pkg.price}/-
-                  </p>
-                </CardFooter>
-              </Card>
-            );
-          })
-        )}
-      </div>
+      {loader ? (
+        <div className="flex h-[50vh] w-full justify-center items-center ">
+          <div className="flex flex-row gap-2">
+            <div className="w-4 h-4 rounded-full bg-white animate-bounce"></div>
+            <div className="w-4 h-4 rounded-full bg-white animate-bounce [animation-delay:-.3s]"></div>
+            <div className="w-4 h-4 rounded-full bg-white animate-bounce [animation-delay:-.5s]"></div>
+          </div>
+        </div>
+      ) : (
+        <div className="grid gap-4 grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6 ">
+          {services && services.length == 0 ? (
+            <p className="text-center mt-10 font-poppins ">
+              No services found for this category
+            </p>
+          ) : (
+            services.map((pkg: any, ind: any) => {
+              return (
+                <Card
+                  key={ind}
+                  className="col-span-1 overflow-hidden"
+                  x-chunk="dashboard-05-chunk-0"
+                >
+                  <CardHeader className="pb-3">
+                    <CardTitle className="font-poppins text-[16px] md:text-xl font-semibold md:leading-8 ">
+                      <p className="text-wrap">{pkg.name}</p>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="font-poppins text-sm text-foreground/50">
+                      Gender - {pkg.gender}
+                    </p>
+                    <p className="font-poppins text-sm text-foreground/50">
+                      Duration -{" "}
+                      {pkg.duration.hours > 0 && pkg.duration.hours + " hour "}
+                      {pkg.duration.minutes > 0 &&
+                        pkg.duration.minutes + " min"}
+                    </p>
+                  </CardContent>
+                  <CardFooter>
+                    <p className="font-poppins text-[16px] md:text-xl text-foreground ">
+                      ₹{pkg.price}/-
+                    </p>
+                  </CardFooter>
+                </Card>
+              );
+            })
+          )}
+        </div>
+      )}
     </div>
   );
 }

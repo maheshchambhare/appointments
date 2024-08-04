@@ -1,8 +1,7 @@
 "use client";
 // import { getMessaging, onMessage } from "firebase/messaging";
 // import { useEffect } from "react";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
 // import { app } from "../utils/firebase/firebase";
 // import { useDispatch, useSelector } from "react-redux";
 // import {
@@ -43,7 +42,6 @@ const ScreenWrapper = ({ children }: { children?: React.ReactNode }) => {
   return (
     <div className="w-[95%] relative  lg:w-[80%] xl:w-[70%] mx-auto ">
       {children}
-      <ToastContainer limit={1} containerId="GlobalApplicationToast" />
     </div>
   );
 };

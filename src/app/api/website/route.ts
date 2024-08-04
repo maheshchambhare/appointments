@@ -3,6 +3,7 @@ import prisma from "@/utils/prisma";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import jwt from "jsonwebtoken";
+import sharp from "sharp";
 
 const JWTKEY: any = process.env.JWT_KEY_TOKEN;
 const region: any = process.env.NEXT_PUBLIC_AWS_REGEION;
@@ -60,11 +61,24 @@ const POST = async (req: NextRequest) => {
 
         if (!isValidURL(logo)) {
           const bufferLogo = Buffer.from(await logo.arrayBuffer());
+          const roundedImageBuffer = await sharp(bufferLogo)
+            .resize(256, 256) // Adjust the size as needed
+            .composite([
+              {
+                input: Buffer.from(
+                  `<svg width="256" height="256"><circle cx="128" cy="128" r="128" fill="black"/></svg>`
+                ),
+                blend: "dest-in",
+              },
+            ])
+            .toFormat("webp")
+            .toBuffer();
           const logoUrl = await uploadFileS3(
-            bufferLogo,
+            roundedImageBuffer,
             "logo.webp",
             folderName
           );
+          console.log(logoUrl, "LOGO UTRL");
           dataObject.logo = logoUrl;
         }
 
@@ -84,11 +98,11 @@ const POST = async (req: NextRequest) => {
         dataObject.live = true;
         dataObject.businessUserId = businessVal.id;
         dataObject.businessName = businessVal.businessName;
+        dataObject.country = JSON.parse(dataObject.country);
 
         const prismaRes = await prisma.website.upsert({
           where: {
-            email: dataObject.email,
-            slug: businessVal.slug,
+            businessUserId: businessVal.id,
           },
           update: { ...dataObject },
           create: { ...dataObject },

@@ -4,6 +4,8 @@ import "./globals.css";
 import { StoreProvider } from "@/store/StoreProvider";
 import homeData from "@/utils/data/homepage.json";
 import { ThemeProvider } from "@/components/theme-provider";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,9 +34,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="icon" href="/favicon.ico" />
-      </head>
       <body className={` ${poppins.className} `}>
         <StoreProvider>
           <ThemeProvider
@@ -44,6 +43,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             {children}
+            <ToastContainer limit={1} />
           </ThemeProvider>
         </StoreProvider>
       </body>

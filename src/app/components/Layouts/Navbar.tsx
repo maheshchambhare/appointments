@@ -63,15 +63,15 @@ function Navbar() {
   const login = false;
 
   const menu = [
-    {
-      name: getUserType == 1 ? "Appointments" : "Appointments",
-      route: "home",
-      icon: <SquareKanban className="text-textPrimary" size={18} />,
-      onClick: () => {
-        router.push("/" + businessUserData.slug);
-        dispatch(setBusinessSectionType("1"));
-      },
-    },
+    // {
+    //   name: getUserType == 1 ? "Appointments" : "Appointments",
+    //   route: "home",
+    //   icon: <SquareKanban className="text-textPrimary" size={18} />,
+    //   onClick: () => {
+    //     router.push("/" + businessUserData.slug);
+    //     dispatch(setBusinessSectionType("1"));
+    //   },
+    // },
     getUserType == 0 && {
       name: "Profile",
       route: "profile",
@@ -180,10 +180,10 @@ function Navbar() {
       <div className=" xsm:w-[40%] md:w-[50%] h-full  flex items-center">
         <div
           onClick={() => {
-            if (isBusinessLoggedIn) {
+            if (!isBusinessLoggedIn) {
               router.push("/" + businessUserData.slug);
             } else {
-              router.push("/");
+              router.push("/dashboard");
             }
           }}
           className="mr-10 "

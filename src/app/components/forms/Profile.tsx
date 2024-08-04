@@ -97,13 +97,17 @@ const Profile = () => {
         validate={(values) => {
           const errors: any = {};
 
-          console.log(JSON.stringify(values.mobile).length, "OOO");
-          console.log(typeof values.mobile);
-
           if (!values.name) {
             errors.name = "Required";
           }
 
+          if (!values.email) {
+            errors.email = "Required";
+          } else if (
+            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+          ) {
+            errors.email = "Invalid email address";
+          }
           if (!values.businessName) {
             errors.businessName = "Required";
           } else if (values.businessName.length > 20) {
@@ -146,7 +150,20 @@ const Profile = () => {
                 transition: Bounce,
               });
             },
-            getError: (err) => {},
+            getError: (err) => {
+              toast("something failed on server, contact admin", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                type: "error",
+                transition: Bounce,
+              });
+            },
             router,
             method: "post",
             data,
@@ -175,6 +192,7 @@ const Profile = () => {
                 value={values.name}
                 error={errors.name}
                 touched={touched.name}
+                required
                 // isDisabled={true}
               />
             </div>
@@ -189,6 +207,7 @@ const Profile = () => {
                 value={values.businessName}
                 error={errors.businessName}
                 touched={touched.businessName}
+                required
                 // isDisabled={true}
               />
             </div>
@@ -203,6 +222,7 @@ const Profile = () => {
                 value={values.mobile}
                 error={errors.mobile}
                 touched={touched.mobile}
+                required
                 // isDisabled={true}
               />
             </div>

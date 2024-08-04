@@ -129,7 +129,7 @@ function NavbarWebsite({ website }: any) {
             }}
             className="mr-10 "
           >
-            <h1 className=" w-full font-bave text-foreground uppercase  cursor-pointer  xsm:text-[15px] sm:text-[20px] md:text-[25px]  font-medium  ">
+            <h1 className=" w-full font-bave text-foreground uppercase  text-[20px] cursor-pointer  xsm:text-[20px] sm:text-[20px] md:text-[25px]  font-medium  ">
               {website.businessName}
             </h1>
           </div>

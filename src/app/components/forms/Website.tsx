@@ -26,6 +26,11 @@ import {
   ModalTrigger,
 } from "../ui/animated-modal";
 
+import city from "@/utils/data/cities.json";
+import state from "@/utils/data/states.json";
+import country from "@/utils/data/country.json";
+import MultiSelectComp from "../MultiSelectComp";
+
 interface timeselector {
   startTime: Date | null;
   endTime: Date | null;
@@ -60,6 +65,18 @@ const Website = () => {
     breakTimeStart: null,
     breakTimeEnd: null,
   });
+
+  const [selectedCity, setSelectedCity] = useState<any>(null);
+  const [selectedState, setSelectedState] = useState<any>(null);
+  const [selectedCountry, setSelectedCountry] = useState<any>(null);
+  const [addressArr, setAddressArr] = useState<any>({
+    countryErr: "",
+    stateErr: "",
+    cityErr: "",
+  });
+
+  const [states, setStates] = useState<any>(null);
+  const [cities, setCities] = useState<any>(null);
 
   const [dayOfWeek, setDaysOfWeek] = useState([
     { id: 0, days: "S", name: "Sunday", isActive: false },
@@ -163,7 +180,6 @@ const Website = () => {
     apicall({
       path: "website/getdata",
       getResponse: (res) => {
-        console.log(res.data.website.weekdays, "PPPPPPOOO");
         const website = res.data.website;
         if (website.weekdays) {
           setDaysOfWeek(website.weekdays);
@@ -179,6 +195,22 @@ const Website = () => {
             breakTimeEnd: moment(website.breakTimeEnd).toDate(),
           });
         }
+
+        const citiesArr: any = city;
+
+        const countryObj = country.find(
+          (d: any, i: any) => d.label == website.country.value
+        );
+        const stateObj = state.find(
+          (d: any, i: any) => d.label == website.state
+        );
+        const cityObj = citiesArr.find(
+          (d: any, i: any) => d.label == website.city
+        );
+        setSelectedCountry(countryObj);
+        setSelectedState(stateObj);
+        setSelectedCity(cityObj);
+
         setLoader(false);
       },
       getError: (err) => {},
@@ -187,6 +219,29 @@ const Website = () => {
       data: { slug: null },
     });
   }, []);
+
+  useEffect(() => {
+    if (selectedCountry) {
+      const statesFilter = state.filter(
+        (st) => st.countryCode == selectedCountry.isoCode
+      );
+
+      setStates(statesFilter);
+    }
+  }, [selectedCountry]);
+
+  useEffect(() => {
+    if (selectedState) {
+      const citiesArr: any = city;
+      const statesFilter = citiesArr.filter(
+        (st: any) =>
+          st.stateCode == selectedState.isoCode &&
+          st.countryCode == selectedState.countryCode
+      );
+
+      setCities(statesFilter);
+    }
+  }, [selectedState]);
 
   if (loader && website == null) {
     return (
@@ -205,7 +260,7 @@ const Website = () => {
         <label
           className={`font-sans  text-md  font-medium  transition-all duration-200 ease-in-out left-4 text-foreground`}
         >
-          Upload Logo
+          Upload Logo <span className="text-red-500">*</span>
         </label>
 
         <Modal>
@@ -223,7 +278,6 @@ const Website = () => {
                   accept="image/png, image/jpeg,image/jpg"
                   className="opacity-0 h-full  w-full absolute z-50 cursor-pointer"
                   onChange={(e: any) => {
-                    console.log("Hello");
                     setEditImgType(1);
                     setSelectedProfile(e.target.files[0]);
                     //   setShowModel(true);
@@ -322,7 +376,7 @@ const Website = () => {
         <label
           className={`font-sans  text-md  font-medium  transition-all duration-200 ease-in-out left-4 text-foreground`}
         >
-          Upload Image
+          Upload Banner <span className="text-red-500">*</span>
         </label>
 
         <Modal>
@@ -461,9 +515,50 @@ const Website = () => {
           address: website?.address || "",
           email: website?.email || "",
           slug: website?.slug || "",
+          pincode: website?.pincode || "",
         }}
         validate={(values) => {
           const errors: any = {};
+
+          if (!values.title) {
+            errors.title = "Required";
+          }
+
+          if (!values.subtitle) {
+            errors.subtitle = "Required";
+          }
+
+          if (!values.pincode) {
+            errors.pincode = "Required";
+          }
+
+          if (!values.email) {
+            errors.email = "Required";
+          } else if (
+            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+          ) {
+            errors.email = "Invalid email address";
+          }
+
+          if (!values.whatsapp) {
+            errors.whatsapp = "Required";
+          } else if (
+            typeof values.whatsapp == "string"
+              ? values.whatsapp.length != 10
+              : JSON.stringify(values.whatsapp).length != 10
+          ) {
+            errors.whatsapp = "Invalid mobile number";
+          }
+
+          if (!values.mobile) {
+            errors.mobile = "Required";
+          } else if (
+            typeof values.mobile == "string"
+              ? values.mobile.length != 10
+              : JSON.stringify(values.mobile).length != 10
+          ) {
+            errors.mobile = "Invalid mobile number";
+          }
 
           if (values.facebook != "" && !isValidURL(values.facebook)) {
             errors.facebook = "facebook link is not valid";
@@ -484,6 +579,45 @@ const Website = () => {
         onSubmit={(values, { setSubmitting }) => {
           let data = new FormData();
 
+          if (selectedCountry == null) {
+            setAddressArr({
+              ...addressArr,
+              countryErr: "Please select country",
+            });
+            return;
+          } else {
+            setAddressArr({
+              ...addressArr,
+              countryErr: "",
+            });
+          }
+
+          if (selectedState == null) {
+            setAddressArr({
+              ...addressArr,
+              stateErr: "Please select state",
+            });
+            return;
+          } else {
+            setAddressArr({
+              ...addressArr,
+              stateErr: "",
+            });
+          }
+
+          if (selectedCity == null) {
+            setAddressArr({
+              ...addressArr,
+              cityErr: "Please select city",
+            });
+            return;
+          } else {
+            setAddressArr({
+              ...addressArr,
+              cityErr: "",
+            });
+          }
+
           data.append("title", values.title);
           data.append("subtitle", values.subtitle);
           data.append("whatsapp", values.whatsapp);
@@ -496,13 +630,44 @@ const Website = () => {
           data.append("address", values.address);
           data.append("slug", values.slug);
 
-          if (!isValidURL(cropedLogoImage)) {
+          if (!isValidURL(cropedLogoImage) && cropedLogoImage != null) {
             data.append("logo", cropedLogoImage, cropedLogoImage.name);
+          } else if (cropedLogoImage == null) {
+            toast("Logo is required, Please upload logo", {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              type: "error",
+              transition: Bounce,
+            });
+            window.scroll({ top: 0, behavior: "smooth" });
+            return;
           } else {
             data.append("logo", cropedLogoImage);
           }
-          if (!isValidURL(cropedLogoImage)) {
+
+          if (!isValidURL(cropedHeroImage) && cropedHeroImage != null) {
             data.append("heroImage", cropedHeroImage, cropedHeroImage.name);
+          } else if (cropedHeroImage == null) {
+            toast("banner Image is required, please upload banner", {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              type: "error",
+              transition: Bounce,
+            });
+            window.scroll({ top: 0, behavior: "smooth" });
+            return;
           } else {
             data.append("heroImage", cropedHeroImage);
           }
@@ -512,6 +677,18 @@ const Website = () => {
           data.append("endTime", timeSelector?.endTime);
           data.append("breakTimeStart", timeSelector?.breakTimeStart);
           data.append("breakTimeEnd", timeSelector?.breakTimeEnd);
+          data.append("state", selectedState.value);
+          data.append("city", selectedCity.value);
+          data.append(
+            "country",
+            JSON.stringify({
+              value: selectedCountry.value,
+              currency: selectedCountry.currency,
+              countryCode: selectedCountry.isoCode,
+              phonecode: selectedCountry.phonecode,
+            })
+          );
+          data.append("pincode", values.pincode);
 
           apicall({
             path: "website",
@@ -558,6 +735,7 @@ const Website = () => {
                 value={values.title}
                 error={errors.title}
                 touched={touched.title}
+                required
                 // isDisabled={true}
               />
             </div>
@@ -572,6 +750,7 @@ const Website = () => {
                 value={values.subtitle}
                 error={errors.subtitle}
                 touched={touched.subtitle}
+                required
                 // isDisabled={true}
               />
             </div>
@@ -586,6 +765,7 @@ const Website = () => {
                 value={values.mobile}
                 error={errors.mobile}
                 touched={touched.mobile}
+                required
                 // isDisabled={true}
               />
             </div>
@@ -600,6 +780,7 @@ const Website = () => {
                 value={values.whatsapp}
                 error={errors.whatsapp}
                 touched={touched.whatsapp}
+                required
                 // isDisabled={true}
               />
             </div>
@@ -633,17 +814,100 @@ const Website = () => {
             <div className="my-4">
               <CustomTextArea
                 name="address"
-                inputLabel="Address"
+                inputLabel="Address (don't include contry,state,city)"
                 inputId="address"
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.address}
                 inputError={errors.address}
                 inputTouched={touched.address}
+                required
               />
             </div>
 
-            <div className="w-full max-w-[450px]  my-[10px]">
+            <div className="mt-4 w-full flex justify-between ">
+              <div className="w-[48%] ">
+                <MultiSelectComp
+                  full={true}
+                  title="Select Country"
+                  refSelect={country}
+                  required={true}
+                  menuPlacement="top"
+                  onChange={(e: any) => {
+                    setSelectedCountry(e);
+                  }}
+                  isMulti={false}
+                  placeholder="Select Country"
+                  error={addressArr.countryErr}
+                  options={country}
+                  defaultValue={selectedCountry}
+
+                  // error={submitCount > 0 && membersArrErr}
+                />
+              </div>
+
+              {states && (
+                <div className="w-[48%] ">
+                  <MultiSelectComp
+                    full={true}
+                    title="Select State"
+                    refSelect={states}
+                    required={true}
+                    menuPlacement="top"
+                    onChange={(e: any) => {
+                      setSelectedState(e);
+                    }}
+                    isMulti={false}
+                    placeholder="Select State"
+                    error={addressArr.stateErr}
+                    options={states}
+                    defaultValue={selectedState}
+
+                    // error={submitCount > 0 && membersArrErr}
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className="mt-4 w-full flex justify-between ">
+              {cities && (
+                <div className="w-[48%] ">
+                  <MultiSelectComp
+                    full={true}
+                    title="Select City"
+                    refSelect={cities}
+                    required={true}
+                    menuPlacement="top"
+                    onChange={(e: any) => {
+                      setSelectedCity(e);
+                    }}
+                    isMulti={false}
+                    placeholder="Select City"
+                    error={addressArr.cityErr}
+                    options={cities}
+                    defaultValue={selectedCity}
+
+                    // error={submitCount > 0 && membersArrErr}
+                  />
+                </div>
+              )}
+              <div className="w-[48%] ">
+                <CustomInput
+                  name="pincode"
+                  label="Pincode"
+                  id="pincode"
+                  type="text"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.pincode}
+                  error={errors.pincode}
+                  touched={touched.pincode}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="w-full max-w-[450px] mt-4  mb-[10px]">
               <div className="w-full flex justify-between ">
                 <div>
                   <label

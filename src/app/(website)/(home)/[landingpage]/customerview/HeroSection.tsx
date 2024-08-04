@@ -112,7 +112,7 @@ function HeroSection({ website }: any) {
           <Image
             height={600}
             width={400}
-            className="w-full h-full   aspect-square object-cover  shadow-lg rotate-6 border-foreground  border-0  rounded-lg"
+            className="w-full h-full   aspect-square object-cover  shadow-lg rotate-12 border-foreground  border-0  rounded-lg"
             alt="Salon hero image"
             src={website.heroImage}
           />
@@ -185,7 +185,14 @@ function HeroSection({ website }: any) {
             Address
           </p>
           <p className="text-foreground text-center font-poppins text-base mt-2 px-4">
-            {website.address}
+            {website.address +
+              website.city +
+              ", " +
+              website.state +
+              ", " +
+              website.country.value +
+              ", " +
+              website.pincode}
           </p>
         </div>
       </div>

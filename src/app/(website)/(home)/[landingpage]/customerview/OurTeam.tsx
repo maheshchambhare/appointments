@@ -47,11 +47,16 @@ function OurTeam({ website }: any) {
       id="team"
       className="h-auto w-full mx-auto  my-[100px] overflow-hidden  "
     >
-      <h2 className="text-foreground font-poppins font-bold text-4xl ">
+      <h2 className="text-foreground font-poppins font-bold text-4xl text-center ">
         Our Team
       </h2>
+      <p className="max-w-[600px] text-sm  md:text-base text-center text-muted-foreground mx-auto">
+        Meet the heart and soul of {website.businessName} – our incredible team
+        of professionals. Each member brings a unique blend of talent, passion,
+        and expertise, driving us to deliver the best results for our clients
+      </p>
 
-      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 mt-6">
+      <div className="grid gap-4 grid-cols-2  sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 mt-10">
         {employeeList &&
           employeeList.map((emp: any, ind: any) => {
             return (
@@ -68,7 +73,7 @@ function OurTeam({ website }: any) {
                     />
                     <AvatarFallback>{emp.name}</AvatarFallback>
                   </Avatar>
-                  <CardTitle className="font-poppins  font-semibold text-center">
+                  <CardTitle className="font-poppins text-xl  font-semibold text-center">
                     {emp.name}
                   </CardTitle>
                   <CardDescription>Hair Stylist</CardDescription>
