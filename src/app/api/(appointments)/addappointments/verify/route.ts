@@ -27,11 +27,11 @@ const POST = async (req: NextRequest) => {
 
         let jsonToken = "";
 
-        const createUser = await prisma.user.create({
+        const createUser = await prisma.customer.create({
           data: user,
         });
 
-        const appointmentData = {
+        const appointmentData: any = {
           userId: createUser.id,
           businessUserId: decryptedOtp.appointmentData.businessUserId,
           slot: decryptedOtp.appointmentData.slot,
@@ -41,7 +41,7 @@ const POST = async (req: NextRequest) => {
           status: "0",
         };
 
-        const appointments = await prisma.appointments.create({
+        const appointments = await prisma.appointment.create({
           data: appointmentData,
         });
 

@@ -46,8 +46,8 @@ const Website = () => {
   const [loader, setLoader] = useState(true);
   const [closeModal, setCloseModal] = useState<boolean>(false);
 
-  const logoImageRef = useRef<HTMLImageElement>(null);
-  const heroImageRef = useRef<HTMLImageElement>(null);
+  const logoImageRef = useRef<any>(null);
+  const heroImageRef = useRef<any>(null);
   const [cropedHeroImage, setCropHeroImage] = useState<any>(null);
   const [cropedLogoImage, setCropLogoImage] = useState<any>(null);
   const [compressLoader, setCompressLoader] = useState<boolean>(false);

@@ -24,18 +24,16 @@ const POST = async (req: NextRequest) => {
         ? [businessUSER.fcmToken, body.fcmToken]
         : [businessUSER.fcmToken];
 
-  
-
     // Send the notification
 
-    const user = await prisma.user.findUnique({
+    const user = await prisma.customer.findUnique({
       where: {
         mobile: JSON.stringify(body.mobile),
       },
     });
 
     if (user) {
-      const appointmentData = {
+      const appointmentData: any = {
         userId: user.id,
         businessUserId: businessUSER.id,
         slot: body.slot,
@@ -45,7 +43,7 @@ const POST = async (req: NextRequest) => {
         serviceId: body.serviceId,
       };
 
-      const addAppointment = await prisma.appointments.create({
+      const addAppointment = await prisma.appointment.create({
         data: appointmentData,
       });
 

@@ -38,7 +38,6 @@ const POST = async (req: NextRequest) => {
           {
             name: prismaRes.name,
             slug: prismaRes.slug,
-            about: prismaRes.about,
             address: prismaRes.address,
             id: prismaRes.id,
           },

@@ -6,9 +6,9 @@ const POST = async (req: NextRequest) => {
   try {
     const body = await req.json();
 
-    const appointments = await prisma.appointments.findMany({
+    const appointments = await prisma.appointment.findMany({
       where: {
-        memberId: body.member,
+        employeeId: body.member,
         date: body.date,
       },
       select: {

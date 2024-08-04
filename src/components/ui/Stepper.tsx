@@ -93,7 +93,7 @@ export default function StepperDemo() {
                 <div className="px-2 md:mt-6 md:p-4  ">
                   <SignUp
                     formRef={formRef}
-                    setRes={(e) => {
+                    setRes={(e: any) => {
                       setApiRes(e);
                     }}
                     setotpform={(e) => {

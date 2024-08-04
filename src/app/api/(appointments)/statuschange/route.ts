@@ -14,7 +14,7 @@ const PUT = async (req: NextRequest) => {
     const status = body.status;
     const id = body.id;
 
-    const allAppointments = await prisma.appointments.update({
+    const allAppointments = await prisma.appointment.update({
       where: {
         id: id,
       },
