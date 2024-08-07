@@ -78,10 +78,10 @@ function ServicesPage({ website }: any) {
       id="services"
       className="h-auto w-full mx-auto  mt-[100px] overflow-hidden min-h-[50vh]  "
     >
-      <h2 className="text-foreground font-poppins font-bold text-4xl text-center ">
+      <h2 className="text-foreground font-poppins font-bold text-4xl  ">
         Our Services
       </h2>
-      <p className="max-w-[600px] text-sm  md:text-base text-center text-muted-foreground mx-auto">
+      <p className="max-w-[600px] text-sm  md:text-base  text-muted-foreground ">
         Discover the exceptional services we offer at {website.businessName},
         meticulously crafted by our team of experts to meet your every need.
         Explore now and see how we can make a difference for you!

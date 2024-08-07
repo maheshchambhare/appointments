@@ -15,12 +15,12 @@ function LinksSidebar({ website }: any) {
   const links = [
     {
       name: "phone",
-      link: `tel:${website.mobile}`,
+      link: `tel:+${website.country.phonecode}${website.whatsapp}`,
       Icon: <Phone size={25} className="text-foreground text-sm" />,
     },
     {
       name: "whatsapp",
-      link: `https://wa.me/+91${website.whatsapp}`,
+      link: `https://wa.me/+${website.country.phonecode}${website.whatsapp}`,
       Icon: <MessageCircle size={25} className="text-foreground text-sm" />,
     },
     {

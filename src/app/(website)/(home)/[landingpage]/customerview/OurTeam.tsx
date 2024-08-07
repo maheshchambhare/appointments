@@ -47,10 +47,10 @@ function OurTeam({ website }: any) {
       id="team"
       className="h-auto w-full mx-auto  my-[100px] overflow-hidden  "
     >
-      <h2 className="text-foreground font-poppins font-bold text-4xl text-center ">
+      <h2 className="text-foreground font-poppins font-bold text-4xl  ">
         Our Team
       </h2>
-      <p className="max-w-[600px] text-sm  md:text-base text-center text-muted-foreground mx-auto">
+      <p className="max-w-[600px] text-sm  md:text-base  text-muted-foreground ">
         Meet the heart and soul of {website.businessName} – our incredible team
         of professionals. Each member brings a unique blend of talent, passion,
         and expertise, driving us to deliver the best results for our clients

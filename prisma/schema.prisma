@@ -55,6 +55,8 @@ model Website {
   state          String?
   country        Json?
   address        String?
+  latitude       String?
+  longitude      String?
   pincode        String?
   facebook       String?
   instagram      String?

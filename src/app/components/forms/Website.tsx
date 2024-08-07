@@ -516,6 +516,8 @@ const Website = () => {
           email: website?.email || "",
           slug: website?.slug || "",
           pincode: website?.pincode || "",
+          latitude: website?.latitude || "",
+          longitude: website?.longitude || "",
         }}
         validate={(values) => {
           const errors: any = {};
@@ -629,6 +631,8 @@ const Website = () => {
           data.append("email", values.email);
           data.append("address", values.address);
           data.append("slug", values.slug);
+          data.append("latitude", values.latitude);
+          data.append("longitude", values.longitude);
 
           if (!isValidURL(cropedLogoImage) && cropedLogoImage != null) {
             data.append("logo", cropedLogoImage, cropedLogoImage.name);
@@ -903,6 +907,36 @@ const Website = () => {
                   error={errors.pincode}
                   touched={touched.pincode}
                   required
+                />
+              </div>
+            </div>
+
+            <div className="mt-4 w-full flex justify-between ">
+              <div className="w-[48%] ">
+                <CustomInput
+                  name="latitude"
+                  label="Latitude"
+                  id="latitude"
+                  type="text"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.latitude}
+                  error={errors.latitude}
+                  touched={touched.latitude}
+                />
+              </div>
+
+              <div className="w-[48%] ">
+                <CustomInput
+                  name="longitude"
+                  label="Longitude"
+                  id="longitude"
+                  type="text"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.longitude}
+                  error={errors.longitude}
+                  touched={touched.longitude}
                 />
               </div>
             </div>

@@ -61,8 +61,12 @@ function NavbarWebsite({ website }: any) {
       route: "home",
       icon: <UserCircle className="text-foreground mr-2" size={18} />,
       onClick: () => {
-        router.push("/" + businessUserData.slug);
-        dispatch(setBusinessSectionType("1"));
+        setOpenMenu(false);
+        window.scrollTo({
+          top: 0,
+
+          behavior: "smooth",
+        });
       },
     },
 
@@ -72,7 +76,9 @@ function NavbarWebsite({ website }: any) {
       icon: <MenuSquare className="text-foreground mr-2" size={18} />,
       onClick: () => {
         setOpenMenu(false);
-        router.push("/" + businessUserData.slug + "/employee");
+        const service: any = document.getElementById("services");
+
+        service.scrollIntoView({ behavior: "smooth" });
 
         // setTimeout(() => {
         //    dispatch(setUserData("2"));
@@ -81,38 +87,54 @@ function NavbarWebsite({ website }: any) {
     },
 
     {
-      name: "Our Team",
-      route: "logout",
+      name: "Our Taem",
+      route: "ourteam",
       icon: <Users2Icon className="text-foreground mr-2" size={18} />,
       onClick: () => {
-        router.push("/");
+        setOpenMenu(false);
+        const team: any = document.getElementById("team");
 
-        apicall({
-          path: "logout",
-          getResponse: (res) => {
-            dispatch(setBusinessUserLoggedIn(false));
-            dispatch(setUserData(null));
-            dispatch(setUserType(null));
-            setOpenMenu(false);
+        team.scrollIntoView({ behavior: "smooth" });
 
-            toast("logged out successfully", {
-              position: "bottom-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-              transition: Bounce,
-            });
-          },
-          getError: (err) => {},
-          router,
-          method: "get",
-        });
+        // setTimeout(() => {
+        //    dispatch(setUserData("2"));
+        // }, 200);
       },
     },
+
+    // {
+    //   name: "Our Team",
+    //   route: "logout",
+    //   icon: <Users2Icon className="text-foreground mr-2" size={18} />,
+    //   onClick: () => {
+    //     router.push("/");
+
+    //     apicall({
+    //       path: "logout",
+    //       getResponse: (res) => {
+    //         dispatch(setBusinessUserLoggedIn(false));
+    //         dispatch(setUserData(null));
+    //         dispatch(setUserType(null));
+    //         setOpenMenu(false);
+
+    //         toast("logged out successfully", {
+    //           position: "bottom-right",
+    //           autoClose: 5000,
+    //           hideProgressBar: false,
+    //           closeOnClick: true,
+    //           pauseOnHover: true,
+    //           draggable: true,
+    //           progress: undefined,
+    //           theme: "light",
+    //           transition: Bounce,
+    //         });
+    //       },
+    //       getError: (err) => {},
+    //       router,
+    //       method: "get",
+    //     });
+    //   },
+    // },
   ];
 
   return (

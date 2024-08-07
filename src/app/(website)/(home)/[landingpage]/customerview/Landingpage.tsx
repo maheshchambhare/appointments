@@ -13,17 +13,20 @@ const DynamicFooter = dynamic(
 );
 const DynamicService = dynamic(() => import("./ServicesPage"));
 const DynamicOurTeam = dynamic(() => import("./OurTeam"));
+const DynamicMap = dynamic(() => import(".//LocationView"));
 
 function Landingpage({ website, daysString }: any) {
   const [scrollY, setScrollY] = useState<any>(0);
   const [showService, setShowService] = useState<boolean>(false);
   const [showTeam, setShowTeam] = useState<boolean>(false);
+  const [showMap, setShowMap] = useState<boolean>(false);
   const [showFooter, setShowFooter] = useState<boolean>(false);
 
   const scrollFunc = () => {
     setScrollY(window.scrollY);
     if (window.scrollY > 300) setShowTeam(true);
-    if (window.scrollY > 600) setShowFooter(true);
+    if (window.scrollY > 600) setShowMap(true);
+    if (window.scrollY > 800) setShowFooter(true);
   };
 
   useEffect(() => {
@@ -97,7 +100,7 @@ function Landingpage({ website, daysString }: any) {
           "-" +
           moment(website.endTime).format("HH:MMA")
         }",
-       "telephone": "+91${website.mobile}",
+       "telephone": "+${website.country.phonecode}${website.mobile}",
       "name": "${website.businessName}",
         "description": "${website.subtitle}",
         "isAccessibleForFree": false,
@@ -112,6 +115,8 @@ function Landingpage({ website, daysString }: any) {
     "postalCode":  "${website.pincode}",
     "streetAddress": "${website.address}"
   },
+  "latitude":"${website.latitude}",
+  "longitude":"${website.longitude}",
         "email":"${website.email}",
         "location": { "@id": "_:salon" },
         "hasMap":"${website.maps}",
@@ -125,6 +130,8 @@ function Landingpage({ website, daysString }: any) {
         {showService && <DynamicService website={website} />}
 
         {showTeam && <DynamicOurTeam website={website} />}
+
+        {showMap && <DynamicMap website={website} />}
       </ScreenWrapper>
       {showFooter && <DynamicFooter website={website} />}
       <LinksSidebar website={website} />

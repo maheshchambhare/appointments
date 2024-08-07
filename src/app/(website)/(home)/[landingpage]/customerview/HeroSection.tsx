@@ -85,23 +85,24 @@ function HeroSection({ website }: any) {
             <Button
               type="button"
               onClick={() => {
-                const service: any = document.getElementById("services");
-
-                service.scrollIntoView({ behavior: "smooth" });
+                window.open(
+                  `https://wa.me/+${website.country.phonecode}${website.whatsapp}`,
+                  "_blank"
+                );
               }}
-              title={"Our Services"}
+              title={"Enquire now"}
             />
 
-            {/* <ButtonShad
+            <ButtonShad
               onClick={() => {
                 const service: any = document.getElementById("services");
 
                 service.scrollIntoView({ behavior: "smooth" });
               }}
-              className="inline-flex w-full md:w-auto h-12 mt-4 md:mt-0 text-foreground   text-base items-center justify-center rounded-lg border border-slate-800 bg-[linear-gradient(110deg,#fff,45%,#eee,55%,#fff)] dark:bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-4 font-medium  transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+              className="inline-flex w-full md:w-auto ml-0 md:ml-4 h-12 mt-4 md:mt-0 text-foreground   text-base items-center justify-center rounded-lg border border-slate-800 bg-[linear-gradient(110deg,#fff,45%,#eee,55%,#fff)] dark:bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-4 font-medium  transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
             >
               Our Services
-            </ButtonShad> */}
+            </ButtonShad>
 
             <div className="md:hidden">
               <Horizontallinks website={website} />
@@ -122,10 +123,10 @@ function HeroSection({ website }: any) {
         <div className="flex flex-col  items-center w-full md:w-[33%]  md:border-r-2 border-foreground ">
           <p className="text-foreground font-bave text-xl ">Contact Us</p>
           <Link
-            href={`tel:${website.mobile}`}
+            href={`tel:${website.country.phonecode + website.mobile}`}
             className="text-foreground text-center font-poppins text-base mt-2"
           >
-            +91 {website.mobile}
+            +{website.country.phonecode + " " + website.mobile}
           </Link>
           <Link
             href={`mailto:${website.email}`}
