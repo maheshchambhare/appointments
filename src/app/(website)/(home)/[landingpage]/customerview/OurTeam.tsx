@@ -76,7 +76,7 @@ function OurTeam({ website }: any) {
                   <CardTitle className="font-poppins text-xl  font-semibold text-center">
                     {emp.name}
                   </CardTitle>
-                  <CardDescription>Hair Stylist</CardDescription>
+                  <CardDescription>{emp?.designation}</CardDescription>
                 </CardHeader>
                 <CardContent></CardContent>
               </Card>
