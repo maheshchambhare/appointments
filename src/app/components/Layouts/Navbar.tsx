@@ -7,8 +7,6 @@ import Otp from "../forms/Otp";
 import Menu from "./Menu";
 import {
   User,
-  CalendarPlus,
-  UsersRound,
   Users2Icon,
   LogOut,
   Blocks,
@@ -16,6 +14,7 @@ import {
   MoonIcon,
   Globe,
   ListPlus,
+  LayoutDashboard,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { setBusinessSectionType } from "@/store/slices/commonSlices";
@@ -72,6 +71,14 @@ function Navbar() {
     //     dispatch(setBusinessSectionType("1"));
     //   },
     // },
+    getUserType == 0 && {
+      name: "Dashboard",
+      route: "dashboard",
+      icon: <LayoutDashboard className="text-textPrimary" size={18} />,
+      onClick: () => {
+        router.push("/dashboard");
+      },
+    },
     getUserType == 0 && {
       name: "Profile",
       route: "profile",
