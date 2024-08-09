@@ -221,6 +221,8 @@ function AddService({
           if (getService) {
             data.id = getService.id;
           }
+
+          setLoader(true);
           apicall({
             path: getService ? "service/edit" : "service/add",
             getResponse: (res) => {
@@ -255,8 +257,15 @@ function AddService({
                 hours: 0,
                 minutes: 0,
               });
+
+              setTimeout(() => {
+                setLoader(false);
+              }, 300);
             },
             getError: (err) => {
+              setTimeout(() => {
+                setLoader(false);
+              }, 300);
               toast("Something failed on server", {
                 position: "bottom-right",
                 autoClose: 5000,

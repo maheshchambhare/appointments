@@ -7,29 +7,19 @@ const JWTKEYOTP: any = process.env.JWT_KEY_OTP;
 
 const POST = async (req: NextRequest) => {
   try {
-    const cookie = req.cookies.get("userauth");
+    const cookie = req.cookies.get("token");
     const userToken: any = cookie?.value;
 
-    const userTokenDecrypted: any = await jwt.verify(userToken, JWTKEYOTP);
+    const userTokenDecrypted: any = await jwt.verify(userToken, JWTKEY);
 
     const body = await req.json();
-    const slug = body?.slug || userTokenDecrypted.businessUser.slug;
+    const slug = body?.slug || userTokenDecrypted.slug;
     const page = body?.page;
 
     const businessUser = await prisma.businessUser.findUnique({
       where: {
         slug: slug,
-        AND: [{ verified: true }, { approved: true }],
-      },
-
-      include: {
-        employees: {
-          select: {
-            id: true,
-            name: true,
-            fcmToken: true,
-          },
-        },
+        approved: true,
       },
     });
 
@@ -61,7 +51,6 @@ const POST = async (req: NextRequest) => {
               : {
                   name: businessUser.businessName,
                   address: businessUser.address,
-                  employee: businessUser.employees,
                   slug: businessUser.slug,
                   id: businessUser.id,
                 },

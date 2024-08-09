@@ -181,39 +181,43 @@ const Website = () => {
       path: "website/getdata",
       getResponse: (res) => {
         const website = res.data.website;
-        if (website.weekdays) {
-          setDaysOfWeek(website.weekdays);
-        }
-        if (website.logo) setCropLogoImage(website.logo);
-        if (website.heroImage) setCropHeroImage(website.heroImage);
-        seWebsite(website);
-        if (website.startTime) {
-          setTimeSelector({
-            startTime: moment(website.startTime).toDate(),
-            endTime: moment(website.endTime).toDate(),
-            breakTimeStart: moment(website.breakTimeStart).toDate(),
-            breakTimeEnd: moment(website.breakTimeEnd).toDate(),
-          });
-        }
+        if (website) {
+          if (website.weekdays) {
+            setDaysOfWeek(website.weekdays);
+          }
+          if (website.logo) setCropLogoImage(website.logo);
+          if (website.heroImage) setCropHeroImage(website.heroImage);
+          seWebsite(website);
+          if (website.startTime) {
+            setTimeSelector({
+              startTime: moment(website.startTime).toDate(),
+              endTime: moment(website.endTime).toDate(),
+              breakTimeStart: moment(website.breakTimeStart).toDate(),
+              breakTimeEnd: moment(website.breakTimeEnd).toDate(),
+            });
+          }
 
-        const citiesArr: any = city;
+          const citiesArr: any = city;
 
-        const countryObj = country.find(
-          (d: any, i: any) => d.label == website.country.value
-        );
-        const stateObj = state.find(
-          (d: any, i: any) => d.label == website.state
-        );
-        const cityObj = citiesArr.find(
-          (d: any, i: any) => d.label == website.city
-        );
-        setSelectedCountry(countryObj);
-        setSelectedState(stateObj);
-        setSelectedCity(cityObj);
+          const countryObj = country.find(
+            (d: any, i: any) => d.label == website.country.value
+          );
+          const stateObj = state.find(
+            (d: any, i: any) => d.label == website.state
+          );
+          const cityObj = citiesArr.find(
+            (d: any, i: any) => d.label == website.city
+          );
+          setSelectedCountry(countryObj);
+          setSelectedState(stateObj);
+          setSelectedCity(cityObj);
+        }
 
         setLoader(false);
       },
-      getError: (err) => {},
+      getError: (err) => {
+        setLoader(false);
+      },
       router,
       method: "post",
       data: { slug: null },
@@ -243,7 +247,7 @@ const Website = () => {
     }
   }, [selectedState]);
 
-  if (loader && website == null) {
+  if (loader) {
     return (
       <div className="flex h-[80vh]  justify-center items-center">
         <div className="flex flex-row gap-2">
@@ -502,7 +506,7 @@ const Website = () => {
           title:
             website?.title ||
             "Discover the Ultimate Salon Experience with " +
-              businessUser.businessName,
+              businessUser?.businessName,
           subtitle:
             website?.subtitle ||
             "Step into a world of style and relaxation. Book your appointment today and let our expert team bring out the best in you.",

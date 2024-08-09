@@ -78,7 +78,7 @@ const POST = async (req: NextRequest) => {
             "logo.webp",
             folderName
           );
-          console.log(logoUrl, "LOGO UTRL");
+
           dataObject.logo = logoUrl;
         }
 
@@ -115,6 +115,10 @@ const POST = async (req: NextRequest) => {
         return response;
       } catch (e) {
         console.error(e, "Uploading failed");
+        return NextResponse.json(
+          { message: "Something failed", e },
+          { status: 500 }
+        );
       }
     }
   } catch (error) {

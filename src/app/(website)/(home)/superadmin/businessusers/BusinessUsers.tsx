@@ -39,7 +39,6 @@ function BusinessUsers() {
 
       <div className="flex  w-full mt-4 flex-wrap">
         {businessUsers.map((d: any, i: any) => {
-          console.log(d, "UUUU");
           return (
             <div
               onClick={() => {
