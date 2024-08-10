@@ -171,7 +171,7 @@ function AddEmployee({
                   type="file"
                   id="fullName"
                   accept="image/png, image/jpeg,image/jpg"
-                  className="opacity-0 h-full  w-full absolute z-50 cursor-pointer"
+                  className="opacity-0 h-full  w-full absolute z-40 cursor-pointer"
                   onChange={(e: any) => {
                     setSelectedProfile(e.target.files[0]);
                     //   setShowModel(true);

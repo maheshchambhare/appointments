@@ -280,7 +280,7 @@ const Website = () => {
                   type="file"
                   id="fullName"
                   accept="image/png, image/jpeg,image/jpg"
-                  className="opacity-0 h-full  w-full absolute z-50 cursor-pointer"
+                  className="opacity-0 h-full  w-full absolute z-40 cursor-pointer"
                   onChange={(e: any) => {
                     setEditImgType(1);
                     setSelectedProfile(e.target.files[0]);
@@ -390,7 +390,7 @@ const Website = () => {
           >
             <div
               className=" w-[200px] relative bg-background
-                        flex justify-center items-center h-[200px]  mt-4  "
+                        flex justify-center items-center h-[200px]  mt-4"
             >
               <input
                 ref={heroImageRef}
@@ -398,7 +398,7 @@ const Website = () => {
                 type="file"
                 id="fullName"
                 accept="image/png, image/jpeg,image/jpg"
-                className="opacity-0 h-full w-full absolute z-50 cursor-pointer"
+                className="opacity-0 h-full w-full absolute z-40 cursor-pointer"
                 onChange={(e: any) => {
                   setEditImgType(2);
                   setSelectedProfile(e.target.files[0]);

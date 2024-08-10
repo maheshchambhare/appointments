@@ -34,6 +34,7 @@ const Header = () => {
 
         <h1
           className=" text-center text-foreground   font-mont font-bold 
+          text-[25px] xsm:leading-[30px]
           xsm:text-[25px] xsm:leading-[30px]
         md:text-[35px] md:leading-[40px]
         lg:text-[45px] lg:leading-[50px]

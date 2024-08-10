@@ -39,6 +39,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ButtonShad } from "../ui/Buttons";
+import Link from "next/link";
 
 interface menuItem {
   name: string;
@@ -73,7 +74,7 @@ function Navbar() {
     // },
     getUserType == 0 && {
       name: "Dashboard",
-      route: "dashboard",
+      route: "/dashboard",
       icon: <LayoutDashboard className="text-textPrimary" size={18} />,
       onClick: () => {
         router.push("/dashboard");
@@ -81,7 +82,7 @@ function Navbar() {
     },
     getUserType == 0 && {
       name: "Profile",
-      route: "profile",
+      route: "/dashboard/profile",
       icon: <User className="text-textPrimary" size={18} />,
       onClick: () => {
         router.push("/dashboard/profile");
@@ -89,7 +90,7 @@ function Navbar() {
     },
     getUserType == 0 && {
       name: "Website",
-      route: "website",
+      route: "/dashboard/website",
       icon: <Globe className="text-textPrimary" size={18} />,
       onClick: () => {
         router.push("/dashboard/website");
@@ -110,7 +111,7 @@ function Navbar() {
     // },
     getUserType == 0 && {
       name: "Employees",
-      route: "employee",
+      route: "/dashboard/employee",
       icon: <Users2Icon className="text-textPrimary" size={18} />,
       onClick: () => {
         setOpenMenu(false);
@@ -123,7 +124,7 @@ function Navbar() {
     },
     getUserType == 0 && {
       name: "Categories",
-      route: "categories",
+      route: "/dashboard/category",
       icon: <ListPlus className="text-textPrimary" size={18} />,
       onClick: () => {
         setOpenMenu(false);
@@ -136,7 +137,7 @@ function Navbar() {
     },
     getUserType == 0 && {
       name: "Services",
-      route: "services",
+      route: "/dashboard/services",
       icon: <Blocks className="text-textPrimary" size={18} />,
       onClick: () => {
         setOpenMenu(false);
@@ -323,7 +324,8 @@ function Navbar() {
         <div className="px-2 sm:px-4 py-4">
           {menu.map((item, ind) => {
             return (
-              item && (
+              item &&
+              (item.route == "logout" ? (
                 <div
                   onClick={item.onClick}
                   className="flex cursor-pointer items-center my-4 "
@@ -334,7 +336,18 @@ function Navbar() {
                     {item.name}
                   </p>
                 </div>
-              )
+              ) : (
+                <Link
+                  href={item.route}
+                  className="flex cursor-pointer items-center my-4 "
+                  key={ind}
+                >
+                  {item.icon}
+                  <p className="font-poppins text-base ml-2 text-textPrimary">
+                    {item.name}
+                  </p>
+                </Link>
+              ))
             );
           })}
         </div>
