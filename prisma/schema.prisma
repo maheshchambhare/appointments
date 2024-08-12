@@ -24,7 +24,7 @@ model BusinessUser {
   slug           String        @unique
   address        String?
   verified       Boolean
-  approved       Boolean
+  approved       Boolean       @default(true)
   employeeLength Int           @default(20)
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt

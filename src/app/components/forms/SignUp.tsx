@@ -4,23 +4,15 @@ import CustomInput from "../CustomInput";
 import Button from "../ui/Button";
 import { apicall } from "@/utils/getdata";
 import { useRouter } from "next/navigation";
+import { Bounce, toast } from "react-toastify";
 
-const SignUp = ({
-  setotpform,
-  formRef,
-  setRes,
-}: {
-  setotpform?: (val: boolean) => void;
-  formRef?: any;
-  setRes?: any;
-}) => {
+const SignUp = ({ closeModal }: { closeModal?: (val: boolean) => void }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showCnfPassword, setShowCnfPassword] = useState(false);
   const router = useRouter();
   return (
     <div>
       <Formik
-        // innerRef={(f) => (formRef.current = f)}
         initialValues={{
           name: "",
           businessName: "",
@@ -74,16 +66,11 @@ const SignUp = ({
           return errors;
         }}
         onSubmit={(values, { setSubmitting }) => {
-          // setRes({
-          //   loader: true,
-          //   success: false,
-          // });
-
           const data = {
             name: values.name,
             businessName: values.businessName.trim(),
             verified: false,
-            approved: false,
+            approved: true,
             mobile: JSON.stringify(values.mobile),
             password: values.password,
             email: values.email,
@@ -92,15 +79,35 @@ const SignUp = ({
           apicall({
             path: "signup",
             getResponse: (res) => {
-              setRes({
-                loader: false,
-                success: true,
-              });
+              if (closeModal) closeModal(false);
+              toast(
+                "🥳 Sign up successful, you can login now using mobile and password",
+                {
+                  position: "bottom-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                  transition: Bounce,
+                }
+              );
             },
             getError: (err) => {
-              setRes({
-                loader: false,
-                success: false,
+              if (closeModal) closeModal(false);
+              toast("Something failed on server, contact admin +918767431997", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                type: "error",
+                transition: Bounce,
               });
             },
             router,

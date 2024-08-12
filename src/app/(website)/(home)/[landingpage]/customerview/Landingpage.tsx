@@ -7,6 +7,7 @@ import LinksSidebar from "@/app/components/Layouts/LinksSidebar";
 import dynamic from "next/dynamic";
 import Script from "next/script";
 import moment from "moment";
+import axios from "axios";
 
 const DynamicFooter = dynamic(
   () => import("@/app/components/Layouts/WebsiteFooter")
@@ -105,7 +106,7 @@ function Landingpage({ website, daysString }: any) {
         "description": "${website.subtitle}",
         "isAccessibleForFree": false,
         "paymentAccepted":"Cash, UPI",
-        "url":"${process.env.NEXT_PUBLIC_BASE_URL + website.slug}",
+        "url":"${process?.env?.NEXT_PUBLIC_BASE_URL + website.slug}",
         "address":  {
     "@id": "_:salon",
     "@type": "PostalAddress",
@@ -128,9 +129,7 @@ function Landingpage({ website, daysString }: any) {
       <ScreenWrapper>
         <HeroSection website={website} />
         {showService && <DynamicService website={website} />}
-
         {showTeam && <DynamicOurTeam website={website} />}
-
         {showMap && <DynamicMap website={website} />}
       </ScreenWrapper>
       {showFooter && <DynamicFooter website={website} />}

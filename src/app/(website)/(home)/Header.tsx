@@ -117,8 +117,8 @@ const Header = () => {
             />
           ) : ( */}
           <SignUp
-            setotpform={(e) => {
-              setOtpForm(e);
+            closeModal={(e: any) => {
+              setSignupModal(e);
             }}
           />
           {/* )} */}

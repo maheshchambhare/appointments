@@ -73,6 +73,10 @@ function ServicesPage({ website }: any) {
     );
   }
 
+  if (categories.length == 1) {
+    return null;
+  }
+
   return (
     <div
       id="services"

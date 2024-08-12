@@ -824,7 +824,7 @@ const Website = () => {
             <div className="my-4">
               <CustomTextArea
                 name="address"
-                inputLabel="Address (don't include contry,state,city)"
+                inputLabel="Address (don't include Business Name,contry,state,city)"
                 inputId="address"
                 onChange={handleChange}
                 onBlur={handleBlur}

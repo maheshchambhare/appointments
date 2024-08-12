@@ -7,7 +7,7 @@ import { ButtonShad } from "@/app/components/ui/Buttons";
 
 function Header({ title, slug }: { title: string; slug: string }) {
   return (
-    <div className="h-auto  mt-6 mb-6 md:mb-10 pb-4  flex flex-col   shadow-md justify-center items-center ">
+    <div className="h-auto  mt-6 mb-10 md:mb-10 pb-4  flex flex-col justify-center items-center ">
       <h1 className="font-mont text-center text-[40px] text-textPrimary capitalize md:text-[70px]">
         {title}
       </h1>
@@ -19,6 +19,11 @@ function Header({ title, slug }: { title: string; slug: string }) {
         complete a few forms, and you'll be on your way to creating something
         amazing. Thank you for your patience as we make things even better for
         you!`}
+      </p>
+
+      <p className="mt-10 text-center text-red-400 text-sm md:text-base">
+        Submit all forms which are given in menu before clicking on preview
+        website
       </p>
 
       <ButtonShad

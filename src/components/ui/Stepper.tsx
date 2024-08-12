@@ -85,14 +85,13 @@ export default function StepperDemo() {
 
   return (
     <div className="flex w-full flex-col gap-4">
-      <Stepper initialStep={0} steps={steps}>
+      {/* <Stepper initialStep={0} steps={steps}>
         {steps.map((stepProps, index) => {
           return (
             <Step key={stepProps.label} {...stepProps}>
               {index == 0 ? (
                 <div className="px-2 md:mt-6 md:p-4  ">
                   <SignUp
-                    formRef={formRef}
                     setRes={(e: any) => {
                       setApiRes(e);
                     }}
@@ -114,7 +113,7 @@ export default function StepperDemo() {
           otpSubmit={otpSubmit}
           apiRes={apiRes}
         />
-      </Stepper>
+      </Stepper> */}
     </div>
   );
 }
