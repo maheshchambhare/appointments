@@ -91,7 +91,7 @@ const Profile = () => {
           name: user?.name || "",
           businessName: user?.businessName || "",
           mobile: user?.mobile || "",
-          address: user?.address || "",
+
           email: user?.email || "",
         }}
         validate={(values) => {
@@ -253,7 +253,7 @@ const Profile = () => {
               />
             </div> */}
 
-            <div className="my-4">
+            {/* <div className="my-4">
               <CustomTextArea
                 name="address"
                 inputLabel="Address"
@@ -264,7 +264,7 @@ const Profile = () => {
                 inputError={errors.address}
                 inputTouched={touched.address}
               />
-            </div>
+            </div> */}
 
             {/* <div className="w-full max-w-[450px]  my-[10px]">
               <div className="w-full flex justify-between ">
@@ -442,7 +442,7 @@ const Profile = () => {
               </div>
             </div> */}
 
-            <div className="mb-6">
+            <div className="mb-6 mt-6">
               <Button type="submit" title="Submit" />
             </div>
           </form>

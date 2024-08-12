@@ -288,7 +288,7 @@ function NavbarWebsite({ website }: any) {
               Make a Reservation
             </button>
           </div> */}
-          <div className="absolute bottom-4 flex flex-col justify-center items-center ">
+          <div className="absolute bottom-10 flex flex-col justify-center items-center ">
             <Horizontallinks website={website} />
           </div>
         </Menu>

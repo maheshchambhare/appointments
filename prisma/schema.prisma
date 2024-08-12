@@ -55,16 +55,16 @@ model Website {
   state          String?
   country        Json?
   address        String?
-  latitude       String?
-  longitude      String?
+  latitude       String?      @default("")
+  longitude      String?      @default("")
   pincode        String?
   facebook       String?
   instagram      String?
   youtube        String?
   maps           String?
   weekdays       Json?
-  breakTimeEnd   String?
-  breakTimeStart String?
+  breakTimeEnd   String?      @default("")
+  breakTimeStart String?      @default("")
   endTime        String?
   startTime      String?
   email          String       @unique

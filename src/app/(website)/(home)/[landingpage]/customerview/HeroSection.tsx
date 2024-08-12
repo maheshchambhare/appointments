@@ -1,12 +1,12 @@
-import Appointment from "@/app/components/forms/Appointment";
+// import Appointment from "@/app/components/forms/Appointment";
+// import {
+//   Modal,
+//   ModalBody,
+//   ModalContent,
+//   ModalFooter,
+//   ModalTrigger,
+// } from "@/app/components/ui/animated-modal";
 import Horizontallinks from "@/app/components/Layouts/Horizontallinks";
-import {
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalTrigger,
-} from "@/app/components/ui/animated-modal";
 import Button from "@/app/components/ui/Button";
 import { ButtonShad } from "@/app/components/ui/Buttons";
 import {

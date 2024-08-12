@@ -46,7 +46,7 @@ const Menu: React.FC<ModalLayoutProps> = ({ isOpen, setIsOpen, children }) => {
         }, 500);
       }}
       className={`fixed h-[100vh] cursor-pointer left-0 top-0  bottom-0 right-0 z-[1800] w-full ${
-        isMainDiv ? "flex" : " hidden"
+        isMainDiv ? "flex" : "hidden"
       }   bg-opacity-[0.6] overflow-hidden bg-black
         xsm:items-end sm:items-end md:items-end
         `}
@@ -60,7 +60,7 @@ const Menu: React.FC<ModalLayoutProps> = ({ isOpen, setIsOpen, children }) => {
           maxWidth: 300,
           minWidth: 250,
         }}
-        className={`relative z-[100] scrollbar-hide h-[100vh]    pb-6  px-5 ${
+        className={`relative z-[100] scrollbar-hide h-full pb-6  px-5 ${
           childDiv
             ? "translate-x-0  duration-500"
             : "translate-x-[400px]  duration-1000"
