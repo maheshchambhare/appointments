@@ -187,6 +187,7 @@ function HeroSection({ website }: any) {
           </p>
           <p className="text-foreground text-center font-poppins text-base mt-2 px-4">
             {website.address +
+              " " +
               website.city +
               ", " +
               website.state +

@@ -64,7 +64,7 @@ function TicketCards({
               <p className="text-textSecondary font-poppins text-sm sm:text-sm">
                 {"Service: " +
                   ticket?.service.name +
-                  " - ₹" +
+                  " - " +
                   ticket?.service.price}
               </p>
               <p className="text-textSecondary font-poppins text-sm sm:text-sm">

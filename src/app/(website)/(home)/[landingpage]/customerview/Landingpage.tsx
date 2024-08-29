@@ -7,8 +7,6 @@ import LinksSidebar from "@/app/components/Layouts/LinksSidebar";
 import dynamic from "next/dynamic";
 import Script from "next/script";
 import moment from "moment";
-import axios from "axios";
-
 const DynamicFooter = dynamic(
   () => import("@/app/components/Layouts/WebsiteFooter")
 );

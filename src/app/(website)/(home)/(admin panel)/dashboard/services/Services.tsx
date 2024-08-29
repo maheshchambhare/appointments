@@ -59,7 +59,7 @@ function Services({
                     Gender : {packageData.gender}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    Price : ₹{packageData.price}/-
+                    Price : {packageData.price}/-
                   </p>
 
                   <p className="text-sm text-muted-foreground">

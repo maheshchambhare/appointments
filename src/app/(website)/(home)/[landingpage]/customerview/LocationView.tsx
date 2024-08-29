@@ -19,6 +19,7 @@ function LocationView({ website }: any) {
               process.env.NEXT_PUBLIC_MAPS_KEY
             }&q=${website.businessName},${
               website.address +
+              " " +
               website.city +
               ", " +
               website.state +

@@ -12,10 +12,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import countryCurrencyMap from "@/utils/data/currencyMap";
 
 function ServicesPage({ website }: any) {
   const router = useRouter();
   let [activeTab, setActiveTab] = useState(1);
+
+  const currencySymbol = countryCurrencyMap[website.country.value];
 
   const [services, setServices] = useState<any>(null);
   const [categories, setCategories] = useState<any>(null);
@@ -140,7 +143,8 @@ function ServicesPage({ website }: any) {
                   </CardContent>
                   <CardFooter>
                     <p className="font-poppins text-[16px] md:text-xl text-foreground ">
-                      ₹{pkg.price}/-
+                      {currencySymbol ? currencySymbol?.symbol : ""}
+                      {pkg.price}/-
                     </p>
                   </CardFooter>
                 </Card>

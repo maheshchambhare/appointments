@@ -128,7 +128,7 @@ const Appointment = ({
         let pkgArr: any[] = [];
         res.data.packages.map((d: any, i: any) => {
           let obj = {
-            label: d.name + " - ₹" + d.price,
+            label: d.name + " - " + d.price,
             value: d.id,
             duration: d.duration,
             gender: d.gender,

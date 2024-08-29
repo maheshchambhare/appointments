@@ -622,6 +622,12 @@ const Website = () => {
             });
           }
 
+          let address = values.address;
+          address = address.trim();
+          if (address.charAt(address.length - 1) !== ",") {
+            address += ",";
+          }
+
           data.append("title", values.title);
           data.append("subtitle", values.subtitle);
           data.append("whatsapp", values.whatsapp);
@@ -631,7 +637,7 @@ const Website = () => {
           data.append("youtube", values.youtube);
           data.append("maps", values.maps);
           data.append("email", values.email);
-          data.append("address", values.address);
+          data.append("address", address);
           data.append("slug", values.slug);
 
           if (!isValidURL(cropedLogoImage) && cropedLogoImage != null) {
